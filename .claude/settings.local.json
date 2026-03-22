@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:deepwiki.com)",
+      "Bash(java -version)",
+      "Bash(mvn -version)",
+      "Bash(npm -v)",
+      "Bash(mvn compile:*)",
+      "Bash(npx create-react-app:*)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx --package=typescript tsc --noEmit)",
+      "Bash(./mvnw compile:*)",
+      "Bash(find /Users/sridhar/claude-code/whatsappcrm/backend/src -type f -name \"*.java\" -path \"*controller*\" -exec grep -l \"public\" {})",
+      "Bash(grep -r @RequestMapping.*public /Users/sridhar/claude-code/whatsappcrm/backend/src/main/java)",
+      "Bash(psql -U sridhar -d whatsappcrm -c \"ALTER TABLE users ADD COLUMN IF NOT EXISTS availability varchar\\(255\\); UPDATE users SET availability = ''OFFLINE'' WHERE availability IS NULL; ALTER TABLE users ALTER COLUMN availability SET NOT NULL; ALTER TABLE users ALTER COLUMN availability SET DEFAULT ''OFFLINE'';\")",
+      "Bash(psql -U sridhar -d whatsappcrm -c \"SELECT id, name, availability FROM users;\")",
+      "Bash(grep -r \"automationEngine\\\\|onConversationCreated\\\\|onConversationUpdated\\\\|onMessageCreated\" /Users/sridhar/claude-code/whatsappcrm/backend/src/main/java --include=*.java)",
+      "Bash(ls mvnw* pom.xml)",
+      "Bash(ls gradlew* build.gradle*)"
+    ]
+  }
+}
