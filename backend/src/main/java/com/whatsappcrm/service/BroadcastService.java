@@ -33,6 +33,7 @@ public class BroadcastService {
     private final ChannelWhatsappRepository channelWhatsappRepository;
     private final ContactRepository contactRepository;
     private final AccountRepository accountRepository;
+    private final ConsentService consentService;
     private final ObjectMapper objectMapper;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -176,6 +177,16 @@ public class BroadcastService {
                         bc.setErrorMessage("No phone number");
                         broadcastContactRepository.save(bc);
                         failedCount++;
+                        continue;
+                    }
+
+                    // Skip opted-out contacts (WhatsApp compliance)
+                    if (consentService.isOptedOut(accountId, contact.getId())) {
+                        bc.setStatus(BroadcastContact.MessageDeliveryStatus.FAILED);
+                        bc.setErrorMessage("Contact opted out — skipped for compliance");
+                        broadcastContactRepository.save(bc);
+                        failedCount++;
+                        log.debug("Skipping opted-out contact {} in broadcast {}", contact.getId(), broadcastId);
                         continue;
                     }
 

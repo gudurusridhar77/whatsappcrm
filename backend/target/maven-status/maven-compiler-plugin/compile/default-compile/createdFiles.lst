@@ -14,6 +14,7 @@ com/whatsappcrm/repository/ContactRepository.class
 com/whatsappcrm/entity/ChatbotFlow.class
 com/whatsappcrm/entity/Broadcast$BroadcastBuilder.class
 com/whatsappcrm/entity/BroadcastContact.class
+com/whatsappcrm/entity/ConsentAuditLog.class
 com/whatsappcrm/service/WhatsAppChannelService$1.class
 com/whatsappcrm/dto/CsatReportResponse$AgentCsat$AgentCsatBuilder.class
 com/whatsappcrm/entity/AccountUser.class
@@ -36,6 +37,7 @@ com/whatsappcrm/controller/WhatsAppWebhookController$TemplateMessageRequest.clas
 com/whatsappcrm/service/AuthService.class
 com/whatsappcrm/dto/UpdateInboxRequest.class
 com/whatsappcrm/dto/TeamResponse$AgentSummary$AgentSummaryBuilder.class
+com/whatsappcrm/dto/ConsentResponse$ConsentResponseBuilder.class
 com/whatsappcrm/config/AsyncConfig.class
 com/whatsappcrm/dto/InboxResponse$WebWidgetConfig$WebWidgetConfigBuilder.class
 com/whatsappcrm/dto/ReportResponse$OverviewMetrics$OverviewMetricsBuilder.class
@@ -59,6 +61,7 @@ com/whatsappcrm/repository/InboxRepository.class
 com/whatsappcrm/dto/ReportResponse$TimeSeriesPoint$TimeSeriesPointBuilder.class
 com/whatsappcrm/repository/NoteRepository.class
 com/whatsappcrm/enums/AccountStatus.class
+com/whatsappcrm/dto/ConsentResponse$ConsentStats.class
 com/whatsappcrm/security/UserDetailsServiceImpl.class
 com/whatsappcrm/controller/ChatbotFlowController.class
 com/whatsappcrm/security/JwtTokenProvider.class
@@ -69,6 +72,7 @@ com/whatsappcrm/controller/InboxController.class
 com/whatsappcrm/entity/ChannelWebWidget$ChannelWebWidgetBuilder.class
 com/whatsappcrm/dto/ScheduledMessageResponse$ScheduledMessageResponseBuilder.class
 com/whatsappcrm/repository/ChannelWhatsappRepository.class
+com/whatsappcrm/entity/ContactConsent$ConsentStatus.class
 com/whatsappcrm/enums/UserRole.class
 com/whatsappcrm/exception/BadRequestException.class
 com/whatsappcrm/entity/WhatsAppTemplate$WhatsAppTemplateBuilder.class
@@ -94,6 +98,7 @@ com/whatsappcrm/dto/UserResponse.class
 com/whatsappcrm/repository/MessageRepository.class
 com/whatsappcrm/entity/AutomationRule$RuleAction.class
 com/whatsappcrm/dto/WidgetDTO$WidgetConfig.class
+com/whatsappcrm/dto/ConsentResponse$ConsentDetailResponse$ConsentDetailResponseBuilder.class
 com/whatsappcrm/entity/Contact$ContactBuilder.class
 com/whatsappcrm/entity/Contact.class
 com/whatsappcrm/dto/BroadcastResponse.class
@@ -105,6 +110,7 @@ com/whatsappcrm/service/ScheduledMessageService.class
 com/whatsappcrm/dto/ChatbotFlowResponse.class
 com/whatsappcrm/dto/ConversationResponse.class
 com/whatsappcrm/entity/CsatResponse$CsatResponseBuilder.class
+com/whatsappcrm/dto/ConsentUpdateRequest.class
 com/whatsappcrm/dto/ReportResponse$AgentMetrics.class
 com/whatsappcrm/config/WebSocketConfig.class
 com/whatsappcrm/repository/ChannelEmailRepository.class
@@ -131,9 +137,11 @@ com/whatsappcrm/entity/WhatsAppTemplate$TemplateStatus.class
 com/whatsappcrm/dto/AccountUserResponse.class
 com/whatsappcrm/repository/CsatResponseRepository.class
 com/whatsappcrm/dto/AuthResponse.class
+com/whatsappcrm/repository/ConsentAuditLogRepository.class
 com/whatsappcrm/controller/BroadcastController.class
 com/whatsappcrm/dto/AccountSettingsResponse$AccountSettingsResponseBuilder.class
 com/whatsappcrm/dto/CsatSubmitRequest.class
+com/whatsappcrm/dto/ConsentResponse$ConsentDetailResponse.class
 com/whatsappcrm/entity/AutomationRule$RuleCondition$RuleConditionBuilder.class
 com/whatsappcrm/service/ScheduledMessageService$1.class
 com/whatsappcrm/dto/AttachmentResponse.class
@@ -150,7 +158,9 @@ com/whatsappcrm/controller/CsatController.class
 com/whatsappcrm/controller/MessageController.class
 com/whatsappcrm/controller/AuthController.class
 com/whatsappcrm/repository/BroadcastRepository.class
+com/whatsappcrm/dto/ConsentResponse.class
 com/whatsappcrm/controller/AccountController.class
+com/whatsappcrm/service/ConsentService.class
 com/whatsappcrm/dto/MessageResponse.class
 com/whatsappcrm/service/AgentService.class
 com/whatsappcrm/dto/CampaignAnalyticsResponse$InboxCampaignMetrics.class
@@ -192,9 +202,11 @@ com/whatsappcrm/entity/User$UserBuilder.class
 com/whatsappcrm/controller/ConversationController.class
 com/whatsappcrm/exception/ResourceNotFoundException.class
 com/whatsappcrm/dto/WhatsAppTemplateRequest.class
+com/whatsappcrm/entity/ConsentAuditLog$ConsentAuditLogBuilder.class
 com/whatsappcrm/repository/ScheduledMessageRepository.class
 com/whatsappcrm/dto/CreateNoteRequest.class
 com/whatsappcrm/dto/CampaignAnalyticsResponse.class
+com/whatsappcrm/entity/ContactConsent.class
 com/whatsappcrm/service/ContactService.class
 com/whatsappcrm/dto/ReportResponse.class
 com/whatsappcrm/dto/LabelResponse$LabelResponseBuilder.class
@@ -214,6 +226,7 @@ com/whatsappcrm/dto/ReportResponse$TeamMetrics$TeamMetricsBuilder.class
 com/whatsappcrm/entity/User.class
 com/whatsappcrm/entity/Note$NoteBuilder.class
 com/whatsappcrm/dto/WidgetDTO$WidgetConversation$WidgetConversationBuilder.class
+com/whatsappcrm/repository/ContactConsentRepository.class
 com/whatsappcrm/controller/AgentController.class
 com/whatsappcrm/entity/ChatbotFlow$ChatbotFlowBuilder.class
 com/whatsappcrm/controller/WhatsAppWebhookController.class
@@ -223,6 +236,7 @@ com/whatsappcrm/dto/UpdateAccountSettingsRequest.class
 com/whatsappcrm/controller/NoteController.class
 com/whatsappcrm/dto/RefreshTokenRequest.class
 com/whatsappcrm/dto/WidgetDTO$WidgetConversation.class
+com/whatsappcrm/dto/ConsentResponse$AuditEntry.class
 com/whatsappcrm/dto/AutomationRuleResponse.class
 com/whatsappcrm/dto/CreateLabelRequest.class
 com/whatsappcrm/dto/CampaignAnalyticsResponse$CampaignMetrics$CampaignMetricsBuilder.class
@@ -279,9 +293,11 @@ com/whatsappcrm/entity/InboxMember.class
 com/whatsappcrm/entity/Notification$NotificationBuilder.class
 com/whatsappcrm/enums/InvitationStatus.class
 com/whatsappcrm/repository/NotificationRepository.class
+com/whatsappcrm/entity/ContactConsent$ContactConsentBuilder.class
 com/whatsappcrm/dto/ReportResponse$StatusCount$StatusCountBuilder.class
 com/whatsappcrm/repository/WhatsAppTemplateRepository.class
 com/whatsappcrm/controller/EmailChannelController$IncomingEmailRequest.class
+com/whatsappcrm/entity/ContactConsent$ConsentSource.class
 com/whatsappcrm/dto/InboxResponse$WhatsAppConfig.class
 com/whatsappcrm/dto/ReportResponse$LabelCount.class
 com/whatsappcrm/dto/CampaignAnalyticsResponse$CampaignMetrics.class
@@ -296,6 +312,7 @@ com/whatsappcrm/service/SearchService.class
 com/whatsappcrm/dto/ReportResponse$AgentMetrics$AgentMetricsBuilder.class
 com/whatsappcrm/dto/ContactImportResult.class
 com/whatsappcrm/controller/SearchController.class
+com/whatsappcrm/dto/ConsentResponse$AuditEntry$AuditEntryBuilder.class
 com/whatsappcrm/service/AutomationEngine.class
 com/whatsappcrm/entity/Label$LabelBuilder.class
 com/whatsappcrm/controller/EmailChannelController.class
@@ -303,12 +320,14 @@ com/whatsappcrm/entity/ScheduledMessage$ScheduleStatus.class
 com/whatsappcrm/controller/AttachmentController.class
 com/whatsappcrm/dto/ScheduledMessageResponse.class
 com/whatsappcrm/entity/ChatbotSession.class
+com/whatsappcrm/dto/ConsentResponse$ConsentStats$ConsentStatsBuilder.class
 com/whatsappcrm/repository/BroadcastContactRepository.class
 com/whatsappcrm/repository/ConversationRepository.class
 com/whatsappcrm/dto/MessageResponse$MessageResponseBuilder.class
 com/whatsappcrm/entity/Attachment$AttachmentBuilder.class
 com/whatsappcrm/dto/CsatReportResponse$RatingCount.class
 com/whatsappcrm/config/WebSocketAuthInterceptor.class
+com/whatsappcrm/controller/ConsentController.class
 com/whatsappcrm/dto/ChatbotFlowRequest.class
 com/whatsappcrm/dto/AgentResponse.class
 com/whatsappcrm/repository/AutomationRuleRepository.class

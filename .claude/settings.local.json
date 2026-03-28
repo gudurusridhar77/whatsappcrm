@@ -19,7 +19,12 @@
       "Bash(psql -U sridhar -d whatsappcrm -c \"SELECT id, name, availability FROM users;\")",
       "Bash(grep -r \"automationEngine\\\\|onConversationCreated\\\\|onConversationUpdated\\\\|onMessageCreated\" /Users/sridhar/claude-code/whatsappcrm/backend/src/main/java --include=*.java)",
       "Bash(ls mvnw* pom.xml)",
-      "Bash(ls gradlew* build.gradle*)"
+      "Bash(ls gradlew* build.gradle*)",
+      "Bash(ls /Users/sridhar/claude-code/whatsappcrm/backend/src/main/resources/application*.properties /Users/sridhar/claude-code/whatsappcrm/backend/src/main/resources/application*.yml)",
+      "Bash(chmod +x /Users/sridhar/claude-code/whatsappcrm/deploy/aws-setup.sh)",
+      "Bash(docker compose:*)",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\(''/Users/sridhar/claude-code/whatsappcrm/docker-compose.yml''\\)\\); print\\(''docker-compose.yml: Valid YAML''\\)\")",
+      "Bash(/opt/homebrew/bin/mvn compile:*)"
     ]
   }
 }

@@ -58,6 +58,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     { path: '/chatbot', label: 'Chatbot Flows' },
     { path: '/campaign-analytics', label: 'Campaign Analytics' },
     { path: '/scheduled-messages', label: 'Scheduled' },
+    { path: '/consent', label: 'Consent' },
   ];
 
   const availability = user?.availability || 'OFFLINE';

@@ -31,6 +31,7 @@ public class MessageScheduler {
     private final ScheduledMessageRepository scheduledMessageRepository;
     private final ChannelWhatsappRepository channelWhatsappRepository;
     private final BroadcastService broadcastService;
+    private final ConsentService consentService;
     private final ObjectMapper objectMapper;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -50,6 +51,18 @@ public class MessageScheduler {
             scheduledMessageRepository.save(sm);
 
             try {
+                // Check consent for direct/template messages (broadcast handles its own consent check)
+                if ((sm.getScheduleType() == ScheduledMessage.ScheduleType.DIRECT ||
+                     sm.getScheduleType() == ScheduledMessage.ScheduleType.TEMPLATE) &&
+                    sm.getContact() != null &&
+                    consentService.isOptedOut(sm.getAccount().getId(), sm.getContact().getId())) {
+                    sm.setStatus(ScheduledMessage.ScheduleStatus.FAILED);
+                    sm.setFailureReason("Contact has opted out — message blocked for compliance");
+                    scheduledMessageRepository.save(sm);
+                    log.info("Scheduled message blocked (opted out): id={}, contact={}", sm.getId(), sm.getContact().getId());
+                    continue;
+                }
+
                 switch (sm.getScheduleType()) {
                     case DIRECT:
                         sendDirectMessage(sm);

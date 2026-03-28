@@ -24,6 +24,7 @@ import ChatbotFlowsPage from './pages/chatbot/ChatbotFlowsPage';
 import ChatbotFlowBuilderPage from './pages/chatbot/ChatbotFlowBuilderPage';
 import CampaignAnalyticsPage from './pages/campaign-analytics/CampaignAnalyticsPage';
 import ScheduledMessagesPage from './pages/scheduled-messages/ScheduledMessagesPage';
+import ConsentManagementPage from './pages/consent/ConsentManagementPage';
 
 function App() {
   return (
@@ -150,6 +151,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout><ScheduledMessagesPage /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/consent"
+            element={
+              <ProtectedRoute>
+                <Layout><ConsentManagementPage /></Layout>
               </ProtectedRoute>
             }
           />

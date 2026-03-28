@@ -40,6 +40,7 @@ public class WhatsAppChannelService {
     private final AttachmentService attachmentService;
     private final ChatbotEngine chatbotEngine;
     private final FileStorageService fileStorageService;
+    private final ConsentService consentService;
     private final ObjectMapper objectMapper;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -415,6 +416,20 @@ public class WhatsAppChannelService {
 
         log.info("Processed incoming WhatsApp message from {} for conversation #{}", phoneNumber, conversation.getDisplayId());
 
+        // Check for opt-in/opt-out keywords (STOP, START, etc.)
+        // This must happen before chatbot/automation so consent is always processed
+        try {
+            String consentReply = consentService.processIncomingForConsent(accountId, contact, content);
+            if (consentReply != null) {
+                // Send auto-reply confirming opt-in/opt-out
+                sendConsentAutoReply(waConfig, contact.getPhoneNumber(), consentReply);
+                log.info("Consent keyword detected from {}: message='{}', reply sent", phoneNumber, content.trim());
+                return; // Don't process further — consent keywords aren't real conversations
+            }
+        } catch (Exception e) {
+            log.warn("Consent processing error for {}: {}", phoneNumber, e.getMessage());
+        }
+
         // Try chatbot flow first — if it handles the message, skip agent notification
         boolean handledByChatbot = false;
         try {
@@ -436,6 +451,31 @@ public class WhatsAppChannelService {
 
             // Trigger automation rules
             automationEngine.onMessageCreated(message, conversation);
+        }
+    }
+
+    /**
+     * Send an auto-reply for consent keyword (STOP/START).
+     * Uses direct WhatsApp API call to avoid consent checks on outgoing.
+     */
+    private void sendConsentAutoReply(ChannelWhatsapp waConfig, String phoneNumber, String replyText) {
+        try {
+            String url = waConfig.getApiBaseUrl() + "/" + waConfig.getPhoneNumberId() + "/messages";
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(waConfig.getAccessToken());
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("messaging_product", "whatsapp");
+            body.put("to", phoneNumber);
+            body.put("type", "text");
+            body.put("text", Map.of("body", replyText));
+
+            HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+            restTemplate.postForEntity(url, request, String.class);
+        } catch (Exception e) {
+            log.warn("Failed to send consent auto-reply to {}: {}", phoneNumber, e.getMessage());
         }
     }
 
