@@ -58,6 +58,7 @@ docker run --rm \
     --email "$EMAIL" \
     --agree-tos \
     --no-eff-email \
+    --keep-existing \
     -d "$DOMAIN"
 
 # Step 4: Clean up temporary nginx
