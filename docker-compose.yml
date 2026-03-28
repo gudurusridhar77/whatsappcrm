@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: whatsappcrm-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: whatsappcrm
+      POSTGRES_USER: ${DB_USERNAME:-whatsappcrm}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-whatsappcrm123}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-whatsappcrm}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: whatsappcrm-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/whatsappcrm
+      DB_USERNAME: ${DB_USERNAME:-whatsappcrm}
+      DB_PASSWORD: ${DB_PASSWORD:-whatsappcrm123}
+      JWT_SECRET: ${JWT_SECRET:-mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong2024}
+      UPLOAD_DIR: /app/uploads
+      MAIL_HOST: ${MAIL_HOST:-localhost}
+      MAIL_PORT: ${MAIL_PORT:-1025}
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "8080:8080"
+
+  # React Frontend + Nginx Reverse Proxy
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # In Docker, frontend calls API via Nginx proxy (same origin)
+        REACT_APP_API_URL: ""
+        REACT_APP_WS_URL: /ws
+    container_name: whatsappcrm-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
+  uploads:
