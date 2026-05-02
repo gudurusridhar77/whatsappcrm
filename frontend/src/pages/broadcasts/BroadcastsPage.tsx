@@ -1,34 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { broadcastsApi, BroadcastRequest, BroadcastResponse } from '../../api/broadcasts';
-import { inboxesApi, Inbox } from '../../api/inboxes';
-import { whatsappTemplatesApi, WhatsAppTemplate } from '../../api/whatsappTemplates';
-import { contactsApi, Contact } from '../../api/contacts';
+import { broadcastsApi, BroadcastResponse } from '../../api/broadcasts';
 
 const BroadcastsPage: React.FC = () => {
   const { currentAccountId } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [broadcasts, setBroadcasts] = useState<BroadcastResponse[]>([]);
-  const [showForm, setShowForm] = useState(false);
   const [selectedBroadcast, setSelectedBroadcast] = useState<BroadcastResponse | null>(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  // Form state
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [inboxId, setInboxId] = useState<number>(0);
-  const [templateId, setTemplateId] = useState<number>(0);
-  const [sendToAll, setSendToAll] = useState(true);
-  const [selectedContactIds, setSelectedContactIds] = useState<number[]>([]);
-  const [bodyParams, setBodyParams] = useState<string[]>([]);
-  const [scheduledAt, setScheduledAt] = useState('');
-
-  // Lookups
-  const [inboxes, setInboxes] = useState<Inbox[]>([]);
-  const [templates, setTemplates] = useState<WhatsAppTemplate[]>([]);
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [contactSearch, setContactSearch] = useState('');
 
   const loadBroadcasts = useCallback(async () => {
     if (!currentAccountId) return;
@@ -40,76 +22,16 @@ const BroadcastsPage: React.FC = () => {
     }
   }, [currentAccountId]);
 
-  const loadInboxes = useCallback(async () => {
-    if (!currentAccountId) return;
-    try {
-      const res = await inboxesApi.getInboxes(currentAccountId);
-      setInboxes(res.data.filter((i: Inbox) => i.channelType === 'WHATSAPP'));
-    } catch { /* ignore */ }
-  }, [currentAccountId]);
-
-  const loadTemplates = useCallback(async () => {
-    if (!currentAccountId) return;
-    try {
-      const res = await whatsappTemplatesApi.getTemplates(currentAccountId);
-      setTemplates(res.data.filter((t: WhatsAppTemplate) => t.status === 'APPROVED'));
-    } catch { /* ignore */ }
-  }, [currentAccountId]);
-
-  const loadContacts = useCallback(async () => {
-    if (!currentAccountId) return;
-    try {
-      const res = await contactsApi.getContacts(currentAccountId, 0, 200, contactSearch);
-      setContacts(res.data.content.filter((c: Contact) => c.phoneNumber));
-    } catch { /* ignore */ }
-  }, [currentAccountId, contactSearch]);
-
   useEffect(() => { loadBroadcasts(); }, [loadBroadcasts]);
 
+  // Show success banner when navigating back from the form page after a create.
   useEffect(() => {
-    if (showForm) {
-      loadInboxes();
-      loadTemplates();
-      loadContacts();
-    }
-  }, [showForm, loadInboxes, loadTemplates, loadContacts]);
-
-  const selectedTemplate = templates.find(t => t.id === templateId);
-
-  useEffect(() => {
-    if (selectedTemplate) {
-      setBodyParams(Array(selectedTemplate.bodyParamCount).fill(''));
-    } else {
-      setBodyParams([]);
-    }
-  }, [templateId, selectedTemplate]);
-
-  const resetForm = () => {
-    setName(''); setDescription(''); setInboxId(0); setTemplateId(0);
-    setSendToAll(true); setSelectedContactIds([]); setBodyParams([]);
-    setScheduledAt(''); setShowForm(false); setContactSearch('');
-  };
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentAccountId) return;
-    setError(''); setLoading(true);
-    try {
-      const req: BroadcastRequest = {
-        name, description: description || undefined,
-        inboxId, templateId,
-        contactIds: sendToAll ? undefined : selectedContactIds,
-        defaultBodyParams: bodyParams.length > 0 ? bodyParams : undefined,
-        scheduledAt: scheduledAt || undefined,
-      };
-      await broadcastsApi.createBroadcast(currentAccountId, req);
+    const state = location.state as { created?: boolean } | null;
+    if (state?.created) {
       setSuccess('Broadcast created successfully!');
-      resetForm();
-      loadBroadcasts();
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to create broadcast');
-    } finally { setLoading(false); }
-  };
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const handleStart = async (id: number) => {
     if (!currentAccountId || !window.confirm('Start sending this broadcast now?')) return;
@@ -141,12 +63,6 @@ const BroadcastsPage: React.FC = () => {
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to delete broadcast');
     }
-  };
-
-  const toggleContact = (id: number) => {
-    setSelectedContactIds(prev =>
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
-    );
   };
 
   const statusBadge = (status: string) => {
@@ -195,136 +111,11 @@ const BroadcastsPage: React.FC = () => {
             Send bulk WhatsApp messages using approved templates
           </p>
         </div>
-        <button onClick={() => setShowForm(true)} style={styles.primaryBtn}>+ New Broadcast</button>
+        <button onClick={() => navigate('/broadcasts/new')} style={styles.primaryBtn}>+ New Broadcast</button>
       </div>
 
       {error && <div style={styles.errorBanner}>{error}<button onClick={() => setError('')} style={styles.closeBtnSmall}>&times;</button></div>}
       {success && <div style={styles.successBanner}>{success}<button onClick={() => setSuccess('')} style={styles.closeBtnSmall}>&times;</button></div>}
-
-      {/* Create Broadcast Form */}
-      {showForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-              <h3 style={{ margin: 0 }}>Create Broadcast</h3>
-              <button onClick={resetForm} style={styles.closeBtnSmall}>&times;</button>
-            </div>
-            <form onSubmit={handleCreate}>
-              <div style={styles.formGrid}>
-                <div style={styles.field}>
-                  <label style={styles.label}>Name *</label>
-                  <input type="text" value={name} onChange={e => setName(e.target.value)}
-                    style={styles.input} required placeholder="e.g. March Promotion" />
-                </div>
-                <div style={styles.field}>
-                  <label style={styles.label}>WhatsApp Inbox *</label>
-                  <select value={inboxId} onChange={e => setInboxId(Number(e.target.value))}
-                    style={styles.input} required>
-                    <option value={0}>Select inbox...</option>
-                    {inboxes.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
-                  </select>
-                </div>
-                <div style={styles.field}>
-                  <label style={styles.label}>Template *</label>
-                  <select value={templateId} onChange={e => setTemplateId(Number(e.target.value))}
-                    style={styles.input} required>
-                    <option value={0}>Select template...</option>
-                    {templates.map(t => <option key={t.id} value={t.id}>{t.name} ({t.language})</option>)}
-                  </select>
-                </div>
-                <div style={styles.field}>
-                  <label style={styles.label}>Schedule (optional)</label>
-                  <input type="datetime-local" value={scheduledAt}
-                    onChange={e => setScheduledAt(e.target.value)} style={styles.input} />
-                </div>
-              </div>
-
-              <div style={styles.field}>
-                <label style={styles.label}>Description</label>
-                <textarea value={description} onChange={e => setDescription(e.target.value)}
-                  style={{ ...styles.input, minHeight: '60px' }} placeholder="Optional description" />
-              </div>
-
-              {/* Template Preview */}
-              {selectedTemplate && (
-                <div style={{ backgroundColor: '#f0fdf4', border: '1px solid #86efac', borderRadius: '6px', padding: '12px', marginBottom: '16px' }}>
-                  <div style={{ fontSize: '12px', fontWeight: 600, color: '#166534', marginBottom: '4px' }}>Template Preview</div>
-                  <div style={{ fontSize: '13px', color: '#333', whiteSpace: 'pre-wrap' }}>{selectedTemplate.body}</div>
-                </div>
-              )}
-
-              {/* Body Params */}
-              {bodyParams.length > 0 && (
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={styles.label}>Template Parameters</label>
-                  <p style={{ fontSize: '12px', color: '#666', marginTop: '2px', marginBottom: '8px' }}>
-                    Use placeholders: {'{{name}}, {{phone}}, {{email}}, {{company}}'} for contact-specific values
-                  </p>
-                  {bodyParams.map((p, i) => (
-                    <div key={i} style={{ marginBottom: '6px' }}>
-                      <label style={{ fontSize: '12px', color: '#888' }}>{`{{${i + 1}}}`}</label>
-                      <input type="text" value={p}
-                        onChange={e => {
-                          const newParams = [...bodyParams];
-                          newParams[i] = e.target.value;
-                          setBodyParams(newParams);
-                        }}
-                        style={styles.input} placeholder={`Parameter ${i + 1} value or {{name}}`} />
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Recipients */}
-              <div style={{ marginBottom: '16px' }}>
-                <label style={styles.label}>Recipients</label>
-                <div style={{ display: 'flex', gap: '16px', marginTop: '6px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px' }}>
-                    <input type="radio" checked={sendToAll} onChange={() => setSendToAll(true)} />
-                    All contacts with phone numbers
-                  </label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px' }}>
-                    <input type="radio" checked={!sendToAll} onChange={() => setSendToAll(false)} />
-                    Select specific contacts
-                  </label>
-                </div>
-              </div>
-
-              {/* Contact Picker */}
-              {!sendToAll && (
-                <div style={{ marginBottom: '16px', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '12px' }}>
-                  <input type="text" value={contactSearch} onChange={e => setContactSearch(e.target.value)}
-                    placeholder="Search contacts..." style={{ ...styles.input, marginBottom: '8px' }} />
-                  <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
-                    {selectedContactIds.length} contacts selected
-                  </div>
-                  <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                    {contacts.map(c => (
-                      <label key={c.id} style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 4px',
-                        cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: '13px',
-                      }}>
-                        <input type="checkbox" checked={selectedContactIds.includes(c.id)}
-                          onChange={() => toggleContact(c.id)} />
-                        <span style={{ fontWeight: 500 }}>{c.name}</span>
-                        <span style={{ color: '#888' }}>{c.phoneNumber}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div style={styles.formActions}>
-                <button type="button" onClick={resetForm} style={styles.cancelBtn}>Cancel</button>
-                <button type="submit" disabled={loading || !inboxId || !templateId}
-                  style={{ ...styles.primaryBtn, opacity: loading ? 0.6 : 1 }}>
-                  {loading ? 'Creating...' : 'Create Broadcast'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Broadcast Detail Panel */}
       {selectedBroadcast && (
@@ -443,10 +234,6 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
-  cancelBtn: {
-    padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
-  },
   errorBanner: {
     backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px 16px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
@@ -460,30 +247,6 @@ const styles: Record<string, React.CSSProperties> = {
   closeBtnSmall: {
     background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer',
     color: '#888', padding: '0 4px',
-  },
-  modalOverlay: {
-    position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-    justifyContent: 'center', alignItems: 'center', zIndex: 1000,
-  },
-  modal: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '24px',
-    width: '100%', maxWidth: '640px', maxHeight: '90vh', overflowY: 'auto' as const,
-  },
-  formGrid: {
-    display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px',
-  },
-  field: { marginBottom: '12px' },
-  label: {
-    display: 'block', marginBottom: '4px', fontSize: '13px',
-    fontWeight: 500, color: '#555',
-  },
-  input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
-    borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const,
-  },
-  formActions: {
-    display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px',
   },
   detailPanel: {
     backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px',

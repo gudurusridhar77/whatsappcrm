@@ -433,8 +433,8 @@ const ConsentManagementPage: React.FC = () => {
 
       {/* Bulk Opt-Out Modal */}
       {showBulkModal && (
-        <div style={styles.overlay} onClick={() => setShowBulkModal(false)}>
-          <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className="app-modal-overlay" style={styles.overlay} onClick={() => setShowBulkModal(false)}>
+          <div className="app-modal" style={styles.modal} onClick={e => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 16px', fontSize: '18px' }}>Bulk Opt-Out</h3>
             <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>
               You are about to opt out <strong>{selectedIds.size}</strong> contact{selectedIds.size !== 1 ? 's' : ''}.

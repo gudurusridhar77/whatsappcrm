@@ -356,9 +356,9 @@ const ConversationsPage: React.FC = () => {
   };
 
   return (
-    <div style={styles.wrapper}>
+    <div className="app-conv-wrapper" style={styles.wrapper}>
       {/* Left: Conversation List */}
-      <div style={styles.sidebar}>
+      <div className="app-conv-sidebar" style={styles.sidebar}>
         <div style={styles.sidebarHeader}>
           <h3 style={{ margin: 0, fontSize: '16px' }}>Conversations</h3>
           <button onClick={openNewModal} style={styles.newBtn}>+</button>
@@ -933,8 +933,8 @@ const ConversationsPage: React.FC = () => {
 
       {/* New Conversation Modal */}
       {showNew && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
+        <div className="app-modal-overlay" style={styles.modalOverlay}>
+          <div className="app-modal" style={styles.modal}>
             <h3 style={{ margin: '0 0 20px 0' }}>New Conversation</h3>
             <form onSubmit={handleCreateConversation}>
               <div style={styles.field}>
@@ -958,7 +958,7 @@ const ConversationsPage: React.FC = () => {
                 <textarea value={newInitialMsg} onChange={(e) => setNewInitialMsg(e.target.value)}
                   style={{ ...styles.input, minHeight: '80px' }} placeholder="Type the first message..." />
               </div>
-              <div style={styles.formActions}>
+              <div className="app-modal-actions" style={styles.formActions}>
                 <button type="button" onClick={() => setShowNew(false)} style={styles.cancelBtn}>Cancel</button>
                 <button type="submit" style={styles.primaryBtn} disabled={!newContactId || !newInboxId}>Create</button>
               </div>

@@ -125,8 +125,8 @@ const ContactsPage: React.FC = () => {
 
       {/* Import CSV Modal */}
       {showImport && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
+        <div className="app-modal-overlay" style={styles.modalOverlay}>
+          <div className="app-modal" style={styles.modal}>
             <h3 style={{ margin: '0 0 16px 0' }}>Import Contacts from CSV</h3>
             <p style={{ fontSize: '13px', color: '#666', marginBottom: '12px' }}>
               Upload a CSV file with columns: <strong>name</strong>, <strong>email</strong>, <strong>phone</strong> (or phone_number/mobile/whatsapp), <strong>company</strong>, <strong>description</strong>
@@ -153,7 +153,7 @@ const ContactsPage: React.FC = () => {
               </div>
             )}
 
-            <div style={styles.formActions}>
+            <div className="app-modal-actions" style={styles.formActions}>
               <button type="button" onClick={() => setShowImport(false)} style={styles.cancelBtn}>
                 {importResult ? 'Close' : 'Cancel'}
               </button>
@@ -170,11 +170,11 @@ const ContactsPage: React.FC = () => {
 
       {/* Contact Form Modal */}
       {showForm && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
+        <div className="app-modal-overlay" style={styles.modalOverlay}>
+          <div className="app-modal" style={styles.modal}>
             <h3 style={{ margin: '0 0 20px 0' }}>{editingId ? 'Edit Contact' : 'New Contact'}</h3>
             <form onSubmit={handleSubmit}>
-              <div style={styles.formGrid}>
+              <div className="app-form-grid" style={styles.formGrid}>
                 <div style={styles.field}>
                   <label style={styles.label}>Name *</label>
                   <input
@@ -216,7 +216,7 @@ const ContactsPage: React.FC = () => {
                   style={{ ...styles.input, minHeight: '80px', resize: 'vertical' as const }}
                 />
               </div>
-              <div style={styles.formActions}>
+              <div className="app-modal-actions" style={styles.formActions}>
                 <button type="button" onClick={handleCancel} style={styles.cancelBtn}>Cancel</button>
                 <button type="submit" style={styles.primaryBtn}>
                   {editingId ? 'Update' : 'Create'}

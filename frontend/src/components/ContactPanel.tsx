@@ -102,7 +102,7 @@ const ContactPanel: React.FC<ContactPanelProps> = ({ contactId, contactName, con
   };
 
   return (
-    <div style={styles.panel}>
+    <div className="app-contact-panel" style={styles.panel}>
       {/* Contact Header */}
       <div style={styles.contactHeader}>
         <div style={styles.avatar}>{contactName.charAt(0).toUpperCase()}</div>

@@ -166,8 +166,8 @@ const AutomationsPage: React.FC = () => {
 
       {/* Create/Edit Form Modal */}
       {showForm && (
-        <div style={st.modalOverlay}>
-          <div style={st.modal}>
+        <div className="app-modal-overlay" style={st.modalOverlay}>
+          <div className="app-modal" style={st.modal}>
             <h3 style={{ margin: '0 0 20px 0' }}>{editingRule ? 'Edit Rule' : 'New Automation Rule'}</h3>
             <form onSubmit={handleSubmit}>
               <div style={st.field}>
@@ -229,7 +229,7 @@ const AutomationsPage: React.FC = () => {
                 ))}
               </div>
 
-              <div style={st.formActions}>
+              <div className="app-modal-actions" style={st.formActions}>
                 <button type="button" onClick={resetForm} style={st.cancelBtn}>Cancel</button>
                 <button type="submit" style={st.primaryBtn}>{editingRule ? 'Update' : 'Create'} Rule</button>
               </div>

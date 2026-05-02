@@ -421,8 +421,8 @@ const ScheduledMessagesPage: React.FC = () => {
 
       {/* Create Modal */}
       {showCreate && (
-        <div style={styles.overlay} onClick={() => setShowCreate(false)}>
-          <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <div className="app-modal-overlay" style={styles.overlay} onClick={() => setShowCreate(false)}>
+          <div className="app-modal" style={styles.modal} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
               <h3 style={{ margin: 0, fontSize: '18px' }}>Schedule a Message</h3>
               <button onClick={() => setShowCreate(false)} style={styles.closeBtn}>&times;</button>

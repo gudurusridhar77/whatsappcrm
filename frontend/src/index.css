@@ -11,3 +11,254 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* ---------------------------------------------------------------------------
+ * Responsive layer.
+ *
+ * The app uses inline `style={{}}` props throughout, which always win the
+ * specificity battle against external CSS. To make targeted overrides work
+ * on phones/tablets, the rules inside the @media blocks below use
+ * `!important`. They are scoped strictly to mobile/tablet widths so desktop
+ * rendering is unchanged.
+ *
+ * Wrappers carry hook classes (app-header, app-nav, app-modal-overlay, etc.)
+ * added to the JSX. Don't rename them without updating the components.
+ * --------------------------------------------------------------------------- */
+
+/* Modal overlays: shared scroll behavior on all sizes. */
+.app-modal-overlay {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---------------------------------------------------------------------------
+ * Modal content overflow guard (all viewport sizes).
+ *
+ * Inline-styled inputs, grids, and flex rows inside modals frequently have
+ * fixed widths (e.g. width: 400px) or grids that don't collapse below their
+ * intrinsic min-width. That pushes the modal content wider than the modal
+ * itself, leaving the Save/Cancel buttons off-screen behind a horizontal
+ * scrollbar.
+ *
+ * These rules cap every form control to its container and stop flex/grid
+ * children from refusing to shrink. They use !important to win over the
+ * inline style props the components currently set.
+ * --------------------------------------------------------------------------- */
+.app-modal {
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  min-width: 0 !important;
+}
+.app-modal *,
+.app-modal *::before,
+.app-modal *::after {
+  box-sizing: border-box;
+}
+.app-modal input:not([type="checkbox"]):not([type="radio"]),
+.app-modal select,
+.app-modal textarea {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+/* Grids and flex rows inside the modal: never exceed the modal width. */
+.app-modal > *,
+.app-modal form,
+.app-modal form > * {
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+/* Direct flex/grid children must be allowed to shrink below their content. */
+.app-modal [style*="display: flex"] > *,
+.app-modal [style*="display:flex"] > *,
+.app-modal [style*="display: grid"] > *,
+.app-modal [style*="display:grid"] > * {
+  min-width: 0;
+}
+/* Form grid: clamp columns so two-column layouts don't push past the modal.
+   minmax(0, 1fr) prevents intrinsic min-content from forcing overflow. */
+.app-form-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+/* ----- Tablets and phones (<= 1024px) ----- */
+@media (max-width: 1024px) {
+  /* Pull the contact side panel narrower on tablets. */
+  .app-contact-panel {
+    width: 240px !important;
+  }
+  /* Conversation sidebar narrower on tablets. */
+  .app-conv-sidebar {
+    width: 280px !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Form page wrapper used for long forms that were promoted from modals to
+ * full-page routes (Broadcast, etc.). Keeps inputs from overflowing and
+ * stacks the sticky action bar buttons on phones.
+ * --------------------------------------------------------------------------- */
+.app-page-form {
+  min-width: 0;
+}
+.app-page-form input:not([type="checkbox"]):not([type="radio"]),
+.app-page-form select,
+.app-page-form textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* ----- Phones (<= 768px) ----- */
+@media (max-width: 768px) {
+
+  /* Form page tweaks: collapse the two-column grid, stack action buttons. */
+  .app-page-form section {
+    padding: 14px !important;
+  }
+  .app-form-actions {
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+  }
+  .app-form-actions > button {
+    width: 100% !important;
+  }
+
+
+  /* ---- Header ---- */
+  .app-header {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 10px 12px !important;
+  }
+  .app-header-left {
+    gap: 8px !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+  .app-header-left h1 {
+    font-size: 16px !important;
+  }
+  .app-header-right {
+    gap: 8px !important;
+  }
+  /* Search bar takes a full row under header on phones. */
+  .app-header > .app-search-wrapper {
+    order: 3 !important;
+    flex: 1 0 100% !important;
+    width: 100% !important;
+  }
+  .app-user-name {
+    display: none !important;
+  }
+  .app-account-badge {
+    max-width: 120px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* ---- Top nav: scrollable horizontally on phones ---- */
+  .app-nav {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-wrap: nowrap !important;
+    padding: 0 8px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin;
+  }
+  .app-nav::-webkit-scrollbar {
+    height: 3px;
+  }
+  .app-nav > a {
+    flex-shrink: 0 !important;
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    white-space: nowrap !important;
+  }
+
+  /* ---- Main content area ---- */
+  .app-main {
+    padding: 0 12px !important;
+    margin: 12px auto !important;
+  }
+
+  /* ---- Modals: bottom-sheet feel, full width ---- */
+  .app-modal-overlay {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  .app-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 92vh !important;
+    max-height: 92vh !important;
+    border-radius: 12px 12px 0 0 !important;
+    /* Reserve space at the bottom for the sticky action bar so its
+       background doesn't sit on top of the last form field. */
+    padding: 16px 16px 80px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  /* Two-column form grids collapse to a single column on phones. */
+  .app-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Footer-style action rows in modals: stack the buttons full-width and
+     pin them to the bottom of the modal so users never have to scroll
+     inside the modal to find Save/Cancel. */
+  .app-modal-actions {
+    position: sticky !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 16px -16px -80px !important;
+    padding: 12px 16px !important;
+    flex-direction: column-reverse !important;
+    gap: 8px !important;
+    background-color: #fff !important;
+    border-top: 1px solid #e5e7eb !important;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.04) !important;
+    z-index: 5 !important;
+  }
+  .app-modal-actions > button {
+    width: 100% !important;
+  }
+
+  /* ---- Conversations page ---- */
+  /* Switch the side-by-side layout to a stack so the sidebar OR chat
+     fills the screen depending on whether a conversation is open. */
+  .app-conv-wrapper {
+    flex-direction: column !important;
+    height: calc(100vh - 100px) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .app-conv-sidebar {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    max-height: 40vh !important;
+  }
+  /* Hide the side contact panel on phones — it's not essential to the
+     conversation flow and would push the chat off-screen. */
+  .app-contact-panel {
+    display: none !important;
+  }
+}
+
+/* ----- Small phones (<= 480px) ----- */
+@media (max-width: 480px) {
+  .app-header-left h1 {
+    font-size: 15px !important;
+  }
+  .app-account-badge {
+    display: none !important;
+  }
+  .app-modal {
+    padding: 14px !important;
+  }
+  .app-main {
+    padding: 0 8px !important;
+  }
+}

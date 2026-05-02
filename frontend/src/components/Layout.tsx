@@ -66,15 +66,17 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div style={styles.container}>
       {/* Header */}
-      <header style={styles.header}>
-        <div style={styles.headerLeft}>
+      <header className="app-header" style={styles.header}>
+        <div className="app-header-left" style={styles.headerLeft}>
           <h1 style={styles.logo}>WhatsApp CRM</h1>
           {currentAccount && (
-            <span style={styles.accountBadge}>{currentAccount.accountName}</span>
+            <span className="app-account-badge" style={styles.accountBadge}>{currentAccount.accountName}</span>
           )}
         </div>
-        <SearchBar />
-        <div style={styles.headerRight}>
+        <div className="app-search-wrapper" style={{ flex: 1, minWidth: 0 }}>
+          <SearchBar />
+        </div>
+        <div className="app-header-right" style={styles.headerRight}>
           <NotificationBell />
 
           {/* User Menu with Availability */}
@@ -151,7 +153,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </header>
 
       {/* Nav */}
-      <nav style={styles.nav}>
+      <nav className="app-nav" style={styles.nav}>
         {navItems.map(item => (
           <Link
             key={item.path}
@@ -167,7 +169,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </nav>
 
       {/* Content */}
-      <main style={location.pathname === '/conversations' ? styles.mainFull : styles.main}>
+      <main
+        className={location.pathname === '/conversations' ? undefined : 'app-main'}
+        style={location.pathname === '/conversations' ? styles.mainFull : styles.main}
+      >
         {children}
       </main>
     </div>

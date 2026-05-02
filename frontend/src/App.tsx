@@ -8,6 +8,7 @@ import SignupPage from './pages/auth/SignupPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import ContactsPage from './pages/contacts/ContactsPage';
 import InboxesPage from './pages/inboxes/InboxesPage';
+import InboxFormPage from './pages/inboxes/InboxFormPage';
 import ConversationsPage from './pages/conversations/ConversationsPage';
 import LabelsPage from './pages/labels/LabelsPage';
 import CannedResponsesPage from './pages/canned-responses/CannedResponsesPage';
@@ -20,7 +21,9 @@ import ProfileSettingsPage from './pages/settings/ProfileSettingsPage';
 import AccountSettingsPage from './pages/settings/AccountSettingsPage';
 import WhatsAppTemplatesPage from './pages/whatsapp-templates/WhatsAppTemplatesPage';
 import BroadcastsPage from './pages/broadcasts/BroadcastsPage';
+import BroadcastFormPage from './pages/broadcasts/BroadcastFormPage';
 import ChatbotFlowsPage from './pages/chatbot/ChatbotFlowsPage';
+import ChatbotFlowFormPage from './pages/chatbot/ChatbotFlowFormPage';
 import ChatbotFlowBuilderPage from './pages/chatbot/ChatbotFlowBuilderPage';
 import CampaignAnalyticsPage from './pages/campaign-analytics/CampaignAnalyticsPage';
 import ScheduledMessagesPage from './pages/scheduled-messages/ScheduledMessagesPage';
@@ -63,6 +66,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout><InboxesPage /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inboxes/new"
+            element={
+              <ProtectedRoute>
+                <Layout><InboxFormPage /></Layout>
               </ProtectedRoute>
             }
           />
@@ -123,6 +134,14 @@ function App() {
             }
           />
           <Route
+            path="/chatbot/new"
+            element={
+              <ProtectedRoute>
+                <Layout><ChatbotFlowFormPage /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/chatbot/builder/:flowId"
             element={
               <ProtectedRoute>
@@ -135,6 +154,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Layout><BroadcastsPage /></Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/broadcasts/new"
+            element={
+              <ProtectedRoute>
+                <Layout><BroadcastFormPage /></Layout>
               </ProtectedRoute>
             }
           />
