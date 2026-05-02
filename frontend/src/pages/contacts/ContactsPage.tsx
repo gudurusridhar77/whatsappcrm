@@ -128,7 +128,7 @@ const ContactsPage: React.FC = () => {
         <div className="app-modal-overlay" style={styles.modalOverlay}>
           <div className="app-modal" style={styles.modal}>
             <h3 style={{ margin: '0 0 16px 0' }}>Import Contacts from CSV</h3>
-            <p style={{ fontSize: '13px', color: '#666', marginBottom: '12px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--ink-3)', marginBottom: '12px' }}>
               Upload a CSV file with columns: <strong>name</strong>, <strong>email</strong>, <strong>phone</strong> (or phone_number/mobile/whatsapp), <strong>company</strong>, <strong>description</strong>
             </p>
             <input type="file" accept=".csv" onChange={e => setImportFile(e.target.files?.[0] || null)}
@@ -142,11 +142,11 @@ const ContactsPage: React.FC = () => {
               }}>
                 <div style={{ fontWeight: 600, marginBottom: '6px' }}>Import Results</div>
                 <div>Total rows: {importResult.totalRows}</div>
-                <div style={{ color: '#059669' }}>Imported: {importResult.imported}</div>
-                <div style={{ color: '#d97706' }}>Skipped (duplicates): {importResult.skipped}</div>
-                <div style={{ color: '#dc2626' }}>Failed: {importResult.failed}</div>
+                <div style={{ color: 'var(--ok)' }}>Imported: {importResult.imported}</div>
+                <div style={{ color: 'var(--warn)' }}>Skipped (duplicates): {importResult.skipped}</div>
+                <div style={{ color: 'var(--danger)' }}>Failed: {importResult.failed}</div>
                 {importResult.errors.length > 0 && (
-                  <div style={{ marginTop: '8px', maxHeight: '100px', overflowY: 'auto', fontSize: '12px', color: '#dc2626' }}>
+                  <div style={{ marginTop: '8px', maxHeight: '100px', overflowY: 'auto', fontSize: '12px', color: 'var(--danger)' }}>
                     {importResult.errors.map((err, i) => <div key={i}>{err}</div>)}
                   </div>
                 )}
@@ -242,7 +242,7 @@ const ContactsPage: React.FC = () => {
         <tbody>
           {contacts.length === 0 ? (
             <tr>
-              <td colSpan={6} style={{ ...styles.td, textAlign: 'center', color: '#999', padding: '40px' }}>
+              <td colSpan={6} style={{ ...styles.td, textAlign: 'center', color: 'var(--ink-4)', padding: '40px' }}>
                 {search ? 'No contacts found' : 'No contacts yet. Create your first contact!'}
               </td>
             </tr>
@@ -259,7 +259,7 @@ const ContactsPage: React.FC = () => {
                 <td style={styles.td}>
                   <button onClick={() => handleEdit(contact)} style={styles.actionBtn}>Edit</button>
                   <button onClick={() => handleDelete(contact.id)}
-                    style={{ ...styles.actionBtn, color: '#dc2626' }}>Delete</button>
+                    style={{ ...styles.actionBtn, color: 'var(--danger)' }}>Delete</button>
                 </td>
               </tr>
             ))
@@ -277,7 +277,7 @@ const ContactsPage: React.FC = () => {
           >
             Previous
           </button>
-          <span style={{ fontSize: '14px', color: '#666' }}>
+          <span style={{ fontSize: '14px', color: 'var(--ink-3)' }}>
             Page {page + 1} of {totalPages}
           </span>
           <button
@@ -295,29 +295,29 @@ const ContactsPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px',
   },
   header: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '20px',
   },
-  title: { margin: 0, fontSize: '18px', color: '#333' },
+  title: { margin: 0, fontSize: '18px', color: 'var(--ink)' },
   primaryBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   cancelBtn: {
-    padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   searchBar: { marginBottom: '16px' },
   searchInput: {
-    width: '100%', padding: '10px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '10px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const,
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   modalOverlay: {
@@ -326,7 +326,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center', alignItems: 'center', zIndex: 1000,
   },
   modal: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '24px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '24px',
     width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto' as const,
   },
   formGrid: {
@@ -338,7 +338,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500, color: '#555',
   },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const,
   },
   formActions: {
@@ -346,23 +346,23 @@ const styles: Record<string, React.CSSProperties> = {
   },
   table: { width: '100%', borderCollapse: 'collapse' as const },
   th: {
-    textAlign: 'left' as const, padding: '12px 8px', borderBottom: '2px solid #eee',
-    fontSize: '13px', color: '#666', textTransform: 'uppercase' as const,
+    textAlign: 'left' as const, padding: '12px 8px', borderBottom: '2px solid var(--line)',
+    fontSize: '13px', color: 'var(--ink-3)', textTransform: 'uppercase' as const,
   },
   tr: { borderBottom: '1px solid #f0f0f0' },
   td: { padding: '12px 8px', fontSize: '14px' },
   actionBtn: {
-    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid #ddd',
+    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--line)',
     borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginRight: '4px',
-    color: '#333',
+    color: 'var(--ink)',
   },
   pagination: {
     display: 'flex', justifyContent: 'center', alignItems: 'center',
     gap: '12px', marginTop: '20px',
   },
   pageBtn: {
-    padding: '6px 12px', border: '1px solid #ddd', borderRadius: '4px',
-    backgroundColor: '#fff', cursor: 'pointer', fontSize: '13px',
+    padding: '6px 12px', border: '1px solid var(--line)', borderRadius: '4px',
+    backgroundColor: 'var(--surface)', cursor: 'pointer', fontSize: '13px',
   },
 };
 

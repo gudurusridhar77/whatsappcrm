@@ -39,15 +39,15 @@ const SurveyPage: React.FC = () => {
   };
 
   if (loading) return <div style={ps.page}><div style={ps.card}>Loading...</div></div>;
-  if (error) return <div style={ps.page}><div style={ps.card}><p style={{ color: '#dc2626' }}>{error}</p></div></div>;
+  if (error) return <div style={ps.page}><div style={ps.card}><p style={{ color: 'var(--danger)' }}>{error}</p></div></div>;
 
   if (submitted || alreadySubmitted) {
     return (
       <div style={ps.page}>
         <div style={ps.card}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>{'\u2705'}</div>
-          <h2 style={{ color: '#333', margin: '0 0 8px 0' }}>Thank you!</h2>
-          <p style={{ color: '#666', fontSize: '15px' }}>
+          <h2 style={{ color: 'var(--ink)', margin: '0 0 8px 0' }}>Thank you!</h2>
+          <p style={{ color: 'var(--ink-3)', fontSize: '15px' }}>
             {submitted ? 'Your feedback has been recorded.' : 'You have already submitted your feedback.'}
           </p>
         </div>
@@ -58,8 +58,8 @@ const SurveyPage: React.FC = () => {
   return (
     <div style={ps.page}>
       <div style={ps.card}>
-        <h2 style={{ margin: '0 0 8px 0', color: '#333' }}>How was your experience?</h2>
-        <p style={{ color: '#666', fontSize: '14px', marginBottom: '24px' }}>
+        <h2 style={{ margin: '0 0 8px 0', color: 'var(--ink)' }}>How was your experience?</h2>
+        <p style={{ color: 'var(--ink-3)', fontSize: '14px', marginBottom: '24px' }}>
           We'd love to hear your feedback. Rate your experience below.
         </p>
 
@@ -100,27 +100,27 @@ const ps: Record<string, React.CSSProperties> = {
     backgroundColor: '#f0f4f8', padding: '20px',
   },
   card: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '40px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '40px',
     boxShadow: '0 4px 20px rgba(0,0,0,0.1)', maxWidth: '520px', width: '100%',
     textAlign: 'center' as const,
   },
   ratingRow: { display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '24px' },
   emojiBtn: {
-    border: '2px solid #e5e7eb', borderRadius: '12px', padding: '12px 8px',
-    cursor: 'pointer', backgroundColor: '#fff', transition: 'all 0.2s',
+    border: '2px solid var(--line)', borderRadius: '12px', padding: '12px 8px',
+    cursor: 'pointer', backgroundColor: 'var(--surface)', transition: 'all 0.2s',
     display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '4px',
     width: '80px',
   },
-  emojiBtnActive: { borderColor: '#1b72e8', backgroundColor: '#eff6ff' },
-  emojiLabel: { fontSize: '11px', color: '#666' },
+  emojiBtnActive: { borderColor: 'var(--accent)', backgroundColor: '#eff6ff' },
+  emojiLabel: { fontSize: '11px', color: 'var(--ink-3)' },
   feedbackSection: { marginTop: '16px' },
   textarea: {
-    width: '100%', padding: '12px', border: '1px solid #ddd', borderRadius: '8px',
+    width: '100%', padding: '12px', border: '1px solid var(--line)', borderRadius: '8px',
     fontSize: '14px', fontFamily: 'inherit', resize: 'vertical' as const,
     boxSizing: 'border-box' as const, marginBottom: '12px',
   },
   submitBtn: {
-    padding: '12px 32px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '12px 32px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', fontSize: '16px', fontWeight: 600,
     cursor: 'pointer',
   },

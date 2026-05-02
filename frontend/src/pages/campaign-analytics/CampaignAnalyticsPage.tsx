@@ -74,7 +74,7 @@ const CampaignAnalyticsPage: React.FC = () => {
   if (loading) {
     return (
       <div style={{ padding: '60px', textAlign: 'center' }}>
-        <div style={{ fontSize: '18px', color: '#666' }}>Loading campaign analytics...</div>
+        <div style={{ fontSize: '18px', color: 'var(--ink-3)' }}>Loading campaign analytics...</div>
       </div>
     );
   }
@@ -82,7 +82,7 @@ const CampaignAnalyticsPage: React.FC = () => {
   if (error) {
     return (
       <div style={{ padding: '60px', textAlign: 'center' }}>
-        <div style={{ color: '#dc2626', fontSize: '16px', marginBottom: '12px' }}>{error}</div>
+        <div style={{ color: 'var(--danger)', fontSize: '16px', marginBottom: '12px' }}>{error}</div>
         <button onClick={loadAnalytics} style={styles.btn}>Retry</button>
       </div>
     );
@@ -93,8 +93,8 @@ const CampaignAnalyticsPage: React.FC = () => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '24px', color: '#111' }}>Campaign Analytics</h2>
-          <p style={{ margin: '4px 0 0', color: '#666', fontSize: '14px' }}>
+          <h2 style={{ margin: 0, fontSize: '24px', color: 'var(--ink)' }}>Campaign Analytics</h2>
+          <p style={{ margin: '4px 0 0', color: 'var(--ink-3)', fontSize: '14px' }}>
             Track broadcast performance and engagement metrics
           </p>
         </div>
@@ -118,15 +118,15 @@ const CampaignAnalyticsPage: React.FC = () => {
         <>
           {/* Metric Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-            <MetricCard label="Total Campaigns" value={aggregate.totalCampaigns} subtitle={`${aggregate.completedCampaigns} completed`} color="#1b72e8" />
+            <MetricCard label="Total Campaigns" value={aggregate.totalCampaigns} subtitle={`${aggregate.completedCampaigns} completed`} color="var(--accent)" />
             <MetricCard label="Total Recipients" value={aggregate.totalRecipients.toLocaleString()} subtitle={`${aggregate.totalSent.toLocaleString()} sent`} color="#8b5cf6" />
-            <MetricCard label="Delivery Rate" value={`${aggregate.deliveryRate}%`} subtitle={`${aggregate.totalDelivered.toLocaleString()} delivered`} color="#22c55e" />
-            <MetricCard label="Read Rate" value={`${aggregate.readRate}%`} subtitle={`${aggregate.totalRead.toLocaleString()} read`} color="#0ea5e9" />
+            <MetricCard label="Delivery Rate" value={`${aggregate.deliveryRate}%`} subtitle={`${aggregate.totalDelivered.toLocaleString()} delivered`} color="var(--ok)" />
+            <MetricCard label="Read Rate" value={`${aggregate.readRate}%`} subtitle={`${aggregate.totalRead.toLocaleString()} read`} color="var(--info)" />
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
-            <MetricCard label="Reply Rate" value={`${aggregate.replyRate}%`} subtitle={`${aggregate.totalReplied.toLocaleString()} replied`} color="#f59e0b" />
-            <MetricCard label="Failure Rate" value={`${aggregate.failureRate}%`} subtitle={`${aggregate.totalFailed.toLocaleString()} failed`} color="#ef4444" />
+            <MetricCard label="Reply Rate" value={`${aggregate.replyRate}%`} subtitle={`${aggregate.totalReplied.toLocaleString()} replied`} color="var(--warn)" />
+            <MetricCard label="Failure Rate" value={`${aggregate.failureRate}%`} subtitle={`${aggregate.totalFailed.toLocaleString()} failed`} color="var(--danger)" />
             <MetricCard label="Sent \u2192 Delivered Drop" value={`${aggregate.sentToDeliveredDropOff}%`} subtitle="drop-off rate" color="#f97316" />
             <MetricCard label="Avg Completion" value={aggregate.avgCompletionMinutes != null ? `${Math.round(aggregate.avgCompletionMinutes)} min` : 'N/A'} subtitle="campaign duration" color="#6366f1" />
           </div>
@@ -136,7 +136,7 @@ const CampaignAnalyticsPage: React.FC = () => {
             <h3 style={styles.cardTitle}>Delivery Funnel</h3>
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: '24px', padding: '20px 0' }}>
               {[
-                { label: 'Recipients', value: aggregate.totalRecipients, color: '#e5e7eb' },
+                { label: 'Recipients', value: aggregate.totalRecipients, color: 'var(--line)' },
                 { label: 'Sent', value: aggregate.totalSent, color: '#93c5fd' },
                 { label: 'Delivered', value: aggregate.totalDelivered, color: '#86efac' },
                 { label: 'Read', value: aggregate.totalRead, color: '#67e8f9' },
@@ -146,14 +146,14 @@ const CampaignAnalyticsPage: React.FC = () => {
                 const height = Math.max(20, (step.value / maxVal) * 180);
                 return (
                   <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '18px', fontWeight: 700, color: '#333' }}>{step.value.toLocaleString()}</span>
+                    <span style={{ fontSize: '18px', fontWeight: 700, color: 'var(--ink)' }}>{step.value.toLocaleString()}</span>
                     <div style={{
                       width: '100%', height: `${height}px`, backgroundColor: step.color,
                       borderRadius: '6px 6px 0 0', transition: 'height 0.3s ease',
                     }} />
-                    <span style={{ fontSize: '12px', color: '#666', fontWeight: 500 }}>{step.label}</span>
+                    <span style={{ fontSize: '12px', color: 'var(--ink-3)', fontWeight: 500 }}>{step.label}</span>
                     {idx > 0 && (
-                      <span style={{ fontSize: '11px', color: '#999' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--ink-4)' }}>
                         {aggregate.totalRecipients > 0 ? `${((step.value / aggregate.totalRecipients) * 100).toFixed(1)}%` : '0%'}
                       </span>
                     )}
@@ -187,7 +187,7 @@ const CampaignAnalyticsPage: React.FC = () => {
                     <div style={{ width: `${barWidth / 4}px`, height: `${(point.failed / maxTrendValue) * 140}px`, backgroundColor: '#fca5a5', borderRadius: '2px 2px 0 0' }} />
                   </div>
                   {deliveryTrend.length <= 31 && (
-                    <span style={{ fontSize: '9px', color: '#999', marginTop: '4px', transform: 'rotate(-45deg)', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontSize: '9px', color: 'var(--ink-4)', marginTop: '4px', transform: 'rotate(-45deg)', whiteSpace: 'nowrap' }}>
                       {point.date.slice(5)}
                     </span>
                   )}
@@ -220,32 +220,32 @@ const CampaignAnalyticsPage: React.FC = () => {
                 {sortedCampaigns.map(c => (
                   <tr key={c.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
                     <td style={styles.td}>
-                      <div style={{ fontWeight: 600, color: '#333' }}>{c.name}</div>
-                      <div style={{ fontSize: '12px', color: '#888' }}>{c.templateName} &middot; {c.inboxName}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{c.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{c.templateName} &middot; {c.inboxName}</div>
                     </td>
                     <td style={styles.td}>
                       <span style={{
                         ...styles.statusBadge,
-                        backgroundColor: c.status === 'COMPLETED' ? '#dcfce7' : c.status === 'IN_PROGRESS' ? '#dbeafe' : c.status === 'FAILED' ? '#fee2e2' : '#f3f4f6',
-                        color: c.status === 'COMPLETED' ? '#166534' : c.status === 'IN_PROGRESS' ? '#1e40af' : c.status === 'FAILED' ? '#991b1b' : '#374151',
+                        backgroundColor: c.status === 'COMPLETED' ? '#dcfce7' : c.status === 'IN_PROGRESS' ? '#dbeafe' : c.status === 'FAILED' ? '#fee2e2' : 'var(--surface-3)',
+                        color: c.status === 'COMPLETED' ? '#166534' : c.status === 'IN_PROGRESS' ? '#1e40af' : c.status === 'FAILED' ? '#991b1b' : 'var(--ink-2)',
                       }}>
                         {c.status}
                       </span>
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>{c.totalCount.toLocaleString()}</td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>
-                      <RateBar value={c.deliveryRate} color="#22c55e" />
+                      <RateBar value={c.deliveryRate} color="var(--ok)" />
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>
-                      <RateBar value={c.readRate} color="#0ea5e9" />
+                      <RateBar value={c.readRate} color="var(--info)" />
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>
-                      <RateBar value={c.replyRate} color="#f59e0b" />
+                      <RateBar value={c.replyRate} color="var(--warn)" />
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>
-                      <RateBar value={c.failureRate} color="#ef4444" />
+                      <RateBar value={c.failureRate} color="var(--danger)" />
                     </td>
-                    <td style={{ ...styles.td, textAlign: 'right', color: '#666' }}>
+                    <td style={{ ...styles.td, textAlign: 'right', color: 'var(--ink-3)' }}>
                       {c.durationMinutes != null ? `${Math.round(c.durationMinutes)}m` : '-'}
                     </td>
                   </tr>
@@ -276,8 +276,8 @@ const CampaignAnalyticsPage: React.FC = () => {
                 {templatePerformance.map(t => (
                   <tr key={t.templateId} style={{ borderBottom: '1px solid #f0f0f0' }}>
                     <td style={styles.td}>
-                      <div style={{ fontWeight: 600, color: '#333' }}>{t.templateName}</div>
-                      <div style={{ fontSize: '11px', color: '#888' }}>{t.category} &middot; {t.timesSent}x used</div>
+                      <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{t.templateName}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--ink-3)' }}>{t.category} &middot; {t.timesSent}x used</div>
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>{t.totalRecipients.toLocaleString()}</td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>{t.deliveryRate}%</td>
@@ -308,7 +308,7 @@ const CampaignAnalyticsPage: React.FC = () => {
                 {inboxBreakdown.map(ib => (
                   <tr key={ib.inboxId} style={{ borderBottom: '1px solid #f0f0f0' }}>
                     <td style={styles.td}>
-                      <div style={{ fontWeight: 600, color: '#333' }}>{ib.inboxName}</div>
+                      <div style={{ fontWeight: 600, color: 'var(--ink)' }}>{ib.inboxName}</div>
                     </td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>{ib.campaignCount}</td>
                     <td style={{ ...styles.td, textAlign: 'right' }}>{ib.totalRecipients.toLocaleString()}</td>
@@ -326,8 +326,8 @@ const CampaignAnalyticsPage: React.FC = () => {
       {campaigns.length === 0 && !loading && (
         <div style={{ ...styles.card, textAlign: 'center', padding: '60px 20px' }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>📊</div>
-          <h3 style={{ margin: '0 0 8px', color: '#333' }}>No campaign data yet</h3>
-          <p style={{ color: '#666', margin: 0 }}>
+          <h3 style={{ margin: '0 0 8px', color: 'var(--ink)' }}>No campaign data yet</h3>
+          <p style={{ color: 'var(--ink-3)', margin: 0 }}>
             Create and send broadcasts to see analytics here.
           </p>
         </div>
@@ -342,11 +342,11 @@ const MetricCard: React.FC<{ label: string; value: string | number; subtitle: st
     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
       <div style={{ width: '4px', height: '32px', backgroundColor: color, borderRadius: '2px' }} />
       <div>
-        <div style={{ fontSize: '12px', color: '#888', fontWeight: 500 }}>{label}</div>
-        <div style={{ fontSize: '24px', fontWeight: 700, color: '#111' }}>{value}</div>
+        <div style={{ fontSize: '12px', color: 'var(--ink-3)', fontWeight: 500 }}>{label}</div>
+        <div style={{ fontSize: '24px', fontWeight: 700, color: 'var(--ink)' }}>{value}</div>
       </div>
     </div>
-    <div style={{ fontSize: '12px', color: '#888' }}>{subtitle}</div>
+    <div style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{subtitle}</div>
   </div>
 );
 
@@ -355,39 +355,39 @@ const RateBar: React.FC<{ value: number; color: string }> = ({ value, color }) =
     <div style={{ width: '60px', height: '6px', backgroundColor: '#f0f0f0', borderRadius: '3px', overflow: 'hidden' }}>
       <div style={{ width: `${Math.min(100, value)}%`, height: '100%', backgroundColor: color, borderRadius: '3px' }} />
     </div>
-    <span style={{ fontSize: '13px', fontWeight: 500, color: '#333', minWidth: '42px', textAlign: 'right' }}>{value}%</span>
+    <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink)', minWidth: '42px', textAlign: 'right' }}>{value}%</span>
   </div>
 );
 
 const Legend: React.FC<{ color: string; label: string }> = ({ color, label }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
     <div style={{ width: '12px', height: '12px', backgroundColor: color, borderRadius: '2px' }} />
-    <span style={{ fontSize: '12px', color: '#666' }}>{label}</span>
+    <span style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{label}</span>
   </div>
 );
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '20px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '20px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)', marginBottom: '16px',
   },
-  cardTitle: { margin: '0 0 16px', fontSize: '16px', fontWeight: 600, color: '#333' },
+  cardTitle: { margin: '0 0 16px', fontSize: '16px', fontWeight: 600, color: 'var(--ink)' },
   btn: {
-    padding: '8px 20px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 20px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px',
   },
   rangeBtn: {
     padding: '6px 14px', border: 'none', borderRadius: '6px',
     cursor: 'pointer', fontSize: '13px', fontWeight: 500,
-    backgroundColor: 'transparent', color: '#666',
+    backgroundColor: 'transparent', color: 'var(--ink-3)',
   },
   rangeBtnActive: {
-    backgroundColor: '#fff', color: '#1b72e8', boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    backgroundColor: 'var(--surface)', color: 'var(--accent)', boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   },
   table: { width: '100%', borderCollapse: 'collapse' as const, fontSize: '13px' },
   th: {
-    textAlign: 'left' as const, padding: '10px 12px', borderBottom: '2px solid #e5e7eb',
-    fontSize: '12px', fontWeight: 600, color: '#666', textTransform: 'uppercase' as const,
+    textAlign: 'left' as const, padding: '10px 12px', borderBottom: '2px solid var(--line)',
+    fontSize: '12px', fontWeight: 600, color: 'var(--ink-3)', textTransform: 'uppercase' as const,
     cursor: 'pointer', whiteSpace: 'nowrap' as const, userSelect: 'none' as const,
   },
   td: { padding: '10px 12px', verticalAlign: 'middle' as const },

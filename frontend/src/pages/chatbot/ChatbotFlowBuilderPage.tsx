@@ -25,15 +25,15 @@ import { chatbotFlowsApi, ChatbotFlowResponse } from '../../api/chatbotFlows';
 // ============================================================
 
 const nodeColors: Record<string, { bg: string; border: string; header: string }> = {
-  start: { bg: '#f0fdf4', border: '#86efac', header: '#059669' },
+  start: { bg: '#f0fdf4', border: '#86efac', header: 'var(--ok)' },
   send_message: { bg: '#eff6ff', border: '#93c5fd', header: '#2563eb' },
-  menu: { bg: '#fef3c7', border: '#fcd34d', header: '#d97706' },
+  menu: { bg: '#fef3c7', border: '#fcd34d', header: 'var(--warn)' },
   wait_for_reply: { bg: '#f3e8ff', border: '#c084fc', header: '#7c3aed' },
   collect_input: { bg: '#fce7f3', border: '#f9a8d4', header: '#db2777' },
   condition: { bg: '#fff7ed', border: '#fdba74', header: '#ea580c' },
-  assign_agent: { bg: '#ecfdf5', border: '#6ee7b7', header: '#059669' },
+  assign_agent: { bg: '#ecfdf5', border: '#6ee7b7', header: 'var(--ok)' },
   assign_team: { bg: '#ecfdf5', border: '#6ee7b7', header: '#047857' },
-  close_conversation: { bg: '#fef2f2', border: '#fca5a5', header: '#dc2626' },
+  close_conversation: { bg: '#fef2f2', border: '#fca5a5', header: 'var(--danger)' },
   end: { bg: '#f1f5f9', border: '#94a3b8', header: '#475569' },
 };
 
@@ -179,7 +179,7 @@ const NodeEditor: React.FC<NodeEditorProps> = ({ node, onUpdate, onClose }) => {
                 conds.push({ operator: 'contains', value: '', handle: `cond_${conds.length}` });
                 updateField('conditions', conds);
               }} style={editorStyles.addBtn}>+ Add Condition</button>
-              <p style={{ fontSize: '11px', color: '#888', marginTop: '4px' }}>
+              <p style={{ fontSize: '11px', color: 'var(--ink-3)', marginTop: '4px' }}>
                 Each condition creates an output handle. Add a "default" edge for the else branch.
               </p>
             </div>
@@ -218,7 +218,7 @@ const FlowNodeComponent: React.FC<NodeProps> = ({ id, data, type, selected }) =>
   return (
     <div style={{
       background: colors.bg,
-      border: `2px solid ${selected ? '#1b72e8' : colors.border}`,
+      border: `2px solid ${selected ? 'var(--accent)' : colors.border}`,
       borderRadius: '8px',
       minWidth: '200px',
       maxWidth: '260px',
@@ -234,7 +234,7 @@ const FlowNodeComponent: React.FC<NodeProps> = ({ id, data, type, selected }) =>
       <div style={{
         padding: '6px 10px',
         backgroundColor: colors.header,
-        color: '#fff',
+        color: 'var(--surface)',
         fontSize: '11px',
         fontWeight: 600,
         borderRadius: '6px 6px 0 0',
@@ -247,11 +247,11 @@ const FlowNodeComponent: React.FC<NodeProps> = ({ id, data, type, selected }) =>
       </div>
 
       {/* Body */}
-      <div style={{ padding: '8px 10px', fontSize: '12px', color: '#333' }}>
+      <div style={{ padding: '8px 10px', fontSize: '12px', color: 'var(--ink)' }}>
         <div style={{ fontWeight: 600, marginBottom: '4px' }}>{nodeData.label || nodeType}</div>
         {nodeData.message && (
           <div style={{
-            fontSize: '11px', color: '#666', maxHeight: '60px', overflow: 'hidden',
+            fontSize: '11px', color: 'var(--ink-3)', maxHeight: '60px', overflow: 'hidden',
             textOverflow: 'ellipsis', whiteSpace: 'pre-wrap',
           }}>
             {(nodeData.message as string).substring(0, 100)}{(nodeData.message as string).length > 100 ? '...' : ''}
@@ -291,7 +291,7 @@ const FlowNodeComponent: React.FC<NodeProps> = ({ id, data, type, selected }) =>
           ))}
           <Handle type="source" position={Position.Bottom} id="default"
             style={{
-              width: 8, height: 8, backgroundColor: '#9ca3af',
+              width: 8, height: 8, backgroundColor: 'var(--ink-4)',
               left: `${(((nodeData.conditions as any[]).length + 1) / ((nodeData.conditions as any[]).length + 2)) * 100}%`,
             }} />
         </>
@@ -424,7 +424,7 @@ const ChatbotFlowBuilderPage: React.FC = () => {
   }, [currentAccountId, flowId, nodes, edges]);
 
   if (!flow) {
-    return <div style={{ padding: '40px', textAlign: 'center', color: '#888' }}>Loading flow builder...</div>;
+    return <div style={{ padding: '40px', textAlign: 'center', color: 'var(--ink-3)' }}>Loading flow builder...</div>;
   }
 
   return (
@@ -436,20 +436,20 @@ const ChatbotFlowBuilderPage: React.FC = () => {
           <h3 style={{ margin: 0, fontSize: '15px' }}>{flow.name}</h3>
           <span style={{
             padding: '2px 8px', borderRadius: '10px', fontSize: '11px',
-            backgroundColor: flow.active ? '#d1fae5' : '#f3f4f6',
-            color: flow.active ? '#059669' : '#888',
+            backgroundColor: flow.active ? '#d1fae5' : 'var(--surface-3)',
+            color: flow.active ? 'var(--ok)' : 'var(--ink-3)',
           }}>{flow.active ? 'Active' : 'Draft'}</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {error && <span style={{ color: '#dc2626', fontSize: '13px' }}>{error}</span>}
-          {saved && <span style={{ color: '#059669', fontSize: '13px' }}>Saved!</span>}
+          {error && <span style={{ color: 'var(--danger)', fontSize: '13px' }}>{error}</span>}
+          {saved && <span style={{ color: 'var(--ok)', fontSize: '13px' }}>Saved!</span>}
           {selectedNode && selectedNode.type !== 'start' && (
-            <button onClick={deleteNode} style={{ ...toolbarStyles.btn, color: '#dc2626', borderColor: '#fca5a5' }}>
+            <button onClick={deleteNode} style={{ ...toolbarStyles.btn, color: 'var(--danger)', borderColor: '#fca5a5' }}>
               Delete Node
             </button>
           )}
           <button onClick={handleSave} disabled={saving}
-            style={{ ...toolbarStyles.btn, backgroundColor: '#1b72e8', color: '#fff', border: 'none', opacity: saving ? 0.6 : 1 }}>
+            style={{ ...toolbarStyles.btn, backgroundColor: 'var(--accent)', color: 'var(--surface)', border: 'none', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving...' : 'Save Flow'}
           </button>
         </div>
@@ -474,7 +474,7 @@ const ChatbotFlowBuilderPage: React.FC = () => {
               {item.label}
             </button>
           ))}
-          <div style={{ marginTop: '16px', fontSize: '11px', color: '#888', lineHeight: 1.4 }}>
+          <div style={{ marginTop: '16px', fontSize: '11px', color: 'var(--ink-3)', lineHeight: 1.4 }}>
             <strong>Tips:</strong><br />
             • Click a node to edit<br />
             • Drag handles to connect<br />
@@ -508,7 +508,7 @@ const ChatbotFlowBuilderPage: React.FC = () => {
             <MiniMap
               nodeColor={(n) => {
                 const c = nodeColors[n.type || 'start'];
-                return c ? c.header : '#888';
+                return c ? c.header : 'var(--ink-3)';
               }}
               style={{ borderRadius: '6px' }}
             />
@@ -535,46 +535,46 @@ const ChatbotFlowBuilderPage: React.FC = () => {
 const toolbarStyles: Record<string, React.CSSProperties> = {
   bar: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '8px 16px', backgroundColor: '#fff', borderBottom: '1px solid #e5e7eb',
+    padding: '8px 16px', backgroundColor: 'var(--surface)', borderBottom: '1px solid var(--line)',
     zIndex: 10,
   },
   backBtn: {
-    padding: '4px 10px', backgroundColor: '#f3f4f6', border: '1px solid #ddd',
+    padding: '4px 10px', backgroundColor: 'var(--surface-3)', border: '1px solid var(--line)',
     borderRadius: '4px', cursor: 'pointer', fontSize: '13px',
   },
   btn: {
-    padding: '6px 14px', backgroundColor: '#fff', border: '1px solid #ddd',
+    padding: '6px 14px', backgroundColor: 'var(--surface)', border: '1px solid var(--line)',
     borderRadius: '4px', cursor: 'pointer', fontSize: '13px',
   },
 };
 
 const paletteStyles: Record<string, React.CSSProperties> = {
   panel: {
-    width: '180px', backgroundColor: '#fafafa', borderRight: '1px solid #e5e7eb',
+    width: '180px', backgroundColor: 'var(--surface-2)', borderRight: '1px solid var(--line)',
     padding: '12px', overflowY: 'auto',
   },
   title: {
-    fontSize: '12px', fontWeight: 600, color: '#666', textTransform: 'uppercase',
+    fontSize: '12px', fontWeight: 600, color: 'var(--ink-3)', textTransform: 'uppercase',
     marginBottom: '10px', letterSpacing: '0.5px',
   },
   nodeBtn: {
     display: 'block', width: '100%', padding: '8px 10px', marginBottom: '6px',
-    backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '6px',
+    backgroundColor: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '6px',
     cursor: 'pointer', fontSize: '12px', textAlign: 'left', transition: 'all 0.15s',
   },
 };
 
 const editorStyles: Record<string, React.CSSProperties> = {
   panel: {
-    width: '300px', backgroundColor: '#fff', borderLeft: '1px solid #e5e7eb',
+    width: '300px', backgroundColor: 'var(--surface)', borderLeft: '1px solid var(--line)',
     display: 'flex', flexDirection: 'column', overflow: 'hidden',
   },
   header: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '10px 12px', borderBottom: '1px solid #e5e7eb', fontWeight: 600, fontSize: '14px',
+    padding: '10px 12px', borderBottom: '1px solid var(--line)', fontWeight: 600, fontSize: '14px',
   },
   closeBtn: {
-    background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: '#888',
+    background: 'none', border: 'none', fontSize: '18px', cursor: 'pointer', color: 'var(--ink-3)',
     padding: '0 4px',
   },
   body: {
@@ -585,12 +585,12 @@ const editorStyles: Record<string, React.CSSProperties> = {
     display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 500, color: '#555',
   },
   input: {
-    width: '100%', padding: '6px 8px', border: '1px solid #ddd', borderRadius: '4px',
+    width: '100%', padding: '6px 8px', border: '1px solid var(--line)', borderRadius: '4px',
     fontSize: '13px', boxSizing: 'border-box' as const,
   },
   addBtn: {
-    padding: '4px 10px', backgroundColor: '#f3f4f6', border: '1px solid #ddd',
-    borderRadius: '4px', cursor: 'pointer', fontSize: '12px', color: '#1b72e8',
+    padding: '4px 10px', backgroundColor: 'var(--surface-3)', border: '1px solid var(--line)',
+    borderRadius: '4px', cursor: 'pointer', fontSize: '12px', color: 'var(--accent)',
   },
 };
 

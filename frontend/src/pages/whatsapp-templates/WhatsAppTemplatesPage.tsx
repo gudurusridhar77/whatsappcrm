@@ -6,10 +6,10 @@ import { inboxesApi, Inbox } from '../../api/inboxes';
 const statusColors: Record<string, { bg: string; color: string }> = {
   APPROVED: { bg: '#f0fdf4', color: '#15803d' },
   PENDING: { bg: '#fffbeb', color: '#92400e' },
-  REJECTED: { bg: '#fef2f2', color: '#dc2626' },
+  REJECTED: { bg: '#fef2f2', color: 'var(--danger)' },
   PAUSED: { bg: '#f5f3ff', color: '#7c3aed' },
-  DISABLED: { bg: '#f9fafb', color: '#6b7280' },
-  DELETED: { bg: '#f9fafb', color: '#9ca3af' },
+  DISABLED: { bg: 'var(--surface-2)', color: 'var(--ink-3)' },
+  DELETED: { bg: 'var(--surface-2)', color: 'var(--ink-4)' },
 };
 
 const categoryLabels: Record<string, string> = {
@@ -214,8 +214,8 @@ const WhatsAppTemplatesPage: React.FC = () => {
           )}
           {headerType !== 'NONE' && headerType !== 'TEXT' && (
             <div style={{
-              backgroundColor: '#e5e7eb', borderRadius: '8px', padding: '24px',
-              textAlign: 'center' as const, marginBottom: '8px', fontSize: '12px', color: '#888',
+              backgroundColor: 'var(--line)', borderRadius: '8px', padding: '24px',
+              textAlign: 'center' as const, marginBottom: '8px', fontSize: '12px', color: 'var(--ink-3)',
             }}>
               [{headerType}]
             </div>
@@ -228,12 +228,12 @@ const WhatsAppTemplatesPage: React.FC = () => {
 
           {/* Footer */}
           {footerText && (
-            <div style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>{footerText}</div>
+            <div style={{ fontSize: '12px', color: 'var(--ink-4)', marginTop: '8px' }}>{footerText}</div>
           )}
 
           {/* Buttons */}
           {buttons.length > 0 && (
-            <div style={{ borderTop: '1px solid #e5e7eb', marginTop: '12px', paddingTop: '8px' }}>
+            <div style={{ borderTop: '1px solid var(--line)', marginTop: '12px', paddingTop: '8px' }}>
               {buttons.map((btn: TemplateButton, i: number) => (
                 <div key={i} style={styles.previewBtn}>
                   {btn.type === 'URL' ? '🔗' : btn.type === 'PHONE_NUMBER' ? '📞' : '↩️'} {btn.text}
@@ -250,8 +250,8 @@ const WhatsAppTemplatesPage: React.FC = () => {
     <div>
       <div style={styles.headerRow}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '20px', color: '#333' }}>WhatsApp Templates</h2>
-          <p style={{ margin: '4px 0 0', fontSize: '13px', color: '#888' }}>
+          <h2 style={{ margin: 0, fontSize: '20px', color: 'var(--ink)' }}>WhatsApp Templates</h2>
+          <p style={{ margin: '4px 0 0', fontSize: '13px', color: 'var(--ink-3)' }}>
             Create and manage message templates for WhatsApp Business
           </p>
         </div>
@@ -387,7 +387,7 @@ const WhatsAppTemplatesPage: React.FC = () => {
                   Buttons (optional, max 3)
                   {formButtons.length < 3 && (
                     <button type="button" onClick={addButton}
-                      style={{ marginLeft: '12px', fontSize: '12px', color: '#1b72e8', background: 'none', border: 'none', cursor: 'pointer' }}>
+                      style={{ marginLeft: '12px', fontSize: '12px', color: 'var(--accent)', background: 'none', border: 'none', cursor: 'pointer' }}>
                       + Add Button
                     </button>
                   )}
@@ -411,7 +411,7 @@ const WhatsAppTemplatesPage: React.FC = () => {
                         style={styles.input} placeholder="+1234567890" required />
                     )}
                     <button type="button" onClick={() => removeButton(i)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '18px' }}>
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)', fontSize: '18px' }}>
                       ×
                     </button>
                   </div>
@@ -455,14 +455,14 @@ const WhatsAppTemplatesPage: React.FC = () => {
                       <tr key={t.id}
                         style={{
                           ...styles.tr,
-                          backgroundColor: selectedTemplate?.id === t.id ? '#f0f7ff' : 'transparent',
+                          backgroundColor: selectedTemplate?.id === t.id ? 'var(--accent-soft)' : 'transparent',
                           cursor: 'pointer',
                         }}
                         onClick={() => setSelectedTemplate(t)}
                       >
                         <td style={styles.td}>
                           <div style={{ fontWeight: 500 }}>{t.name}</div>
-                          <div style={{ fontSize: '12px', color: '#888' }}>{t.inboxName}</div>
+                          <div style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{t.inboxName}</div>
                         </td>
                         <td style={styles.td}>
                           <span style={styles.categoryBadge}>
@@ -484,7 +484,7 @@ const WhatsAppTemplatesPage: React.FC = () => {
                         </td>
                         <td style={styles.td}>
                           {t.bodyParamCount > 0 ? (
-                            <span style={{ fontSize: '13px', color: '#666' }}>
+                            <span style={{ fontSize: '13px', color: 'var(--ink-3)' }}>
                               {t.bodyParamCount} param{t.bodyParamCount !== 1 ? 's' : ''}
                             </span>
                           ) : (
@@ -495,7 +495,7 @@ const WhatsAppTemplatesPage: React.FC = () => {
                           <button onClick={(e) => { e.stopPropagation(); handleEdit(t); }}
                             style={styles.actionBtn}>Edit</button>
                           <button onClick={(e) => { e.stopPropagation(); handleDelete(t.id); }}
-                            style={{ ...styles.actionBtn, color: '#dc2626' }}>Delete</button>
+                            style={{ ...styles.actionBtn, color: 'var(--danger)' }}>Delete</button>
                         </td>
                       </tr>
                     );
@@ -529,13 +529,13 @@ const WhatsAppTemplatesPage: React.FC = () => {
                 )}
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Meta ID</span>
-                  <span style={{ fontSize: '12px', color: '#666', fontFamily: 'monospace' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--ink-3)', fontFamily: 'monospace' }}>
                     {selectedTemplate.externalId || 'Not synced'}
                   </span>
                 </div>
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Created</span>
-                  <span style={{ fontSize: '13px', color: '#666' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--ink-3)' }}>
                     {new Date(selectedTemplate.createdAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -572,31 +572,31 @@ const styles: Record<string, React.CSSProperties> = {
     marginBottom: '20px', flexWrap: 'wrap' as const, gap: '12px',
   },
   card: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '20px', marginBottom: '16px',
   },
-  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: '#333' },
+  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: 'var(--ink)' },
   field: { marginBottom: '14px' },
   label: { display: 'block', fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '6px' },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '6px', fontSize: '14px', outline: 'none', boxSizing: 'border-box' as const,
   },
   select: {
-    padding: '8px 12px', border: '1px solid #ddd', borderRadius: '6px',
-    fontSize: '14px', outline: 'none', backgroundColor: '#fff',
+    padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '6px',
+    fontSize: '14px', outline: 'none', backgroundColor: 'var(--surface)',
   },
-  hint: { fontSize: '11px', color: '#999', marginTop: '4px' },
+  hint: { fontSize: '11px', color: 'var(--ink-4)', marginTop: '4px' },
   primaryBtn: {
-    padding: '8px 20px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 20px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: 500,
   },
   secondaryBtn: {
-    padding: '8px 20px', backgroundColor: '#fff', color: '#333',
-    border: '1px solid #ddd', borderRadius: '6px', cursor: 'pointer', fontSize: '14px',
+    padding: '8px 20px', backgroundColor: 'var(--surface)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '6px', cursor: 'pointer', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   success: {
@@ -605,26 +605,26 @@ const styles: Record<string, React.CSSProperties> = {
   },
   emptyState: {
     textAlign: 'center' as const, padding: '60px 20px',
-    backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    color: '#666',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    color: 'var(--ink-3)',
   },
   th: {
-    textAlign: 'left' as const, padding: '10px 8px', borderBottom: '2px solid #eee',
-    fontSize: '12px', color: '#888', textTransform: 'uppercase' as const,
+    textAlign: 'left' as const, padding: '10px 8px', borderBottom: '2px solid var(--line)',
+    fontSize: '12px', color: 'var(--ink-3)', textTransform: 'uppercase' as const,
   },
   tr: { borderBottom: '1px solid #f0f0f0' },
   td: { padding: '12px 8px', fontSize: '14px' },
   actionBtn: {
-    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid #ddd',
-    borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginRight: '4px', color: '#333',
+    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--line)',
+    borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginRight: '4px', color: 'var(--ink)',
   },
   categoryBadge: {
     padding: '2px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 500,
-    backgroundColor: '#f3f4f6', color: '#555',
+    backgroundColor: 'var(--surface-3)', color: '#555',
   },
   preview: { width: '320px', flexShrink: 0 },
   previewLabel: {
-    fontSize: '12px', fontWeight: 600, color: '#888',
+    fontSize: '12px', fontWeight: 600, color: 'var(--ink-3)',
     textTransform: 'uppercase' as const, marginBottom: '8px',
   },
   previewPhone: {
@@ -633,14 +633,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   previewBtn: {
     textAlign: 'center' as const, padding: '8px', fontSize: '13px',
-    color: '#1b72e8', fontWeight: 500, borderBottom: '1px solid #e5e7eb',
+    color: 'var(--accent)', fontWeight: 500, borderBottom: '1px solid var(--line)',
     cursor: 'default',
   },
   detailRow: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '8px 0', borderBottom: '1px solid #f5f5f5',
+    padding: '8px 0', borderBottom: '1px solid var(--surface-3)',
   },
-  detailLabel: { fontSize: '13px', color: '#888' },
+  detailLabel: { fontSize: '13px', color: 'var(--ink-3)' },
 };
 
 export default WhatsAppTemplatesPage;

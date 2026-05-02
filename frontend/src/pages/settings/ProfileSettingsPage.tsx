@@ -3,9 +3,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import { authApi } from '../../api/auth';
 
 const availabilityOptions = [
-  { value: 'ONLINE', label: 'Online', color: '#22c55e', desc: 'You are available to take conversations' },
-  { value: 'BUSY', label: 'Busy', color: '#f59e0b', desc: 'You are available but occupied' },
-  { value: 'OFFLINE', label: 'Offline', color: '#9ca3af', desc: 'You are not available' },
+  { value: 'ONLINE', label: 'Online', color: 'var(--ok)', desc: 'You are available to take conversations' },
+  { value: 'BUSY', label: 'Busy', color: 'var(--warn)', desc: 'You are available but occupied' },
+  { value: 'OFFLINE', label: 'Offline', color: 'var(--ink-4)', desc: 'You are not available' },
 ];
 
 const ProfileSettingsPage: React.FC = () => {
@@ -66,7 +66,7 @@ const ProfileSettingsPage: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '640px' }}>
-      <h2 style={{ margin: '0 0 24px', fontSize: '20px', color: '#333' }}>Profile Settings</h2>
+      <h2 style={{ margin: '0 0 24px', fontSize: '20px', color: 'var(--ink)' }}>Profile Settings</h2>
 
       {/* Availability Section */}
       <div style={styles.card}>
@@ -78,9 +78,9 @@ const ProfileSettingsPage: React.FC = () => {
               onClick={() => handleAvailability(opt.value)}
               style={{
                 flex: 1, minWidth: '140px', padding: '16px',
-                border: user?.availability === opt.value ? `2px solid ${opt.color}` : '2px solid #e5e7eb',
+                border: user?.availability === opt.value ? `2px solid ${opt.color}` : '2px solid var(--line)',
                 borderRadius: '8px', cursor: 'pointer',
-                backgroundColor: user?.availability === opt.value ? `${opt.color}10` : '#fff',
+                backgroundColor: user?.availability === opt.value ? `${opt.color}10` : 'var(--surface)',
                 textAlign: 'left' as const,
               }}
             >
@@ -89,9 +89,9 @@ const ProfileSettingsPage: React.FC = () => {
                   width: '12px', height: '12px', borderRadius: '50%',
                   backgroundColor: opt.color,
                 }} />
-                <span style={{ fontWeight: 600, fontSize: '14px', color: '#333' }}>{opt.label}</span>
+                <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--ink)' }}>{opt.label}</span>
               </div>
-              <div style={{ fontSize: '12px', color: '#888' }}>{opt.desc}</div>
+              <div style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{opt.desc}</div>
             </button>
           ))}
         </div>
@@ -117,7 +117,7 @@ const ProfileSettingsPage: React.FC = () => {
           </div>
           <div style={styles.field}>
             <label style={styles.label}>Email</label>
-            <input type="email" value={user?.email || ''} style={{ ...styles.input, backgroundColor: '#f5f5f5' }}
+            <input type="email" value={user?.email || ''} style={{ ...styles.input, backgroundColor: 'var(--surface-3)' }}
               disabled />
             <p style={styles.hint}>Email cannot be changed</p>
           </div>
@@ -161,20 +161,20 @@ const ProfileSettingsPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px',
     marginBottom: '20px',
   },
-  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: '#333' },
+  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: 'var(--ink)' },
   field: { marginBottom: '16px' },
   label: { display: 'block', fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '6px' },
   input: {
-    width: '100%', padding: '10px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '10px 12px', border: '1px solid var(--line)',
     borderRadius: '6px', fontSize: '14px', outline: 'none', boxSizing: 'border-box' as const,
   },
-  hint: { fontSize: '12px', color: '#999', marginTop: '4px' },
+  hint: { fontSize: '12px', color: 'var(--ink-4)', marginTop: '4px' },
   primaryBtn: {
-    padding: '10px 24px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 24px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: 500,
   },
   success: {
@@ -182,7 +182,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
 };

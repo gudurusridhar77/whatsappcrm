@@ -4,9 +4,9 @@ import { accountApi } from '../../api/account';
 import { AccountUser } from '../../types';
 
 const availabilityColors: Record<string, string> = {
-  ONLINE: '#22c55e',
-  BUSY: '#f59e0b',
-  OFFLINE: '#9ca3af',
+  ONLINE: 'var(--ok)',
+  BUSY: 'var(--warn)',
+  OFFLINE: 'var(--ink-4)',
 };
 
 const DashboardPage: React.FC = () => {
@@ -86,16 +86,16 @@ const DashboardPage: React.FC = () => {
       {/* Availability Summary */}
       <div style={{ display: 'flex', gap: '16px', marginBottom: '24px' }}>
         {[
-          { label: 'Online', count: onlineMembers.length, color: '#22c55e', bg: '#f0fdf4' },
-          { label: 'Busy', count: busyMembers.length, color: '#f59e0b', bg: '#fffbeb' },
-          { label: 'Offline', count: offlineMembers.length, color: '#9ca3af', bg: '#f9fafb' },
+          { label: 'Online', count: onlineMembers.length, color: 'var(--ok)', bg: '#f0fdf4' },
+          { label: 'Busy', count: busyMembers.length, color: 'var(--warn)', bg: '#fffbeb' },
+          { label: 'Offline', count: offlineMembers.length, color: 'var(--ink-4)', bg: 'var(--surface-2)' },
         ].map(s => (
           <div key={s.label} style={{
             flex: 1, padding: '16px 20px', backgroundColor: s.bg,
             borderRadius: '8px', borderLeft: `4px solid ${s.color}`,
           }}>
             <div style={{ fontSize: '24px', fontWeight: 700, color: s.color }}>{s.count}</div>
-            <div style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>{s.label}</div>
+            <div style={{ fontSize: '13px', color: 'var(--ink-3)', marginTop: '4px' }}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -146,7 +146,7 @@ const DashboardPage: React.FC = () => {
                     <div style={{ position: 'relative' }}>
                       <div style={{
                         width: '32px', height: '32px', borderRadius: '50%',
-                        backgroundColor: '#e5e7eb', display: 'flex',
+                        backgroundColor: 'var(--line)', display: 'flex',
                         alignItems: 'center', justifyContent: 'center',
                         fontSize: '13px', fontWeight: 600, color: '#555',
                       }}>
@@ -155,14 +155,14 @@ const DashboardPage: React.FC = () => {
                       <div style={{
                         position: 'absolute', bottom: '-1px', right: '-1px',
                         width: '10px', height: '10px', borderRadius: '50%',
-                        backgroundColor: availabilityColors[member.availability] || '#9ca3af',
-                        border: '2px solid #fff',
+                        backgroundColor: availabilityColors[member.availability] || 'var(--ink-4)',
+                        border: '2px solid var(--surface)',
                       }} />
                     </div>
                     <div>
                       <div style={{ fontWeight: 500, fontSize: '14px' }}>{member.userName}</div>
                       {member.displayName && member.displayName !== member.userName && (
-                        <div style={{ fontSize: '12px', color: '#888' }}>{member.displayName}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{member.displayName}</div>
                       )}
                     </div>
                   </div>
@@ -173,12 +173,12 @@ const DashboardPage: React.FC = () => {
                     display: 'inline-flex', alignItems: 'center', gap: '6px',
                     padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 500,
                     backgroundColor: member.availability === 'ONLINE' ? '#f0fdf4' :
-                      member.availability === 'BUSY' ? '#fffbeb' : '#f9fafb',
-                    color: availabilityColors[member.availability] || '#9ca3af',
+                      member.availability === 'BUSY' ? '#fffbeb' : 'var(--surface-2)',
+                    color: availabilityColors[member.availability] || 'var(--ink-4)',
                   }}>
                     <div style={{
                       width: '7px', height: '7px', borderRadius: '50%',
-                      backgroundColor: availabilityColors[member.availability] || '#9ca3af',
+                      backgroundColor: availabilityColors[member.availability] || 'var(--ink-4)',
                     }} />
                     {member.availability || 'OFFLINE'}
                   </span>
@@ -186,8 +186,8 @@ const DashboardPage: React.FC = () => {
                 <td style={styles.td}>
                   <span style={{
                     ...styles.roleBadge,
-                    backgroundColor: member.role === 'ADMIN' ? '#dbeafe' : '#f3f4f6',
-                    color: member.role === 'ADMIN' ? '#1d4ed8' : '#374151',
+                    backgroundColor: member.role === 'ADMIN' ? '#dbeafe' : 'var(--surface-3)',
+                    color: member.role === 'ADMIN' ? '#1d4ed8' : 'var(--ink-2)',
                   }}>
                     {member.role}
                   </span>
@@ -204,7 +204,7 @@ const DashboardPage: React.FC = () => {
                           Make {member.role === 'ADMIN' ? 'Agent' : 'Admin'}
                         </button>
                         <button onClick={() => handleRemove(member.userId)}
-                          style={{ ...styles.actionBtn, color: '#dc2626' }}>
+                          style={{ ...styles.actionBtn, color: 'var(--danger)' }}>
                           Remove
                         </button>
                       </>
@@ -222,33 +222,33 @@ const DashboardPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   section: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px',
   },
   sectionHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '20px',
   },
-  sectionTitle: { margin: 0, fontSize: '18px', color: '#333' },
+  sectionTitle: { margin: 0, fontSize: '18px', color: 'var(--ink)' },
   primaryBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   inviteForm: {
     display: 'flex', gap: '8px', marginBottom: '20px', flexWrap: 'wrap' as const,
   },
   input: {
-    padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px',
+    padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px',
     fontSize: '14px', flex: 1, minWidth: '150px',
   },
   table: { width: '100%', borderCollapse: 'collapse' as const },
   th: {
-    textAlign: 'left' as const, padding: '12px 8px', borderBottom: '2px solid #eee',
-    fontSize: '13px', color: '#666', textTransform: 'uppercase' as const,
+    textAlign: 'left' as const, padding: '12px 8px', borderBottom: '2px solid var(--line)',
+    fontSize: '13px', color: 'var(--ink-3)', textTransform: 'uppercase' as const,
   },
   tr: { borderBottom: '1px solid #f0f0f0' },
   td: { padding: '12px 8px', fontSize: '14px' },
@@ -256,9 +256,9 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 500,
   },
   actionBtn: {
-    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid #ddd',
+    padding: '4px 8px', backgroundColor: 'transparent', border: '1px solid var(--line)',
     borderRadius: '4px', cursor: 'pointer', fontSize: '12px', marginRight: '4px',
-    color: '#333',
+    color: 'var(--ink)',
   },
 };
 

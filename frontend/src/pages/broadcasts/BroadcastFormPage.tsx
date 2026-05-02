@@ -157,7 +157,7 @@ const BroadcastFormPage: React.FC = () => {
               </p>
               {bodyParams.map((p, i) => (
                 <div key={i} style={{ marginBottom: '6px' }}>
-                  <label style={{ fontSize: '12px', color: '#888' }}>{`{{${i + 1}}}`}</label>
+                  <label style={{ fontSize: '12px', color: 'var(--ink-3)' }}>{`{{${i + 1}}}`}</label>
                   <input type="text" value={p}
                     onChange={e => {
                       const next = [...bodyParams];
@@ -189,7 +189,7 @@ const BroadcastFormPage: React.FC = () => {
             <div style={styles.contactPicker}>
               <input type="text" value={contactSearch} onChange={e => setContactSearch(e.target.value)}
                 placeholder="Search contacts..." style={{ ...styles.input, marginBottom: '8px' }} />
-              <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginBottom: '8px' }}>
                 {selectedContactIds.length} contacts selected
               </div>
               <div style={styles.contactList}>
@@ -198,7 +198,7 @@ const BroadcastFormPage: React.FC = () => {
                     <input type="checkbox" checked={selectedContactIds.includes(c.id)}
                       onChange={() => toggleContact(c.id)} />
                     <span style={{ fontWeight: 500 }}>{c.name}</span>
-                    <span style={{ color: '#888' }}>{c.phoneNumber}</span>
+                    <span style={{ color: 'var(--ink-3)' }}>{c.phoneNumber}</span>
                   </label>
                 ))}
               </div>
@@ -230,20 +230,20 @@ const styles: Record<string, React.CSSProperties> = {
   headerBar: { marginBottom: '16px' },
   backLink: {
     background: 'none', border: 'none', padding: '4px 0', cursor: 'pointer',
-    color: '#1b72e8', fontSize: '13px', fontWeight: 500,
+    color: 'var(--accent)', fontSize: '13px', fontWeight: 500,
   },
-  title: { margin: '6px 0 0', fontSize: '20px', color: '#222' },
+  title: { margin: '6px 0 0', fontSize: '20px', color: 'var(--ink)' },
   errorBanner: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px 16px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px 16px',
     borderRadius: '6px', marginBottom: '16px', fontSize: '14px',
   },
   form: { display: 'flex', flexDirection: 'column', gap: '16px' },
   card: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)', padding: '20px',
   },
   sectionTitle: {
-    margin: '0 0 14px', fontSize: '15px', fontWeight: 600, color: '#333',
+    margin: '0 0 14px', fontSize: '15px', fontWeight: 600, color: 'var(--ink)',
   },
   grid: {
     display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '12px',
@@ -254,10 +254,10 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 500, color: '#555',
   },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box',
   },
-  hint: { fontSize: '12px', color: '#666', margin: '2px 0 8px' },
+  hint: { fontSize: '12px', color: 'var(--ink-3)', margin: '2px 0 8px' },
   preview: {
     backgroundColor: '#f0fdf4', border: '1px solid #86efac',
     borderRadius: '6px', padding: '12px', marginTop: '12px',
@@ -265,39 +265,39 @@ const styles: Record<string, React.CSSProperties> = {
   previewLabel: {
     fontSize: '12px', fontWeight: 600, color: '#166534', marginBottom: '4px',
   },
-  previewBody: { fontSize: '13px', color: '#333', whiteSpace: 'pre-wrap' },
+  previewBody: { fontSize: '13px', color: 'var(--ink)', whiteSpace: 'pre-wrap' },
   radioRow: { display: 'flex', flexWrap: 'wrap', gap: '16px' },
   radioLabel: {
     display: 'flex', alignItems: 'center', gap: '6px',
     cursor: 'pointer', fontSize: '14px',
   },
   contactPicker: {
-    border: '1px solid #e5e7eb', borderRadius: '6px',
+    border: '1px solid var(--line)', borderRadius: '6px',
     padding: '12px', marginTop: '12px',
   },
   contactList: { maxHeight: '240px', overflowY: 'auto' },
   contactItem: {
     display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 4px',
-    cursor: 'pointer', borderBottom: '1px solid #f3f4f6', fontSize: '13px',
+    cursor: 'pointer', borderBottom: '1px solid var(--surface-3)', fontSize: '13px',
   },
   actions: {
     position: 'sticky', bottom: 0, zIndex: 10,
     display: 'flex', justifyContent: 'flex-end', gap: '8px',
     padding: '12px 16px',
-    backgroundColor: '#fff',
-    borderTop: '1px solid #e5e7eb',
+    backgroundColor: 'var(--surface)',
+    borderTop: '1px solid var(--line)',
     borderRadius: '0 0 8px 8px',
     boxShadow: '0 -2px 8px rgba(0,0,0,0.04)',
     marginTop: '8px',
   },
   primaryBtn: {
-    padding: '10px 18px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 18px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
     fontWeight: 500,
   },
   cancelBtn: {
-    padding: '10px 18px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '10px 18px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
 };
 

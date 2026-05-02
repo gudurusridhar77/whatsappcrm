@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { labelsApi, LabelResponse } from '../../api/labels';
 
 const PRESET_COLORS = [
-  '#1b72e8', '#059669', '#dc2626', '#d97706', '#7c3aed',
+  'var(--accent)', 'var(--ok)', 'var(--danger)', 'var(--warn)', '#7c3aed',
   '#db2777', '#0891b2', '#4f46e5', '#ea580c', '#65a30d',
 ];
 
@@ -18,7 +18,7 @@ const LabelsPage: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState('#1b72e8');
+  const [color, setColor] = useState('var(--accent)');
   const [showOnSidebar, setShowOnSidebar] = useState(true);
 
   const loadLabels = useCallback(async () => {
@@ -38,7 +38,7 @@ const LabelsPage: React.FC = () => {
   const resetForm = () => {
     setTitle('');
     setDescription('');
-    setColor('#1b72e8');
+    setColor('var(--accent)');
     setShowOnSidebar(true);
     setEditingId(null);
     setShowForm(false);
@@ -205,28 +205,28 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '20px',
   },
-  title: { margin: 0, fontSize: '22px', color: '#333' },
+  title: { margin: 0, fontSize: '22px', color: 'var(--ink)' },
   addBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '10px 14px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '10px 14px',
     borderRadius: '6px', marginBottom: '16px', fontSize: '14px',
   },
   success: {
-    backgroundColor: '#f0fdf4', color: '#16a34a', padding: '10px 14px',
+    backgroundColor: '#f0fdf4', color: 'var(--ok)', padding: '10px 14px',
     borderRadius: '6px', marginBottom: '16px', fontSize: '14px',
   },
   formCard: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '20px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '20px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '24px',
   },
   formRow: { display: 'flex', gap: '16px', marginBottom: '12px' },
   field: { flex: 1 },
   label: { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500, color: '#555' },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const,
   },
   colorPicker: { display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' as const },
@@ -234,25 +234,25 @@ const styles: Record<string, React.CSSProperties> = {
     width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer',
     border: '2px solid transparent',
   },
-  colorSwatchActive: { border: '2px solid #333', transform: 'scale(1.2)' },
+  colorSwatchActive: { border: '2px solid var(--ink)', transform: 'scale(1.2)' },
   colorInput: { width: '28px', height: '28px', border: 'none', cursor: 'pointer', padding: 0 },
   checkLabel: { fontSize: '14px', color: '#555', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '24px' },
   formActions: { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' },
   primaryBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   cancelBtn: {
-    padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' },
   empty: {
-    padding: '40px', textAlign: 'center' as const, color: '#999', fontSize: '14px',
+    padding: '40px', textAlign: 'center' as const, color: 'var(--ink-4)', fontSize: '14px',
     gridColumn: '1 / -1',
   },
   card: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '16px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '16px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
   },
   cardHeader: {
@@ -260,21 +260,21 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cardTitle: { display: 'flex', alignItems: 'center', gap: '8px' },
   dot: { width: '12px', height: '12px', borderRadius: '50%', flexShrink: 0 },
-  cardName: { fontSize: '15px', fontWeight: 600, color: '#333' },
+  cardName: { fontSize: '15px', fontWeight: 600, color: 'var(--ink)' },
   cardActions: { display: 'flex', gap: '4px' },
   iconBtn: {
     background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px',
-    color: '#666', padding: '4px 6px', borderRadius: '4px',
+    color: 'var(--ink-3)', padding: '4px 6px', borderRadius: '4px',
   },
   iconBtnDanger: {
     background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px',
-    color: '#dc2626', padding: '4px 6px', borderRadius: '4px',
+    color: 'var(--danger)', padding: '4px 6px', borderRadius: '4px',
   },
-  cardDesc: { fontSize: '13px', color: '#666', marginBottom: '8px' },
+  cardDesc: { fontSize: '13px', color: 'var(--ink-3)', marginBottom: '8px' },
   cardMeta: { display: 'flex', gap: '8px', alignItems: 'center' },
-  convCount: { fontSize: '12px', color: '#999' },
+  convCount: { fontSize: '12px', color: 'var(--ink-4)' },
   sidebarBadge: {
-    fontSize: '11px', backgroundColor: '#eff6ff', color: '#1b72e8',
+    fontSize: '11px', backgroundColor: '#eff6ff', color: 'var(--accent)',
     padding: '2px 6px', borderRadius: '4px',
   },
 };

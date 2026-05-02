@@ -144,8 +144,8 @@ const ConsentManagementPage: React.FC = () => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '24px', color: '#111' }}>Opt-in / Opt-out Management</h2>
-          <p style={{ margin: '4px 0 0', color: '#666', fontSize: '14px' }}>
+          <h2 style={{ margin: 0, fontSize: '24px', color: 'var(--ink)' }}>Opt-in / Opt-out Management</h2>
+          <p style={{ margin: '4px 0 0', color: 'var(--ink-3)', fontSize: '14px' }}>
             WhatsApp compliance: track consent, auto-handle STOP messages, avoid account bans
           </p>
         </div>
@@ -160,23 +160,23 @@ const ConsentManagementPage: React.FC = () => {
       {stats && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '24px' }}>
           <div style={styles.statCard}>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#111' }}>{stats.totalContacts}</div>
-            <div style={{ fontSize: '13px', color: '#666' }}>Total Tracked</div>
+            <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--ink)' }}>{stats.totalContacts}</div>
+            <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>Total Tracked</div>
           </div>
           <div style={styles.statCard}>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#16a34a' }}>{stats.optedIn}</div>
-            <div style={{ fontSize: '13px', color: '#666' }}>Opted In</div>
+            <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--ok)' }}>{stats.optedIn}</div>
+            <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>Opted In</div>
           </div>
           <div style={styles.statCard}>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#dc2626' }}>{stats.optedOut}</div>
-            <div style={{ fontSize: '13px', color: '#666' }}>Opted Out</div>
+            <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--danger)' }}>{stats.optedOut}</div>
+            <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>Opted Out</div>
           </div>
           <div style={styles.statCard}>
-            <div style={{ fontSize: '28px', fontWeight: 700, color: '#1b72e8' }}>{stats.optInRate}%</div>
-            <div style={{ fontSize: '13px', color: '#666' }}>Opt-In Rate</div>
+            <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--accent)' }}>{stats.optInRate}%</div>
+            <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>Opt-In Rate</div>
             {/* Visual bar */}
             <div style={{ width: '100%', height: '4px', background: '#fee2e2', borderRadius: '2px', marginTop: '8px' }}>
-              <div style={{ width: `${stats.optInRate}%`, height: '100%', background: '#16a34a', borderRadius: '2px' }} />
+              <div style={{ width: `${stats.optInRate}%`, height: '100%', background: 'var(--ok)', borderRadius: '2px' }} />
             </div>
           </div>
         </div>
@@ -206,8 +206,8 @@ const ConsentManagementPage: React.FC = () => {
               style={{
                 padding: '6px 14px', border: 'none', borderRadius: '6px', cursor: 'pointer',
                 fontSize: '13px', fontWeight: 500,
-                backgroundColor: filter === f ? '#fff' : 'transparent',
-                color: filter === f ? '#1b72e8' : '#666',
+                backgroundColor: filter === f ? 'var(--surface)' : 'transparent',
+                color: filter === f ? 'var(--accent)' : 'var(--ink-3)',
                 boxShadow: filter === f ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
               }}
             >
@@ -234,19 +234,19 @@ const ConsentManagementPage: React.FC = () => {
         {/* Left: Contact List */}
         <div style={{ flex: 1 }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px', color: '#666' }}>Loading...</div>
+            <div style={{ textAlign: 'center', padding: '60px', color: 'var(--ink-3)' }}>Loading...</div>
           ) : filtered.length === 0 ? (
             <div style={{ ...styles.card, textAlign: 'center', padding: '60px 20px' }}>
               <div style={{ fontSize: '48px', marginBottom: '12px' }}>{'\uD83D\uDCCB'}</div>
-              <h3 style={{ margin: '0 0 8px', color: '#333' }}>No consent records</h3>
-              <p style={{ color: '#666', margin: 0 }}>
+              <h3 style={{ margin: '0 0 8px', color: 'var(--ink)' }}>No consent records</h3>
+              <p style={{ color: 'var(--ink-3)', margin: 0 }}>
                 Consent records are created automatically when contacts message your WhatsApp number.
               </p>
             </div>
           ) : (
             <>
               {/* Select all */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '13px', color: '#666' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', fontSize: '13px', color: 'var(--ink-3)' }}>
                 <input
                   type="checkbox"
                   checked={selectedIds.size === filtered.length && filtered.length > 0}
@@ -263,8 +263,8 @@ const ConsentManagementPage: React.FC = () => {
                     style={{
                       ...styles.card,
                       cursor: 'pointer',
-                      borderLeft: consent.status === 'OPT_OUT' ? '3px solid #dc2626' : '3px solid #16a34a',
-                      backgroundColor: selectedContact === consent.contactId ? '#f0f7ff' : '#fff',
+                      borderLeft: consent.status === 'OPT_OUT' ? '3px solid var(--danger)' : '3px solid var(--ok)',
+                      backgroundColor: selectedContact === consent.contactId ? 'var(--accent-soft)' : 'var(--surface)',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -276,7 +276,7 @@ const ConsentManagementPage: React.FC = () => {
                       />
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontWeight: 600, fontSize: '14px', color: '#111' }}>
+                          <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--ink)' }}>
                             {consent.contactName || 'Unknown'}
                           </span>
                           <span style={{
@@ -287,17 +287,17 @@ const ConsentManagementPage: React.FC = () => {
                             {consent.status === 'OPT_IN' ? 'Opted In' : 'Opted Out'}
                           </span>
                         </div>
-                        <div style={{ fontSize: '12px', color: '#888', marginTop: '2px' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '2px' }}>
                           {consent.contactPhone || 'No phone'}
                           {consent.contactEmail && ` · ${consent.contactEmail}`}
                         </div>
                       </div>
 
-                      <div style={{ textAlign: 'right', fontSize: '11px', color: '#999' }}>
+                      <div style={{ textAlign: 'right', fontSize: '11px', color: 'var(--ink-4)' }}>
                         <div>{sourceLabel(consent.source)}</div>
                         {consent.triggerKeyword && (
                           <div style={{ marginTop: '2px' }}>
-                            Keyword: <code style={{ background: '#f3f4f6', padding: '1px 4px', borderRadius: '3px' }}>{consent.triggerKeyword}</code>
+                            Keyword: <code style={{ background: 'var(--surface-3)', padding: '1px 4px', borderRadius: '3px' }}>{consent.triggerKeyword}</code>
                           </div>
                         )}
                         <div style={{ marginTop: '2px' }}>{formatDate(consent.updatedAt)}</div>
@@ -315,7 +315,7 @@ const ConsentManagementPage: React.FC = () => {
           <div style={{ width: '380px', flexShrink: 0 }}>
             <div style={{ ...styles.card, position: 'sticky', top: '20px' }}>
               {loadingDetail ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Loading...</div>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--ink-3)' }}>Loading...</div>
               ) : detail ? (
                 <>
                   {/* Contact Info */}
@@ -323,9 +323,9 @@ const ConsentManagementPage: React.FC = () => {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
                         <h3 style={{ margin: '0 0 4px', fontSize: '16px' }}>{detail.consent.contactName}</h3>
-                        <div style={{ fontSize: '13px', color: '#666' }}>{detail.consent.contactPhone}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>{detail.consent.contactPhone}</div>
                         {detail.consent.contactEmail && (
-                          <div style={{ fontSize: '13px', color: '#666' }}>{detail.consent.contactEmail}</div>
+                          <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>{detail.consent.contactEmail}</div>
                         )}
                       </div>
                       <button onClick={() => setSelectedContact(null)} style={styles.closeBtn}>&times;</button>
@@ -341,12 +341,12 @@ const ConsentManagementPage: React.FC = () => {
                     <div style={{ fontSize: '14px', fontWeight: 600, color: detail.consent.status === 'OPT_IN' ? '#166534' : '#991b1b' }}>
                       {detail.consent.status === 'OPT_IN' ? '\u2705 Opted In — Can receive messages' : '\u274C Opted Out — Messages blocked'}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                       Via: {sourceLabel(detail.consent.source)}
                       {detail.consent.triggerKeyword && ` (keyword: "${detail.consent.triggerKeyword}")`}
                     </div>
                     {detail.consent.status === 'OPT_OUT' && detail.consent.optedOutAt && (
-                      <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
+                      <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '2px' }}>
                         Since: {formatDate(detail.consent.optedOutAt)}
                       </div>
                     )}
@@ -375,11 +375,11 @@ const ConsentManagementPage: React.FC = () => {
 
                   {/* Audit Trail */}
                   <div>
-                    <h4 style={{ margin: '0 0 10px', fontSize: '14px', color: '#333' }}>
+                    <h4 style={{ margin: '0 0 10px', fontSize: '14px', color: 'var(--ink)' }}>
                       Consent History ({detail.auditTrail.length})
                     </h4>
                     {detail.auditTrail.length === 0 ? (
-                      <div style={{ fontSize: '13px', color: '#888' }}>No history yet</div>
+                      <div style={{ fontSize: '13px', color: 'var(--ink-3)' }}>No history yet</div>
                     ) : (
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
                         {detail.auditTrail.map((entry, idx) => (
@@ -388,28 +388,28 @@ const ConsentManagementPage: React.FC = () => {
                             {idx < detail.auditTrail.length - 1 && (
                               <div style={{
                                 position: 'absolute', left: '7px', top: '18px', bottom: '0',
-                                width: '2px', background: '#e5e7eb',
+                                width: '2px', background: 'var(--line)',
                               }} />
                             )}
                             {/* Timeline dot */}
                             <div style={{
                               width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, marginTop: '2px',
-                              background: entry.newStatus === 'OPT_OUT' ? '#dc2626' : '#16a34a',
-                              border: '3px solid #fff', boxShadow: '0 0 0 1px #e5e7eb',
+                              background: entry.newStatus === 'OPT_OUT' ? 'var(--danger)' : 'var(--ok)',
+                              border: '3px solid var(--surface)', boxShadow: '0 0 0 1px var(--line)',
                             }} />
                             <div style={{ flex: 1 }}>
-                              <div style={{ fontSize: '13px', fontWeight: 500, color: '#111' }}>
+                              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink)' }}>
                                 {entry.previousStatus
                                   ? `${entry.previousStatus === 'OPT_IN' ? 'Opted In' : 'Opted Out'} → ${entry.newStatus === 'OPT_IN' ? 'Opted In' : 'Opted Out'}`
                                   : `Set to ${entry.newStatus === 'OPT_IN' ? 'Opted In' : 'Opted Out'}`
                                 }
                               </div>
-                              <div style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>
+                              <div style={{ fontSize: '11px', color: 'var(--ink-3)', marginTop: '2px' }}>
                                 {sourceLabel(entry.source)}
                                 {entry.triggerKeyword && ` — "${entry.triggerKeyword}"`}
                               </div>
                               {entry.notes && (
-                                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px', fontStyle: 'italic' }}>
+                                <div style={{ fontSize: '11px', color: 'var(--ink-3)', marginTop: '2px', fontStyle: 'italic' }}>
                                   {entry.notes}
                                 </div>
                               )}
@@ -424,7 +424,7 @@ const ConsentManagementPage: React.FC = () => {
                   </div>
                 </>
               ) : (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>Failed to load</div>
+                <div style={{ textAlign: 'center', padding: '40px', color: 'var(--ink-3)' }}>Failed to load</div>
               )}
             </div>
           </div>
@@ -436,7 +436,7 @@ const ConsentManagementPage: React.FC = () => {
         <div className="app-modal-overlay" style={styles.overlay} onClick={() => setShowBulkModal(false)}>
           <div className="app-modal" style={styles.modal} onClick={e => e.stopPropagation()}>
             <h3 style={{ margin: '0 0 16px', fontSize: '18px' }}>Bulk Opt-Out</h3>
-            <p style={{ color: '#666', fontSize: '14px', marginBottom: '16px' }}>
+            <p style={{ color: 'var(--ink-3)', fontSize: '14px', marginBottom: '16px' }}>
               You are about to opt out <strong>{selectedIds.size}</strong> contact{selectedIds.size !== 1 ? 's' : ''}.
               They will no longer receive broadcasts or scheduled messages.
             </p>
@@ -464,38 +464,38 @@ const ConsentManagementPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#fff', borderRadius: '10px', padding: '14px 16px',
+    backgroundColor: 'var(--surface)', borderRadius: '10px', padding: '14px 16px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
   },
   statCard: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '20px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '20px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)', textAlign: 'center',
   },
   input: {
-    width: '100%', padding: '10px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '10px 12px', border: '1px solid var(--line)',
     borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' as const,
     outline: 'none',
   },
   label: {
-    display: 'block', fontSize: '13px', fontWeight: 600, color: '#333', marginBottom: '6px',
+    display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--ink)', marginBottom: '6px',
   },
   dangerBtn: {
-    padding: '10px 20px', backgroundColor: '#dc2626', color: '#fff',
+    padding: '10px 20px', backgroundColor: 'var(--danger)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 600,
     width: '100%',
   },
   successBtn: {
-    padding: '10px 20px', backgroundColor: '#16a34a', color: '#fff',
+    padding: '10px 20px', backgroundColor: 'var(--ok)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 600,
     width: '100%',
   },
   cancelBtn: {
-    padding: '10px 20px', backgroundColor: '#f3f4f6', color: '#333',
+    padding: '10px 20px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px',
   },
   closeBtn: {
     background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer',
-    color: '#999', lineHeight: '1',
+    color: 'var(--ink-4)', lineHeight: '1',
   },
   overlay: {
     position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -503,7 +503,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center', zIndex: 1000,
   },
   modal: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '28px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '28px',
     width: '100%', maxWidth: '480px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
   },
 };

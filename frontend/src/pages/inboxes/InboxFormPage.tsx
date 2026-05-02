@@ -18,7 +18,7 @@ const InboxFormPage: React.FC = () => {
   const [formWebsiteUrl, setFormWebsiteUrl] = useState('');
   const [formWelcomeTitle, setFormWelcomeTitle] = useState('Hi there!');
   const [formWelcomeTagline, setFormWelcomeTagline] = useState('We make it simple to connect with us.');
-  const [formWidgetColor, setFormWidgetColor] = useState('#1b72e8');
+  const [formWidgetColor, setFormWidgetColor] = useState('var(--accent)');
   const [formPreChatEnabled, setFormPreChatEnabled] = useState(false);
 
   // Email
@@ -343,30 +343,30 @@ const styles: Record<string, React.CSSProperties> = {
   headerBar: { marginBottom: '16px' },
   backLink: {
     background: 'none', border: 'none', padding: '4px 0', cursor: 'pointer',
-    color: '#1b72e8', fontSize: '13px', fontWeight: 500,
+    color: 'var(--accent)', fontSize: '13px', fontWeight: 500,
   },
-  title: { margin: '6px 0 0', fontSize: '20px', color: '#222' },
+  title: { margin: '6px 0 0', fontSize: '20px', color: 'var(--ink)' },
   errorBanner: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px 16px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px 16px',
     borderRadius: '6px', marginBottom: '16px', fontSize: '14px',
   },
   form: { display: 'flex', flexDirection: 'column', gap: '16px' },
   card: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)', padding: '20px',
   },
-  sectionTitle: { margin: '0 0 14px', fontSize: '15px', fontWeight: 600, color: '#333' },
+  sectionTitle: { margin: '0 0 14px', fontSize: '15px', fontWeight: 600, color: 'var(--ink)' },
   grid: {
     display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '12px',
   },
   field: { marginBottom: '12px' },
   label: { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500, color: '#555' },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box',
   },
-  hint: { fontSize: '12px', color: '#888', marginTop: '4px' },
-  smallHint: { color: '#999', fontSize: '11px' },
+  hint: { fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' },
+  smallHint: { color: 'var(--ink-4)', fontSize: '11px' },
   infoBlock: {
     backgroundColor: '#f0fdf4', padding: '12px', borderRadius: '6px',
     marginBottom: '12px', fontSize: '13px', color: '#166534',
@@ -374,17 +374,17 @@ const styles: Record<string, React.CSSProperties> = {
   actions: {
     position: 'sticky', bottom: 0, zIndex: 10,
     display: 'flex', justifyContent: 'flex-end', gap: '8px',
-    padding: '12px 16px', backgroundColor: '#fff',
-    borderTop: '1px solid #e5e7eb', borderRadius: '0 0 8px 8px',
+    padding: '12px 16px', backgroundColor: 'var(--surface)',
+    borderTop: '1px solid var(--line)', borderRadius: '0 0 8px 8px',
     boxShadow: '0 -2px 8px rgba(0,0,0,0.04)', marginTop: '8px',
   },
   primaryBtn: {
-    padding: '10px 18px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 18px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 500,
   },
   cancelBtn: {
-    padding: '10px 18px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '10px 18px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
 };
 

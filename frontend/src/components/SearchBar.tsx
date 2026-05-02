@@ -1,3 +1,6 @@
+// Drop-in replacement for SearchBar.tsx — restyled to match Pulse design system.
+// Key change: input lives on a neutral surface (was rgba over blue header).
+
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,134 +16,91 @@ const SearchBar: React.FC = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Close on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
+    const onClick = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) setIsOpen(false);
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
   }, []);
 
   const doSearch = useCallback(async (q: string) => {
-    if (!currentAccountId || q.trim().length < 2) {
-      setResults(null);
-      setIsOpen(false);
-      return;
-    }
+    if (!currentAccountId || q.trim().length < 2) { setResults(null); setIsOpen(false); return; }
     setLoading(true);
     try {
       const res = await searchApi.search(currentAccountId, q);
-      setResults(res.data);
-      setIsOpen(true);
-    } catch {
-      setResults(null);
-    } finally {
-      setLoading(false);
-    }
+      setResults(res.data); setIsOpen(true);
+    } catch { setResults(null); }
+    finally { setLoading(false); }
   }, [currentAccountId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setQuery(val);
+    const v = e.target.value;
+    setQuery(v);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => doSearch(val), 300);
+    debounceRef.current = setTimeout(() => doSearch(v), 300);
   };
 
-  const handleConvClick = (convId: number) => {
-    setIsOpen(false);
-    setQuery('');
-    navigate('/conversations', { state: { openConversationId: convId } });
-  };
-
-  const handleContactClick = (contactId: number) => {
-    setIsOpen(false);
-    setQuery('');
-    navigate('/contacts');
-  };
-
-  const handleMsgClick = (conversationId: number) => {
-    setIsOpen(false);
-    setQuery('');
-    navigate('/conversations', { state: { openConversationId: conversationId } });
-  };
-
-  const totalResults = results
-    ? results.conversations.length + results.contacts.length + results.messages.length
-    : 0;
+  const total = results ? results.conversations.length + results.contacts.length + results.messages.length : 0;
 
   return (
-    <div ref={wrapperRef} style={styles.wrapper}>
-      <input
-        type="text"
-        value={query}
-        onChange={handleChange}
-        onFocus={() => { if (results && totalResults > 0) setIsOpen(true); }}
-        placeholder="Search conversations, contacts, messages..."
-        style={styles.input}
-      />
-      {loading && <span style={styles.spinner}>...</span>}
+    <div ref={wrapperRef} style={s.wrap}>
+      <div style={s.field}>
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" />
+        </svg>
+        <input value={query} onChange={handleChange}
+          onFocus={() => { if (results && total > 0) setIsOpen(true); }}
+          placeholder="Search conversations, contacts, messages..."
+          style={s.input} />
+        {loading && <span style={s.spinner}>…</span>}
+      </div>
 
       {isOpen && results && (
-        <div style={styles.dropdown}>
-          {totalResults === 0 ? (
-            <div style={styles.noResults}>No results for "{query}"</div>
+        <div style={s.dropdown}>
+          {total === 0 ? (
+            <div style={s.noResults}>No results for “{query}”</div>
           ) : (
             <>
-              {/* Conversations */}
               {results.conversations.length > 0 && (
                 <div>
-                  <div style={styles.sectionTitle}>Conversations ({results.conversations.length})</div>
+                  <div style={s.section}>Conversations · {results.conversations.length}</div>
                   {results.conversations.map(c => (
-                    <div key={`conv-${c.id}`} onClick={() => handleConvClick(c.id)} style={styles.resultItem}>
-                      <div style={styles.resultMain}>
-                        <span style={styles.resultId}>#{c.displayId}</span>
-                        <span style={styles.resultName}>{c.contactName}</span>
-                        <span style={{ ...styles.statusBadge, color: c.status === 'OPEN' ? '#059669' : '#666' }}>
-                          {c.status}
-                        </span>
+                    <div key={c.id} style={s.item}
+                      onClick={() => { setIsOpen(false); setQuery(''); navigate('/conversations', { state: { openConversationId: c.id } }); }}>
+                      <div style={s.row}>
+                        <span style={s.id}>#{c.displayId}</span>
+                        <span style={s.name}>{c.contactName}</span>
+                        <span style={{ ...s.status, color: c.status === 'OPEN' ? 'var(--ok)' : 'var(--ink-3)' }}>{c.status}</span>
                       </div>
-                      <div style={styles.resultMeta}>
-                        {c.inboxName}
-                        {c.assigneeName && ` · ${c.assigneeName}`}
-                        {c.teamName && ` · ${c.teamName}`}
-                      </div>
+                      <div style={s.meta}>{c.inboxName}{c.assigneeName && ` · ${c.assigneeName}`}{c.teamName && ` · ${c.teamName}`}</div>
                     </div>
                   ))}
                 </div>
               )}
-
-              {/* Contacts */}
               {results.contacts.length > 0 && (
                 <div>
-                  <div style={styles.sectionTitle}>Contacts ({results.contacts.length})</div>
+                  <div style={s.section}>Contacts · {results.contacts.length}</div>
                   {results.contacts.map(c => (
-                    <div key={`contact-${c.id}`} onClick={() => handleContactClick(c.id)} style={styles.resultItem}>
-                      <div style={styles.resultMain}>
-                        <span style={styles.resultName}>{c.name}</span>
-                      </div>
-                      <div style={styles.resultMeta}>
-                        {c.email || ''} {c.phoneNumber ? `· ${c.phoneNumber}` : ''} {c.company ? `· ${c.company}` : ''}
-                      </div>
+                    <div key={c.id} style={s.item} onClick={() => { setIsOpen(false); setQuery(''); navigate('/contacts'); }}>
+                      <div style={s.row}><span style={s.name}>{c.name}</span></div>
+                      <div style={s.meta}>{c.email || ''}{c.phoneNumber ? ` · ${c.phoneNumber}` : ''}{c.company ? ` · ${c.company}` : ''}</div>
                     </div>
                   ))}
                 </div>
               )}
-
-              {/* Messages */}
               {results.messages.length > 0 && (
                 <div>
-                  <div style={styles.sectionTitle}>Messages ({results.messages.length})</div>
+                  <div style={s.section}>Messages · {results.messages.length}</div>
                   {results.messages.map(m => (
-                    <div key={`msg-${m.id}`} onClick={() => handleMsgClick(m.conversationId)} style={styles.resultItem}>
-                      <div style={styles.resultMain}>
-                        <span style={styles.resultId}>#{m.conversationDisplayId}</span>
-                        <span style={styles.resultName}>{m.contactName}</span>
-                        {m.senderName && <span style={styles.resultMeta}>by {m.senderName}</span>}
+                    <div key={m.id} style={s.item}
+                      onClick={() => { setIsOpen(false); setQuery(''); navigate('/conversations', { state: { openConversationId: m.conversationId } }); }}>
+                      <div style={s.row}>
+                        <span style={s.id}>#{m.conversationDisplayId}</span>
+                        <span style={s.name}>{m.contactName}</span>
+                        {m.senderName && <span style={s.meta}>by {m.senderName}</span>}
                       </div>
-                      <div style={styles.msgPreview}>{m.content}</div>
+                      <div style={s.preview}>{m.content}</div>
                     </div>
                   ))}
                 </div>
@@ -153,34 +113,39 @@ const SearchBar: React.FC = () => {
   );
 };
 
-const styles: Record<string, React.CSSProperties> = {
-  wrapper: { position: 'relative', flex: 1, maxWidth: '400px' },
+const s: Record<string, React.CSSProperties> = {
+  wrap: { position: 'relative', flex: 1, maxWidth: 420 },
+  field: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    background: 'var(--surface-3)', border: '1px solid transparent',
+    borderRadius: 999, padding: '8px 14px', color: 'var(--ink-3)',
+  },
   input: {
-    width: '100%', padding: '6px 14px', borderRadius: '20px', border: 'none',
-    fontSize: '13px', backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff',
-    outline: 'none', boxSizing: 'border-box',
+    flex: 1, background: 'transparent', border: 0, outline: 0,
+    fontSize: 14, color: 'var(--ink)', minWidth: 0,
   },
-  spinner: { position: 'absolute', right: '12px', top: '6px', color: 'rgba(255,255,255,0.6)', fontSize: '12px' },
+  spinner: { color: 'var(--ink-4)', fontSize: 14 },
+
   dropdown: {
-    position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '8px',
-    backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-    maxHeight: '400px', overflowY: 'auto', zIndex: 1000,
+    position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
+    background: 'var(--surface)', borderRadius: 12,
+    border: '1px solid var(--line)', boxShadow: 'var(--sh-2)',
+    maxHeight: 440, overflowY: 'auto', zIndex: 1000,
   },
-  noResults: { padding: '20px', textAlign: 'center', color: '#999', fontSize: '13px' },
-  sectionTitle: {
-    padding: '8px 14px', fontSize: '11px', fontWeight: 600, color: '#999',
-    textTransform: 'uppercase', backgroundColor: '#f9fafb', borderBottom: '1px solid #f0f0f0',
+  noResults: { padding: 24, textAlign: 'center', color: 'var(--ink-3)', fontSize: 13 },
+  section: {
+    padding: '10px 14px', fontSize: 11, fontWeight: 600, color: 'var(--ink-3)',
+    textTransform: 'uppercase', letterSpacing: '0.06em',
+    background: 'var(--surface-2)', borderBottom: '1px solid var(--line)',
   },
-  resultItem: {
-    padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid #f5f5f5',
-  },
-  resultMain: { display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' },
-  resultId: { fontSize: '12px', color: '#1b72e8', fontWeight: 600 },
-  resultName: { fontSize: '13px', fontWeight: 500, color: '#333' },
-  statusBadge: { fontSize: '10px', fontWeight: 600 },
-  resultMeta: { fontSize: '11px', color: '#999' },
-  msgPreview: {
-    fontSize: '12px', color: '#666', lineHeight: '1.3',
+  item: { padding: '10px 14px', cursor: 'pointer', borderBottom: '1px solid var(--line)' },
+  row: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 },
+  id: { fontSize: 12, color: 'var(--accent)', fontWeight: 600 },
+  name: { fontSize: 13.5, fontWeight: 500, color: 'var(--ink)' },
+  status: { fontSize: 11, fontWeight: 600 },
+  meta: { fontSize: 12, color: 'var(--ink-3)' },
+  preview: {
+    fontSize: 12, color: 'var(--ink-2)', lineHeight: 1.4,
     overflow: 'hidden', textOverflow: 'ellipsis',
     display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any,
   },

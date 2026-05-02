@@ -111,7 +111,7 @@ const AutomationsPage: React.FC = () => {
       {rules.length === 0 && !showForm ? (
         <div style={st.empty}>
           <p>No automation rules yet.</p>
-          <p style={{ color: '#999', fontSize: '13px' }}>
+          <p style={{ color: 'var(--ink-4)', fontSize: '13px' }}>
             Create rules to auto-assign, auto-label, or auto-reply to conversations.
           </p>
         </div>
@@ -131,7 +131,7 @@ const AutomationsPage: React.FC = () => {
                     {rule.active ? 'Disable' : 'Enable'}
                   </button>
                   <button onClick={() => openEdit(rule)} style={st.iconBtn}>Edit</button>
-                  <button onClick={() => handleDelete(rule.id)} style={{ ...st.iconBtn, color: '#dc2626' }}>Delete</button>
+                  <button onClick={() => handleDelete(rule.id)} style={{ ...st.iconBtn, color: 'var(--danger)' }}>Delete</button>
                 </div>
               </div>
               {rule.description && <div style={st.ruleDesc}>{rule.description}</div>}
@@ -243,41 +243,41 @@ const AutomationsPage: React.FC = () => {
 
 const st: Record<string, React.CSSProperties> = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  title: { margin: 0, fontSize: '22px', color: '#333' },
-  error: { backgroundColor: '#fef2f2', color: '#dc2626', padding: '10px 16px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' },
-  empty: { textAlign: 'center', padding: '60px 20px', color: '#666', fontSize: '15px' },
-  primaryBtn: { padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
-  cancelBtn: { padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
+  title: { margin: 0, fontSize: '22px', color: 'var(--ink)' },
+  error: { backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '10px 16px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' },
+  empty: { textAlign: 'center', padding: '60px 20px', color: 'var(--ink-3)', fontSize: '15px' },
+  primaryBtn: { padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
+  cancelBtn: { padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)', border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
 
   rulesList: { display: 'flex', flexDirection: 'column' as const, gap: '12px' },
-  ruleCard: { backgroundColor: '#fff', padding: '16px 20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
+  ruleCard: { backgroundColor: 'var(--surface)', padding: '16px 20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
   ruleHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' },
-  ruleName: { fontSize: '15px', fontWeight: 600, color: '#333', marginRight: '8px' },
+  ruleName: { fontSize: '15px', fontWeight: 600, color: 'var(--ink)', marginRight: '8px' },
   badge: { fontSize: '11px', padding: '2px 8px', borderRadius: '12px', fontWeight: 500 },
-  ruleDesc: { fontSize: '13px', color: '#666', marginBottom: '10px' },
+  ruleDesc: { fontSize: '13px', color: 'var(--ink-3)', marginBottom: '10px' },
   ruleActions: { display: 'flex', gap: '8px' },
-  iconBtn: { background: 'none', border: 'none', color: '#1b72e8', cursor: 'pointer', fontSize: '12px', fontWeight: 500 },
+  iconBtn: { background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '12px', fontWeight: 500 },
   ruleDetail: { display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' },
   detailLabel: { fontSize: '12px', fontWeight: 600, color: '#555', minWidth: '40px', marginTop: '3px' },
   eventBadge: { backgroundColor: '#dbeafe', color: '#1e40af', padding: '2px 10px', borderRadius: '4px', fontSize: '12px' },
   conditionsList: { display: 'flex', flexWrap: 'wrap' as const, gap: '4px' },
-  condBadge: { backgroundColor: '#f3f4f6', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', color: '#555' },
+  condBadge: { backgroundColor: 'var(--surface-3)', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', color: '#555' },
   actionBadge: { backgroundColor: '#fef3c7', padding: '3px 8px', borderRadius: '4px', fontSize: '12px', color: '#92400e' },
 
   // Modal
   modalOverlay: { position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 },
-  modal: { backgroundColor: '#fff', borderRadius: '8px', padding: '24px', width: '100%', maxWidth: '640px', maxHeight: '80vh', overflowY: 'auto' as const },
+  modal: { backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '24px', width: '100%', maxWidth: '640px', maxHeight: '80vh', overflowY: 'auto' as const },
   field: { marginBottom: '12px' },
   label: { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500, color: '#555' },
-  input: { width: '100%', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const },
-  section: { backgroundColor: '#f9fafb', padding: '12px', borderRadius: '6px', marginBottom: '16px' },
+  input: { width: '100%', padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const },
+  section: { backgroundColor: 'var(--surface-2)', padding: '12px', borderRadius: '6px', marginBottom: '16px' },
   sectionHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' },
-  sectionTitle: { fontSize: '13px', fontWeight: 600, color: '#333' },
-  addBtn: { background: 'none', border: 'none', color: '#1b72e8', cursor: 'pointer', fontSize: '12px', fontWeight: 500 },
+  sectionTitle: { fontSize: '13px', fontWeight: 600, color: 'var(--ink)' },
+  addBtn: { background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontSize: '12px', fontWeight: 500 },
   condRow: { display: 'flex', gap: '6px', marginBottom: '6px', alignItems: 'center' },
-  condSelect: { padding: '6px 8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', flex: 1 },
-  condInput: { padding: '6px 8px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '13px', flex: 1 },
-  removeBtn: { background: 'none', border: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '18px', padding: '0 4px' },
+  condSelect: { padding: '6px 8px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '13px', flex: 1 },
+  condInput: { padding: '6px 8px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '13px', flex: 1 },
+  removeBtn: { background: 'none', border: 'none', color: 'var(--danger)', cursor: 'pointer', fontSize: '18px', padding: '0 4px' },
   formActions: { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '20px' },
 };
 

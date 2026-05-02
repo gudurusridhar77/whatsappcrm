@@ -241,8 +241,8 @@ const ScheduledMessagesPage: React.FC = () => {
       case 'PROCESSING': return { bg: '#dbeafe', color: '#1e40af' };
       case 'SENT': return { bg: '#dcfce7', color: '#166534' };
       case 'FAILED': return { bg: '#fee2e2', color: '#991b1b' };
-      case 'CANCELLED': return { bg: '#f3f4f6', color: '#374151' };
-      default: return { bg: '#f3f4f6', color: '#374151' };
+      case 'CANCELLED': return { bg: 'var(--surface-3)', color: 'var(--ink-2)' };
+      default: return { bg: 'var(--surface-3)', color: 'var(--ink-2)' };
     }
   };
 
@@ -262,8 +262,8 @@ const ScheduledMessagesPage: React.FC = () => {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '24px', color: '#111' }}>Scheduled Messages</h2>
-          <p style={{ margin: '4px 0 0', color: '#666', fontSize: '14px' }}>
+          <h2 style={{ margin: 0, fontSize: '24px', color: 'var(--ink)' }}>Scheduled Messages</h2>
+          <p style={{ margin: '4px 0 0', color: 'var(--ink-3)', fontSize: '14px' }}>
             {pendingCount > 0 ? `${pendingCount} message${pendingCount > 1 ? 's' : ''} pending` : 'Schedule messages and broadcasts for optimal send times'}
           </p>
         </div>
@@ -281,8 +281,8 @@ const ScheduledMessagesPage: React.FC = () => {
             style={{
               padding: '6px 14px', border: 'none', borderRadius: '6px', cursor: 'pointer',
               fontSize: '13px', fontWeight: 500,
-              backgroundColor: filter === f ? '#fff' : 'transparent',
-              color: filter === f ? '#1b72e8' : '#666',
+              backgroundColor: filter === f ? 'var(--surface)' : 'transparent',
+              color: filter === f ? 'var(--accent)' : 'var(--ink-3)',
               boxShadow: filter === f ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
             }}
           >
@@ -296,16 +296,16 @@ const ScheduledMessagesPage: React.FC = () => {
         ))}
       </div>
 
-      {error && <div style={{ color: '#dc2626', marginBottom: '16px' }}>{error}</div>}
+      {error && <div style={{ color: 'var(--danger)', marginBottom: '16px' }}>{error}</div>}
 
       {/* Messages List */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: '#666' }}>Loading...</div>
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--ink-3)' }}>Loading...</div>
       ) : filtered.length === 0 ? (
         <div style={{ ...styles.card, textAlign: 'center', padding: '60px 20px' }}>
           <div style={{ fontSize: '48px', marginBottom: '12px' }}>{'\u23F0'}</div>
-          <h3 style={{ margin: '0 0 8px', color: '#333' }}>No scheduled messages</h3>
-          <p style={{ color: '#666', margin: 0 }}>
+          <h3 style={{ margin: '0 0 8px', color: 'var(--ink)' }}>No scheduled messages</h3>
+          <p style={{ color: 'var(--ink-3)', margin: 0 }}>
             Schedule messages, templates, or broadcasts to send at the perfect time.
           </p>
         </div>
@@ -320,7 +320,7 @@ const ScheduledMessagesPage: React.FC = () => {
                     <div style={{ fontSize: '28px', lineHeight: '1' }}>{typeIcon(msg.scheduleType)}</div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                        <span style={{ fontWeight: 600, fontSize: '15px', color: '#111' }}>
+                        <span style={{ fontWeight: 600, fontSize: '15px', color: 'var(--ink)' }}>
                           {msg.scheduleType === 'DIRECT' ? 'Direct Message' :
                            msg.scheduleType === 'TEMPLATE' ? `Template: ${msg.templateName}` :
                            `Broadcast: ${msg.broadcastName}`}
@@ -334,7 +334,7 @@ const ScheduledMessagesPage: React.FC = () => {
                       </div>
 
                       {msg.label && (
-                        <div style={{ fontSize: '13px', color: '#666', marginBottom: '4px', fontStyle: 'italic' }}>
+                        <div style={{ fontSize: '13px', color: 'var(--ink-3)', marginBottom: '4px', fontStyle: 'italic' }}>
                           {msg.label}
                         </div>
                       )}
@@ -359,17 +359,17 @@ const ScheduledMessagesPage: React.FC = () => {
 
                       {/* Template params */}
                       {msg.bodyParams && msg.bodyParams.length > 0 && (
-                        <div style={{ fontSize: '12px', color: '#888', marginTop: '4px' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                           Params: {msg.bodyParams.join(', ')}
                         </div>
                       )}
 
-                      <div style={{ display: 'flex', gap: '16px', marginTop: '8px', fontSize: '12px', color: '#888' }}>
+                      <div style={{ display: 'flex', gap: '16px', marginTop: '8px', fontSize: '12px', color: 'var(--ink-3)' }}>
                         <span>Inbox: {msg.inboxName}</span>
                         <span>Created: {formatDateTime(msg.createdAt)}</span>
                         {msg.sentAt && <span>Sent: {formatDateTime(msg.sentAt)}</span>}
                         {msg.failureReason && (
-                          <span style={{ color: '#dc2626' }}>Error: {msg.failureReason}</span>
+                          <span style={{ color: 'var(--danger)' }}>Error: {msg.failureReason}</span>
                         )}
                       </div>
                     </div>
@@ -377,11 +377,11 @@ const ScheduledMessagesPage: React.FC = () => {
 
                   {/* Right side: schedule time + actions */}
                   <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: '16px' }}>
-                    <div style={{ fontSize: '14px', fontWeight: 600, color: '#333' }}>
+                    <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>
                       {formatDateTime(msg.scheduledAt)}
                     </div>
                     {msg.status === 'PENDING' && (
-                      <div style={{ fontSize: '12px', color: '#f59e0b', fontWeight: 500, marginTop: '2px' }}>
+                      <div style={{ fontSize: '12px', color: 'var(--warn)', fontWeight: 500, marginTop: '2px' }}>
                         {timeUntil(msg.scheduledAt)}
                       </div>
                     )}
@@ -394,7 +394,7 @@ const ScheduledMessagesPage: React.FC = () => {
                           </button>
                           <button
                             onClick={() => handleCancel(msg.id)}
-                            style={{ ...styles.smallBtn, color: '#f59e0b', borderColor: '#f59e0b' }}
+                            style={{ ...styles.smallBtn, color: 'var(--warn)', borderColor: 'var(--warn)' }}
                             title="Cancel"
                           >
                             Cancel
@@ -404,7 +404,7 @@ const ScheduledMessagesPage: React.FC = () => {
                       {(msg.status === 'SENT' || msg.status === 'FAILED' || msg.status === 'CANCELLED') && (
                         <button
                           onClick={() => handleDelete(msg.id)}
-                          style={{ ...styles.smallBtn, color: '#dc2626', borderColor: '#dc2626' }}
+                          style={{ ...styles.smallBtn, color: 'var(--danger)', borderColor: 'var(--danger)' }}
                           title="Delete"
                         >
                           Delete
@@ -429,7 +429,7 @@ const ScheduledMessagesPage: React.FC = () => {
             </div>
 
             {createError && (
-              <div style={{ color: '#dc2626', fontSize: '13px', marginBottom: '12px', padding: '8px 12px', background: '#fee2e2', borderRadius: '6px' }}>
+              <div style={{ color: 'var(--danger)', fontSize: '13px', marginBottom: '12px', padding: '8px 12px', background: '#fee2e2', borderRadius: '6px' }}>
                 {createError}
               </div>
             )}
@@ -444,9 +444,9 @@ const ScheduledMessagesPage: React.FC = () => {
                     onClick={() => setScheduleType(t)}
                     style={{
                       ...styles.typeBtn,
-                      borderColor: scheduleType === t ? '#1b72e8' : '#ddd',
-                      backgroundColor: scheduleType === t ? '#eff6ff' : '#fff',
-                      color: scheduleType === t ? '#1b72e8' : '#666',
+                      borderColor: scheduleType === t ? 'var(--accent)' : 'var(--line)',
+                      backgroundColor: scheduleType === t ? '#eff6ff' : 'var(--surface)',
+                      color: scheduleType === t ? 'var(--accent)' : 'var(--ink-3)',
                     }}
                   >
                     <span style={{ fontSize: '18px' }}>{typeIcon(t)}</span>
@@ -516,7 +516,7 @@ const ScheduledMessagesPage: React.FC = () => {
                   </select>
                 </div>
                 {selectedTemplate > 0 && (
-                  <div style={{ fontSize: '12px', color: '#666', background: '#f8f9fa', padding: '8px 12px', borderRadius: '6px', marginBottom: '12px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--ink-3)', background: '#f8f9fa', padding: '8px 12px', borderRadius: '6px', marginBottom: '12px' }}>
                     {templates.find(t => t.id === selectedTemplate)?.body || ''}
                   </div>
                 )}
@@ -558,7 +558,7 @@ const ScheduledMessagesPage: React.FC = () => {
                   ))}
                 </select>
                 {broadcasts.length === 0 && (
-                  <div style={{ fontSize: '12px', color: '#888', marginTop: '4px' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--ink-3)', marginTop: '4px' }}>
                     No draft/scheduled broadcasts available. Create a broadcast first.
                   </div>
                 )}
@@ -667,20 +667,20 @@ const ScheduledMessagesPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '16px 20px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '16px 20px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
   },
   primaryBtn: {
-    padding: '10px 20px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 20px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px', fontWeight: 600,
   },
   cancelBtn: {
-    padding: '10px 20px', backgroundColor: '#f3f4f6', color: '#333',
+    padding: '10px 20px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px',
   },
   smallBtn: {
-    padding: '4px 10px', border: '1px solid #ddd', borderRadius: '6px',
-    backgroundColor: '#fff', cursor: 'pointer', fontSize: '12px', fontWeight: 500, color: '#333',
+    padding: '4px 10px', border: '1px solid var(--line)', borderRadius: '6px',
+    backgroundColor: 'var(--surface)', cursor: 'pointer', fontSize: '12px', fontWeight: 500, color: 'var(--ink)',
   },
   overlay: {
     position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0,
@@ -688,32 +688,32 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center', zIndex: 1000,
   },
   modal: {
-    backgroundColor: '#fff', borderRadius: '12px', padding: '28px',
+    backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '28px',
     width: '100%', maxWidth: '560px', maxHeight: '90vh', overflow: 'auto',
     boxShadow: '0 20px 60px rgba(0,0,0,0.2)',
   },
   closeBtn: {
     background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer',
-    color: '#999', lineHeight: '1',
+    color: 'var(--ink-4)', lineHeight: '1',
   },
   formGroup: { marginBottom: '16px' },
   label: {
-    display: 'block', fontSize: '13px', fontWeight: 600, color: '#333',
+    display: 'block', fontSize: '13px', fontWeight: 600, color: 'var(--ink)',
     marginBottom: '6px',
   },
   input: {
-    width: '100%', padding: '10px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '10px 12px', border: '1px solid var(--line)',
     borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' as const,
     outline: 'none',
   },
   typeBtn: {
     flex: 1, display: 'flex', flexDirection: 'column' as const, alignItems: 'center',
-    gap: '6px', padding: '12px 8px', border: '2px solid #ddd', borderRadius: '10px',
-    cursor: 'pointer', backgroundColor: '#fff', transition: 'all 0.15s',
+    gap: '6px', padding: '12px 8px', border: '2px solid var(--line)', borderRadius: '10px',
+    cursor: 'pointer', backgroundColor: 'var(--surface)', transition: 'all 0.15s',
   },
   quickBtn: {
-    padding: '4px 10px', border: '1px solid #e5e7eb', borderRadius: '14px',
-    backgroundColor: '#f9fafb', cursor: 'pointer', fontSize: '12px', color: '#555',
+    padding: '4px 10px', border: '1px solid var(--line)', borderRadius: '14px',
+    backgroundColor: 'var(--surface-2)', cursor: 'pointer', fontSize: '12px', color: '#555',
   },
 };
 

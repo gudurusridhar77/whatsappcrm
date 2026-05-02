@@ -69,7 +69,7 @@ const AccountSettingsPage: React.FC = () => {
 
   return (
     <div style={{ maxWidth: '640px' }}>
-      <h2 style={{ margin: '0 0 24px', fontSize: '20px', color: '#333' }}>Account Settings</h2>
+      <h2 style={{ margin: '0 0 24px', fontSize: '20px', color: 'var(--ink)' }}>Account Settings</h2>
 
       {/* Account Info */}
       <div style={styles.card}>
@@ -160,7 +160,7 @@ const AccountSettingsPage: React.FC = () => {
           <span style={{
             padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 500,
             backgroundColor: settings?.status === 'ACTIVE' ? '#f0fdf4' : '#fef2f2',
-            color: settings?.status === 'ACTIVE' ? '#15803d' : '#dc2626',
+            color: settings?.status === 'ACTIVE' ? '#15803d' : 'var(--danger)',
           }}>
             {settings?.status}
           </span>
@@ -169,8 +169,8 @@ const AccountSettingsPage: React.FC = () => {
           <span style={styles.infoLabel}>Your Role</span>
           <span style={{
             padding: '2px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 500,
-            backgroundColor: currentAccount?.role === 'ADMIN' ? '#dbeafe' : '#f3f4f6',
-            color: currentAccount?.role === 'ADMIN' ? '#1d4ed8' : '#374151',
+            backgroundColor: currentAccount?.role === 'ADMIN' ? '#dbeafe' : 'var(--surface-3)',
+            color: currentAccount?.role === 'ADMIN' ? '#1d4ed8' : 'var(--ink-2)',
           }}>
             {currentAccount?.role}
           </span>
@@ -191,20 +191,20 @@ const AccountSettingsPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px',
     marginBottom: '20px',
   },
-  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: '#333' },
+  cardTitle: { margin: '0 0 16px', fontSize: '16px', color: 'var(--ink)' },
   field: { marginBottom: '16px' },
   label: { display: 'block', fontSize: '13px', fontWeight: 600, color: '#555', marginBottom: '6px' },
   input: {
-    width: '100%', padding: '10px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '10px 12px', border: '1px solid var(--line)',
     borderRadius: '6px', fontSize: '14px', outline: 'none', boxSizing: 'border-box' as const,
   },
-  hint: { fontSize: '12px', color: '#999', marginTop: '4px' },
+  hint: { fontSize: '12px', color: 'var(--ink-4)', marginTop: '4px' },
   primaryBtn: {
-    padding: '10px 24px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 24px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', fontWeight: 500,
   },
   success: {
@@ -212,15 +212,15 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   infoRow: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '10px 0', borderBottom: '1px solid #f0f0f0',
   },
-  infoLabel: { fontSize: '14px', color: '#666' },
-  infoValue: { fontSize: '14px', fontWeight: 500, color: '#333' },
+  infoLabel: { fontSize: '14px', color: 'var(--ink-3)' },
+  infoValue: { fontSize: '14px', fontWeight: 500, color: 'var(--ink)' },
 };
 
 export default AccountSettingsPage;

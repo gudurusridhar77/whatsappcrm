@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { csatApi, CsatReportResponse, CsatSurveyResponse } from '../../api/csat';
 
 const EMOJI_RATINGS = ['', '\uD83D\uDE21', '\uD83D\uDE1E', '\uD83D\uDE10', '\uD83D\uDE0A', '\uD83E\uDD29'];
-const RATING_COLORS = ['', '#ef4444', '#f97316', '#eab308', '#22c55e', '#059669'];
+const RATING_COLORS = ['', 'var(--danger)', '#f97316', '#eab308', 'var(--ok)', 'var(--ok)'];
 
 const CsatPage: React.FC = () => {
   const { currentAccountId } = useAuth();
@@ -54,7 +54,7 @@ const CsatPage: React.FC = () => {
           {/* Overview Cards */}
           <div style={s.cardGrid}>
             <div style={s.card}>
-              <div style={{ ...s.cardValue, color: '#1b72e8' }}>
+              <div style={{ ...s.cardValue, color: 'var(--accent)' }}>
                 {report.averageRating != null ? `${report.averageRating}/5` : '-'}
               </div>
               <div style={s.cardLabel}>Avg Rating</div>
@@ -65,7 +65,7 @@ const CsatPage: React.FC = () => {
               )}
             </div>
             <div style={s.card}>
-              <div style={{ ...s.cardValue, color: '#059669' }}>
+              <div style={{ ...s.cardValue, color: 'var(--ok)' }}>
                 {report.satisfactionScore != null ? `${report.satisfactionScore}%` : '-'}
               </div>
               <div style={s.cardLabel}>Satisfaction Score</div>
@@ -76,7 +76,7 @@ const CsatPage: React.FC = () => {
               <div style={s.cardLabel}>Total Responses</div>
             </div>
             <div style={s.card}>
-              <div style={{ ...s.cardValue, color: '#d97706' }}>{report.pendingSurveys}</div>
+              <div style={{ ...s.cardValue, color: 'var(--warn)' }}>{report.pendingSurveys}</div>
               <div style={s.cardLabel}>Pending Surveys</div>
             </div>
           </div>
@@ -148,7 +148,7 @@ const CsatPage: React.FC = () => {
                     <td style={s.td}>{r.contactName}</td>
                     <td style={s.td}>{r.agentName || '-'}</td>
                     <td style={{ ...s.tdNum, fontSize: '18px' }}>
-                      {EMOJI_RATINGS[r.rating]} <span style={{ fontSize: '13px', color: '#666' }}>{r.ratingLabel}</span>
+                      {EMOJI_RATINGS[r.rating]} <span style={{ fontSize: '13px', color: 'var(--ink-3)' }}>{r.ratingLabel}</span>
                     </td>
                     <td style={{ ...s.td, maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {r.feedbackText || '-'}
@@ -168,32 +168,32 @@ const CsatPage: React.FC = () => {
 };
 
 const s: Record<string, React.CSSProperties> = {
-  loading: { textAlign: 'center', padding: '60px', color: '#999' },
-  error: { backgroundColor: '#fef2f2', color: '#dc2626', padding: '10px 16px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' },
+  loading: { textAlign: 'center', padding: '60px', color: 'var(--ink-4)' },
+  error: { backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '10px 16px', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  title: { margin: 0, fontSize: '22px', color: '#333' },
+  title: { margin: 0, fontSize: '22px', color: 'var(--ink)' },
   tabs: { display: 'flex', gap: '4px' },
-  tab: { padding: '6px 14px', border: '1px solid #ddd', borderRadius: '4px', backgroundColor: '#fff', cursor: 'pointer', fontSize: '13px', color: '#666' },
-  tabActive: { backgroundColor: '#1b72e8', color: '#fff', borderColor: '#1b72e8' },
+  tab: { padding: '6px 14px', border: '1px solid var(--line)', borderRadius: '4px', backgroundColor: 'var(--surface)', cursor: 'pointer', fontSize: '13px', color: 'var(--ink-3)' },
+  tabActive: { backgroundColor: 'var(--accent)', color: 'var(--surface)', borderColor: 'var(--accent)' },
   cardGrid: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '20px' },
-  card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', textAlign: 'center' as const },
+  card: { backgroundColor: 'var(--surface)', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', textAlign: 'center' as const },
   cardValue: { fontSize: '28px', fontWeight: 700 },
-  cardLabel: { fontSize: '12px', color: '#888', textTransform: 'uppercase' as const, letterSpacing: '0.5px', marginTop: '4px' },
+  cardLabel: { fontSize: '12px', color: 'var(--ink-3)', textTransform: 'uppercase' as const, letterSpacing: '0.5px', marginTop: '4px' },
   cardSubtext: { fontSize: '11px', color: '#aaa', marginTop: '2px' },
-  section: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', marginBottom: '16px' },
-  sectionTitle: { margin: '0 0 16px 0', fontSize: '15px', color: '#333' },
+  section: { backgroundColor: 'var(--surface)', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', marginBottom: '16px' },
+  sectionTitle: { margin: '0 0 16px 0', fontSize: '15px', color: 'var(--ink)' },
   distContainer: { display: 'flex', flexDirection: 'column' as const, gap: '10px' },
   distRow: { display: 'flex', alignItems: 'center', gap: '10px' },
   distEmoji: { fontSize: '20px', width: '28px', textAlign: 'center' as const },
   distLabel: { fontSize: '13px', color: '#555', width: '70px' },
-  distBar: { flex: 1, height: '12px', backgroundColor: '#f3f4f6', borderRadius: '6px', overflow: 'hidden' },
+  distBar: { flex: 1, height: '12px', backgroundColor: 'var(--surface-3)', borderRadius: '6px', overflow: 'hidden' },
   distFill: { height: '100%', borderRadius: '6px', transition: 'width 0.5s' },
-  distCount: { fontSize: '12px', color: '#999', width: '90px', textAlign: 'right' as const },
-  empty: { textAlign: 'center' as const, color: '#999', padding: '40px', fontSize: '14px' },
+  distCount: { fontSize: '12px', color: 'var(--ink-4)', width: '90px', textAlign: 'right' as const },
+  empty: { textAlign: 'center' as const, color: 'var(--ink-4)', padding: '40px', fontSize: '14px' },
   table: { width: '100%', borderCollapse: 'collapse' as const, fontSize: '13px' },
-  th: { textAlign: 'left' as const, padding: '8px 12px', borderBottom: '2px solid #e5e7eb', color: '#555', fontSize: '12px', fontWeight: 600 },
-  thNum: { textAlign: 'center' as const, padding: '8px 12px', borderBottom: '2px solid #e5e7eb', color: '#555', fontSize: '12px', fontWeight: 600 },
-  td: { padding: '8px 12px', borderBottom: '1px solid #f0f0f0', color: '#333' },
+  th: { textAlign: 'left' as const, padding: '8px 12px', borderBottom: '2px solid var(--line)', color: '#555', fontSize: '12px', fontWeight: 600 },
+  thNum: { textAlign: 'center' as const, padding: '8px 12px', borderBottom: '2px solid var(--line)', color: '#555', fontSize: '12px', fontWeight: 600 },
+  td: { padding: '8px 12px', borderBottom: '1px solid #f0f0f0', color: 'var(--ink)' },
   tdNum: { padding: '8px 12px', borderBottom: '1px solid #f0f0f0', textAlign: 'center' as const },
 };
 

@@ -11,9 +11,9 @@ import ContactPanel from '../../components/ContactPanel';
 import { csatApi } from '../../api/csat';
 
 const statusColors: Record<string, string> = {
-  OPEN: '#059669',
-  PENDING: '#d97706',
-  RESOLVED: '#6b7280',
+  OPEN: 'var(--ok)',
+  PENDING: 'var(--warn)',
+  RESOLVED: 'var(--ink-3)',
   SNOOZED: '#8b5cf6',
 };
 
@@ -454,11 +454,11 @@ const ConversationsPage: React.FC = () => {
                   </button>
                   {showLabelPicker && (
                     <div style={styles.labelDropdown}>
-                      <div style={{ padding: '8px 12px', fontWeight: 600, fontSize: '13px', borderBottom: '1px solid #eee' }}>
+                      <div style={{ padding: '8px 12px', fontWeight: 600, fontSize: '13px', borderBottom: '1px solid var(--line)' }}>
                         Assign Labels
                       </div>
                       {allLabels.length === 0 ? (
-                        <div style={{ padding: '12px', fontSize: '13px', color: '#999' }}>No labels created yet</div>
+                        <div style={{ padding: '12px', fontSize: '13px', color: 'var(--ink-4)' }}>No labels created yet</div>
                       ) : (
                         allLabels.map(label => {
                           const isActive = activeConv.labels?.some(l => l.id === label.id);
@@ -468,7 +468,7 @@ const ConversationsPage: React.FC = () => {
                               style={styles.labelOption}>
                               <span style={{ ...styles.labelDot, backgroundColor: label.color }} />
                               <span style={{ flex: 1, fontSize: '13px' }}>{label.title}</span>
-                              {isActive && <span style={{ color: '#059669', fontWeight: 700 }}>&#10003;</span>}
+                              {isActive && <span style={{ color: 'var(--ok)', fontWeight: 700 }}>&#10003;</span>}
                             </div>
                           );
                         })
@@ -492,7 +492,7 @@ const ConversationsPage: React.FC = () => {
                   onChange={(e) => handleStatusChange(activeConv.id, e.target.value)}
                   style={{
                     ...styles.statusSelect,
-                    color: statusColors[activeConv.status] || '#333',
+                    color: statusColors[activeConv.status] || 'var(--ink)',
                   }}>
                   <option value="OPEN">Open</option>
                   <option value="PENDING">Pending</option>
@@ -566,7 +566,7 @@ const ConversationsPage: React.FC = () => {
                                   {(section.rows as any[]).map((row: any, ri: number) => (
                                     <div key={ri} style={styles.interactiveListRow}>
                                       <div style={{ fontWeight: 500, fontSize: '12px' }}>{row.title}</div>
-                                      {row.description && <div style={{ fontSize: '11px', color: '#888' }}>{row.description}</div>}
+                                      {row.description && <div style={{ fontSize: '11px', color: 'var(--ink-3)' }}>{row.description}</div>}
                                     </div>
                                   ))}
                                 </div>
@@ -600,7 +600,7 @@ const ConversationsPage: React.FC = () => {
                               <a href={att.dataUrl} target="_blank" rel="noopener noreferrer"
                                 style={{
                                   ...styles.attachmentFile,
-                                  color: msg.messageType === 'OUTGOING' && !msg.privateFlag ? '#fff' : '#1b72e8',
+                                  color: msg.messageType === 'OUTGOING' && !msg.privateFlag ? 'var(--surface)' : 'var(--accent)',
                                 }}>
                                 <span style={styles.attachmentIcon}>📎</span>
                                 <span style={styles.attachmentName}>{att.fileName}</span>
@@ -618,7 +618,7 @@ const ConversationsPage: React.FC = () => {
                           {msg.deliveryStatus === 'sent' && '✓'}
                           {msg.deliveryStatus === 'delivered' && '✓✓'}
                           {msg.deliveryStatus === 'read' && <span style={{ color: '#3b82f6' }}>✓✓</span>}
-                          {msg.deliveryStatus === 'failed' && <span style={{ color: '#dc2626' }}>!</span>}
+                          {msg.deliveryStatus === 'failed' && <span style={{ color: 'var(--danger)' }}>!</span>}
                         </span>
                       )}
                     </div>
@@ -713,7 +713,7 @@ const ConversationsPage: React.FC = () => {
                                 style={{ ...styles.interactiveInput, flex: 1, marginBottom: 0 }} />
                               {interactiveButtons.length > 1 && (
                                 <button type="button" onClick={() => setInteractiveButtons(prev => prev.filter((_, j) => j !== i))}
-                                  style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '14px' }}>✕</button>
+                                  style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--danger)', fontSize: '14px' }}>✕</button>
                               )}
                             </div>
                           ))}
@@ -746,7 +746,7 @@ const ConversationsPage: React.FC = () => {
                                   style={{ ...styles.interactiveInput, flex: 1, marginBottom: 0, fontWeight: 600 }} />
                                 {interactiveSections.length > 1 && (
                                   <button type="button" onClick={() => setInteractiveSections(prev => prev.filter((_, j) => j !== si))}
-                                    style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '14px' }}>✕</button>
+                                    style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--danger)', fontSize: '14px' }}>✕</button>
                                 )}
                               </div>
                               {section.rows.map((row, ri) => (
@@ -772,7 +772,7 @@ const ConversationsPage: React.FC = () => {
                                       const updated = [...interactiveSections];
                                       updated[si].rows = updated[si].rows.filter((_, j) => j !== ri);
                                       setInteractiveSections(updated);
-                                    }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#dc2626', fontSize: '12px' }}>✕</button>
+                                    }} style={{ border: 'none', background: 'none', cursor: 'pointer', color: 'var(--danger)', fontSize: '12px' }}>✕</button>
                                   )}
                                 </div>
                               ))}
@@ -833,7 +833,7 @@ const ConversationsPage: React.FC = () => {
                       style={{
                         ...styles.attachBtn,
                         backgroundColor: interactiveMode !== 'none' ? '#dbeafe' : undefined,
-                        color: interactiveMode !== 'none' ? '#1b72e8' : undefined,
+                        color: interactiveMode !== 'none' ? 'var(--accent)' : undefined,
                       }}
                       title="Send interactive message (buttons/list)">
                       🔘
@@ -843,16 +843,16 @@ const ConversationsPage: React.FC = () => {
                         <button onClick={() => { setInteractiveMode('buttons'); setShowInteractiveMenu(false); }}
                           style={styles.interactiveMenuItem}>
                           🔘 Quick Reply Buttons
-                          <span style={{ display: 'block', fontSize: '11px', color: '#888' }}>Up to 3 reply buttons</span>
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-3)' }}>Up to 3 reply buttons</span>
                         </button>
                         <button onClick={() => { setInteractiveMode('list'); setShowInteractiveMenu(false); }}
                           style={styles.interactiveMenuItem}>
                           📋 List Message
-                          <span style={{ display: 'block', fontSize: '11px', color: '#888' }}>Menu with sections &amp; options</span>
+                          <span style={{ display: 'block', fontSize: '11px', color: 'var(--ink-3)' }}>Menu with sections &amp; options</span>
                         </button>
                         {interactiveMode !== 'none' && (
                           <button onClick={resetInteractiveMode}
-                            style={{ ...styles.interactiveMenuItem, color: '#dc2626' }}>
+                            style={{ ...styles.interactiveMenuItem, color: 'var(--danger)' }}>
                             ✕ Cancel Interactive
                           </button>
                         )}
@@ -916,7 +916,7 @@ const ConversationsPage: React.FC = () => {
           </>
         ) : (
           <div style={styles.noChat}>
-            <h3 style={{ color: '#999', fontWeight: 400 }}>Select a conversation to start messaging</h3>
+            <h3 style={{ color: 'var(--ink-4)', fontWeight: 400 }}>Select a conversation to start messaging</h3>
           </div>
         )}
       </div>
@@ -973,39 +973,39 @@ const ConversationsPage: React.FC = () => {
 const styles: Record<string, React.CSSProperties> = {
   wrapper: {
     display: 'flex', height: 'calc(100vh - 110px)',
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', overflow: 'hidden',
   },
   // Sidebar
   sidebar: {
-    width: '340px', borderRight: '1px solid #e5e7eb', display: 'flex',
+    width: '340px', borderRight: '1px solid var(--line)', display: 'flex',
     flexDirection: 'column', flexShrink: 0,
   },
   sidebarHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '16px', borderBottom: '1px solid #e5e7eb',
+    padding: '16px', borderBottom: '1px solid var(--line)',
   },
   newBtn: {
     width: '32px', height: '32px', borderRadius: '50%', border: 'none',
-    backgroundColor: '#1b72e8', color: '#fff', fontSize: '18px', cursor: 'pointer',
+    backgroundColor: 'var(--accent)', color: 'var(--surface)', fontSize: '18px', cursor: 'pointer',
   },
   tabs: {
-    display: 'flex', borderBottom: '1px solid #e5e7eb', padding: '0 8px',
+    display: 'flex', borderBottom: '1px solid var(--line)', padding: '0 8px',
   },
   tab: {
     flex: 1, padding: '8px 4px', border: 'none', backgroundColor: 'transparent',
-    cursor: 'pointer', fontSize: '12px', color: '#666', borderBottom: '2px solid transparent',
+    cursor: 'pointer', fontSize: '12px', color: 'var(--ink-3)', borderBottom: '2px solid transparent',
     display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: '2px',
   },
   tabActive: {
-    color: '#1b72e8', borderBottom: '2px solid #1b72e8',
+    color: 'var(--accent)', borderBottom: '2px solid var(--accent)',
   },
   tabCount: { fontWeight: 700, fontSize: '14px' },
   filters: {
-    display: 'flex', gap: '6px', padding: '8px 12px', borderBottom: '1px solid #e5e7eb',
+    display: 'flex', gap: '6px', padding: '8px 12px', borderBottom: '1px solid var(--line)',
   },
   filterSelect: {
-    flex: 1, padding: '4px 6px', border: '1px solid #e5e7eb', borderRadius: '4px',
+    flex: 1, padding: '4px 6px', border: '1px solid var(--line)', borderRadius: '4px',
     fontSize: '11px', color: '#555', cursor: 'pointer',
   },
   convList: { flex: 1, overflowY: 'auto' as const },
@@ -1017,42 +1017,42 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '4px',
   },
-  convContact: { fontWeight: 600, fontSize: '14px', color: '#333' },
-  convTime: { fontSize: '11px', color: '#999' },
+  convContact: { fontWeight: 600, fontSize: '14px', color: 'var(--ink)' },
+  convTime: { fontSize: '11px', color: 'var(--ink-4)' },
   convMeta: { display: 'flex', gap: '6px', alignItems: 'center', marginBottom: '4px' },
-  convId: { fontSize: '12px', color: '#1b72e8', fontWeight: 500 },
+  convId: { fontSize: '12px', color: 'var(--accent)', fontWeight: 500 },
   convInbox: {
-    fontSize: '11px', backgroundColor: '#f3f4f6', padding: '1px 6px',
-    borderRadius: '4px', color: '#666',
+    fontSize: '11px', backgroundColor: 'var(--surface-3)', padding: '1px 6px',
+    borderRadius: '4px', color: 'var(--ink-3)',
   },
-  convAssignee: { fontSize: '11px', color: '#999' },
+  convAssignee: { fontSize: '11px', color: 'var(--ink-4)' },
   convPreview: {
-    fontSize: '13px', color: '#666', overflow: 'hidden',
+    fontSize: '13px', color: 'var(--ink-3)', overflow: 'hidden',
     textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const,
   },
-  empty: { padding: '40px 16px', textAlign: 'center' as const, color: '#999', fontSize: '14px' },
+  empty: { padding: '40px 16px', textAlign: 'center' as const, color: 'var(--ink-4)', fontSize: '14px' },
 
   // Chat Area
   chatArea: { flex: 1, display: 'flex', flexDirection: 'column' as const },
   chatHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-    padding: '12px 20px', borderBottom: '1px solid #e5e7eb',
+    padding: '12px 20px', borderBottom: '1px solid var(--line)',
   },
-  chatContact: { fontWeight: 600, fontSize: '16px', color: '#333' },
-  chatId: { fontSize: '14px', color: '#1b72e8' },
-  chatEmail: { fontSize: '13px', color: '#999' },
+  chatContact: { fontWeight: 600, fontSize: '16px', color: 'var(--ink)' },
+  chatId: { fontSize: '14px', color: 'var(--accent)' },
+  chatEmail: { fontSize: '13px', color: 'var(--ink-4)' },
   chatActions: { display: 'flex', gap: '8px', alignItems: 'center' },
   connectedBadge: {
-    fontSize: '11px', color: '#059669', backgroundColor: '#ecfdf5',
+    fontSize: '11px', color: 'var(--ok)', backgroundColor: '#ecfdf5',
     padding: '2px 8px', borderRadius: '10px', fontWeight: 600,
   },
   labelBtn: {
-    padding: '4px 10px', border: '1px solid #ddd', borderRadius: '4px',
-    fontSize: '12px', cursor: 'pointer', backgroundColor: '#fff', color: '#555',
+    padding: '4px 10px', border: '1px solid var(--line)', borderRadius: '4px',
+    fontSize: '12px', cursor: 'pointer', backgroundColor: 'var(--surface)', color: '#555',
   },
   labelDropdown: {
     position: 'absolute' as const, top: '100%', right: 0, marginTop: '4px',
-    backgroundColor: '#fff', borderRadius: '6px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+    backgroundColor: 'var(--surface)', borderRadius: '6px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     width: '200px', zIndex: 100, maxHeight: '250px', overflowY: 'auto' as const,
   },
   labelOption: {
@@ -1063,22 +1063,22 @@ const styles: Record<string, React.CSSProperties> = {
     width: '10px', height: '10px', borderRadius: '50%', flexShrink: 0,
   },
   assignSelect: {
-    padding: '4px 8px', border: '1px solid #ddd', borderRadius: '4px',
+    padding: '4px 8px', border: '1px solid var(--line)', borderRadius: '4px',
     fontSize: '12px', cursor: 'pointer', color: '#555', maxWidth: '120px',
   },
   statusSelect: {
-    padding: '4px 8px', border: '1px solid #ddd', borderRadius: '4px',
+    padding: '4px 8px', border: '1px solid var(--line)', borderRadius: '4px',
     fontSize: '13px', cursor: 'pointer', fontWeight: 600,
   },
   csatBtn: {
-    padding: '4px 10px', backgroundColor: '#059669', color: '#fff', border: 'none',
+    padding: '4px 10px', backgroundColor: 'var(--ok)', color: 'var(--surface)', border: 'none',
     borderRadius: '4px', fontSize: '11px', fontWeight: 600, cursor: 'pointer',
   },
   noChat: {
     flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '8px 20px', fontSize: '13px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '8px 20px', fontSize: '13px',
   },
 
   // Messages
@@ -1090,13 +1090,13 @@ const styles: Record<string, React.CSSProperties> = {
   msgBubble: {
     maxWidth: '70%', padding: '8px 12px', borderRadius: '12px', fontSize: '14px',
   },
-  msgOutgoing: { backgroundColor: '#1b72e8', color: '#fff' },
-  msgIncoming: { backgroundColor: '#f3f4f6', color: '#333' },
+  msgOutgoing: { backgroundColor: 'var(--accent)', color: 'var(--surface)' },
+  msgIncoming: { backgroundColor: 'var(--surface-3)', color: 'var(--ink)' },
   msgActivity: {
     backgroundColor: '#fef3c7', color: '#92400e', fontSize: '13px',
     fontStyle: 'italic' as const, maxWidth: '100%', textAlign: 'center' as const,
   },
-  msgPrivate: { backgroundColor: '#fef9c3', color: '#713f12', border: '1px dashed #d97706' },
+  msgPrivate: { backgroundColor: '#fef9c3', color: '#713f12', border: '1px dashed var(--warn)' },
   msgSender: { fontSize: '11px', fontWeight: 600, marginBottom: '2px', opacity: 0.8 },
   msgContent: { lineHeight: '1.4' },
   msgTime: { fontSize: '10px', opacity: 0.6, marginTop: '4px', textAlign: 'right' as const },
@@ -1107,16 +1107,16 @@ const styles: Record<string, React.CSSProperties> = {
 
   // Typing indicator
   typingIndicator: {
-    padding: '4px 20px', fontSize: '12px', color: '#999', fontStyle: 'italic' as const,
+    padding: '4px 20px', fontSize: '12px', color: 'var(--ink-4)', fontStyle: 'italic' as const,
   },
 
   // Compose
-  compose: { borderTop: '1px solid #e5e7eb', padding: '12px 20px' },
+  compose: { borderTop: '1px solid var(--line)', padding: '12px 20px' },
   composeTop: { marginBottom: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  cannedHint: { fontSize: '11px', color: '#999' },
+  cannedHint: { fontSize: '11px', color: 'var(--ink-4)' },
   cannedDropdown: {
     position: 'absolute' as const, bottom: '100%', left: 0, right: 0,
-    backgroundColor: '#fff', borderRadius: '8px 8px 0 0',
+    backgroundColor: 'var(--surface)', borderRadius: '8px 8px 0 0',
     boxShadow: '0 -4px 12px rgba(0,0,0,0.12)', maxHeight: '200px',
     overflowY: 'auto' as const, zIndex: 50, marginBottom: '4px',
   },
@@ -1126,14 +1126,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cannedItemActive: { backgroundColor: '#eff6ff' },
   cannedCode: {
-    fontSize: '12px', fontWeight: 600, color: '#1b72e8', marginBottom: '2px',
+    fontSize: '12px', fontWeight: 600, color: 'var(--accent)', marginBottom: '2px',
   },
-  cannedPreview: { fontSize: '13px', color: '#666', lineHeight: '1.3' },
-  privateLabel: { fontSize: '12px', color: '#666', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' },
+  cannedPreview: { fontSize: '13px', color: 'var(--ink-3)', lineHeight: '1.3' },
+  privateLabel: { fontSize: '12px', color: 'var(--ink-3)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' },
   composeRow: { display: 'flex', gap: '8px', alignItems: 'flex-end' },
   attachBtn: {
-    width: '44px', height: '44px', border: '1px solid #ddd', borderRadius: '8px',
-    backgroundColor: '#fff', fontSize: '20px', cursor: 'pointer', flexShrink: 0,
+    width: '44px', height: '44px', border: '1px solid var(--line)', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', fontSize: '20px', cursor: 'pointer', flexShrink: 0,
     display: 'flex', alignItems: 'center', justifyContent: 'center',
   },
   filePreview: {
@@ -1142,7 +1142,7 @@ const styles: Record<string, React.CSSProperties> = {
   },
   filePreviewItem: {
     display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 8px',
-    backgroundColor: '#f3f4f6', borderRadius: '6px', fontSize: '12px',
+    backgroundColor: 'var(--surface-3)', borderRadius: '6px', fontSize: '12px',
   },
   filePreviewThumb: {
     width: '32px', height: '32px', objectFit: 'cover' as const, borderRadius: '4px',
@@ -1150,12 +1150,12 @@ const styles: Record<string, React.CSSProperties> = {
   filePreviewIcon: { fontSize: '18px' },
   filePreviewName: {
     maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap' as const, color: '#333',
+    whiteSpace: 'nowrap' as const, color: 'var(--ink)',
   },
-  filePreviewSize: { color: '#999', fontSize: '11px' },
+  filePreviewSize: { color: 'var(--ink-4)', fontSize: '11px' },
   fileRemoveBtn: {
     width: '18px', height: '18px', borderRadius: '50%', border: 'none',
-    backgroundColor: '#ef4444', color: '#fff', fontSize: '14px', cursor: 'pointer',
+    backgroundColor: 'var(--danger)', color: 'var(--surface)', fontSize: '14px', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     lineHeight: 1, padding: 0,
   },
@@ -1179,12 +1179,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   attachmentSize: { opacity: 0.7, fontSize: '11px' },
   composeInput: {
-    flex: 1, padding: '10px 12px', border: '1px solid #ddd', borderRadius: '8px',
+    flex: 1, padding: '10px 12px', border: '1px solid var(--line)', borderRadius: '8px',
     fontSize: '14px', resize: 'none' as const, minHeight: '44px', maxHeight: '120px',
     fontFamily: 'inherit',
   },
   sendBtn: {
-    padding: '10px 20px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '10px 20px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px',
     fontWeight: 500, alignSelf: 'flex-end',
   },
@@ -1196,34 +1196,34 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center', alignItems: 'center', zIndex: 1000,
   },
   modal: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '24px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '24px',
     width: '100%', maxWidth: '480px',
   },
   field: { marginBottom: '12px' },
   label: { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500, color: '#555' },
   input: {
-    width: '100%', padding: '8px 12px', border: '1px solid #ddd',
+    width: '100%', padding: '8px 12px', border: '1px solid var(--line)',
     borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const,
   },
   formActions: { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' },
   primaryBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   cancelBtn: {
-    padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   // Interactive message styles
   interactiveMenu: {
     position: 'absolute' as const, bottom: '100%', left: 0, marginBottom: '6px',
-    backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '8px',
     boxShadow: '0 4px 12px rgba(0,0,0,0.15)', width: '220px', overflow: 'hidden', zIndex: 10,
   },
   interactiveMenuItem: {
     display: 'block', width: '100%', padding: '10px 12px', border: 'none',
     backgroundColor: 'transparent', cursor: 'pointer', textAlign: 'left' as const,
-    fontSize: '13px', fontWeight: 500, borderBottom: '1px solid #f3f4f6',
+    fontSize: '13px', fontWeight: 500, borderBottom: '1px solid var(--surface-3)',
   },
   interactiveBuilder: {
     backgroundColor: '#f0f9ff', border: '1px solid #bae6fd', borderRadius: '8px',
@@ -1234,7 +1234,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '8px 12px', backgroundColor: '#e0f2fe', borderBottom: '1px solid #bae6fd',
   },
   interactiveCloseBtn: {
-    border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px', color: '#888',
+    border: 'none', background: 'none', cursor: 'pointer', fontSize: '16px', color: 'var(--ink-3)',
   },
   interactiveBuilderBody: {
     padding: '10px 12px', maxHeight: '250px', overflowY: 'auto' as const,
@@ -1248,8 +1248,8 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '4px', cursor: 'pointer', fontSize: '11px', color: '#2563eb', marginTop: '4px',
   },
   interactiveSection: {
-    border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px',
-    marginBottom: '8px', backgroundColor: '#fff',
+    border: '1px solid var(--line)', borderRadius: '6px', padding: '8px',
+    marginBottom: '8px', backgroundColor: 'var(--surface)',
   },
   // Interactive message display in chat
   interactiveMsg: {
@@ -1259,7 +1259,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '12px', fontWeight: 600, marginBottom: '4px', opacity: 0.8,
   },
   interactiveMsgFooter: {
-    fontSize: '11px', color: '#888', marginTop: '4px', fontStyle: 'italic' as const,
+    fontSize: '11px', color: 'var(--ink-3)', marginTop: '4px', fontStyle: 'italic' as const,
   },
   interactiveBtnGroup: {
     display: 'flex', flexDirection: 'column' as const, gap: '4px', marginTop: '8px',

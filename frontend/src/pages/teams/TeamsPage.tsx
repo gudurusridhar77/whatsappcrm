@@ -168,7 +168,7 @@ const TeamsPage: React.FC = () => {
                   </div>
                 ))}
                 {agents.length === 0 && (
-                  <div style={{ color: '#999', fontSize: '13px' }}>No agents in this account yet.</div>
+                  <div style={{ color: 'var(--ink-4)', fontSize: '13px' }}>No agents in this account yet.</div>
                 )}
               </div>
             </div>
@@ -220,7 +220,7 @@ const TeamsPage: React.FC = () => {
                   <span style={styles.moreMembers}>+{team.members.length - 5}</span>
                 )}
                 {team.members.length === 0 && (
-                  <span style={{ fontSize: '12px', color: '#999' }}>No members</span>
+                  <span style={{ fontSize: '12px', color: 'var(--ink-4)' }}>No members</span>
                 )}
               </div>
             </div>
@@ -233,57 +233,57 @@ const TeamsPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' },
-  title: { margin: '0 0 4px 0', fontSize: '22px', color: '#333' },
-  subtitle: { margin: 0, fontSize: '13px', color: '#888' },
+  title: { margin: '0 0 4px 0', fontSize: '22px', color: 'var(--ink)' },
+  subtitle: { margin: 0, fontSize: '13px', color: 'var(--ink-3)' },
   addBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px', whiteSpace: 'nowrap' as const,
   },
-  error: { backgroundColor: '#fef2f2', color: '#dc2626', padding: '10px 14px', borderRadius: '6px', marginBottom: '16px', fontSize: '14px' },
-  success: { backgroundColor: '#f0fdf4', color: '#16a34a', padding: '10px 14px', borderRadius: '6px', marginBottom: '16px', fontSize: '14px' },
-  formCard: { backgroundColor: '#fff', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '24px' },
+  error: { backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '10px 14px', borderRadius: '6px', marginBottom: '16px', fontSize: '14px' },
+  success: { backgroundColor: '#f0fdf4', color: 'var(--ok)', padding: '10px 14px', borderRadius: '6px', marginBottom: '16px', fontSize: '14px' },
+  formCard: { backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '24px' },
   formRow: { display: 'flex', gap: '16px', marginBottom: '12px' },
   field: { flex: 1, marginBottom: '12px' },
   label: { display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 500, color: '#555' },
-  input: { width: '100%', padding: '8px 12px', border: '1px solid #ddd', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const },
+  input: { width: '100%', padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px', fontSize: '14px', boxSizing: 'border-box' as const },
   checkLabel: { fontSize: '14px', color: '#555', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' },
   memberGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '8px' },
   memberCard: {
     display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px',
-    border: '1px solid #e5e7eb', borderRadius: '6px', cursor: 'pointer',
+    border: '1px solid var(--line)', borderRadius: '6px', cursor: 'pointer',
   },
-  memberCardActive: { borderColor: '#1b72e8', backgroundColor: '#eff6ff' },
+  memberCardActive: { borderColor: 'var(--accent)', backgroundColor: '#eff6ff' },
   memberAvatar: {
-    width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#1b72e8',
-    color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--accent)',
+    color: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: '14px', fontWeight: 600, flexShrink: 0,
   },
   memberInfo: { flex: 1, minWidth: 0 },
-  memberName: { fontSize: '13px', fontWeight: 500, color: '#333' },
-  memberEmail: { fontSize: '11px', color: '#999', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const },
-  checkMark: { color: '#1b72e8', fontWeight: 700, fontSize: '16px' },
+  memberName: { fontSize: '13px', fontWeight: 500, color: 'var(--ink)' },
+  memberEmail: { fontSize: '11px', color: 'var(--ink-4)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const },
+  checkMark: { color: 'var(--accent)', fontWeight: 700, fontSize: '16px' },
   formActions: { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' },
-  primaryBtn: { padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
-  cancelBtn: { padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
+  primaryBtn: { padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
+  cancelBtn: { padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)', border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' },
-  empty: { padding: '40px', textAlign: 'center' as const, color: '#999', fontSize: '14px', gridColumn: '1 / -1', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
-  card: { backgroundColor: '#fff', borderRadius: '8px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
+  empty: { padding: '40px', textAlign: 'center' as const, color: 'var(--ink-4)', fontSize: '14px', gridColumn: '1 / -1', backgroundColor: 'var(--surface)', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
+  card: { backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '16px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' },
   cardHeader: { display: 'flex', justifyContent: 'space-between', marginBottom: '10px' },
-  cardName: { margin: 0, fontSize: '16px', color: '#333' },
-  cardDesc: { margin: '4px 0 0 0', fontSize: '13px', color: '#666' },
+  cardName: { margin: 0, fontSize: '16px', color: 'var(--ink)' },
+  cardDesc: { margin: '4px 0 0 0', fontSize: '13px', color: 'var(--ink-3)' },
   cardActions: { display: 'flex', gap: '4px' },
-  iconBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: '#666', padding: '4px 6px' },
-  iconBtnDanger: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: '#dc2626', padding: '4px 6px' },
+  iconBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: 'var(--ink-3)', padding: '4px 6px' },
+  iconBtnDanger: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '14px', color: 'var(--danger)', padding: '4px 6px' },
   cardMeta: { display: 'flex', gap: '8px', marginBottom: '12px' },
-  badge: { fontSize: '12px', backgroundColor: '#f3f4f6', padding: '2px 8px', borderRadius: '4px', color: '#666' },
-  autoBadge: { fontSize: '11px', backgroundColor: '#ecfdf5', color: '#059669', padding: '2px 8px', borderRadius: '4px' },
+  badge: { fontSize: '12px', backgroundColor: 'var(--surface-3)', padding: '2px 8px', borderRadius: '4px', color: 'var(--ink-3)' },
+  autoBadge: { fontSize: '11px', backgroundColor: '#ecfdf5', color: 'var(--ok)', padding: '2px 8px', borderRadius: '4px' },
   membersRow: { display: 'flex', gap: '4px', alignItems: 'center', flexWrap: 'wrap' as const },
   miniAvatar: {
     width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#6366f1',
-    color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'var(--surface)', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: '12px', fontWeight: 600,
   },
-  moreMembers: { fontSize: '12px', color: '#666', marginLeft: '4px' },
+  moreMembers: { fontSize: '12px', color: 'var(--ink-3)', marginLeft: '4px' },
 };
 
 export default TeamsPage;

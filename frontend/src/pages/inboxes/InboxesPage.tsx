@@ -11,9 +11,9 @@ const channelLabels: Record<string, string> = {
 };
 
 const channelColors: Record<string, string> = {
-  WEB_WIDGET: '#1b72e8',
-  API: '#6b7280',
-  EMAIL: '#059669',
+  WEB_WIDGET: 'var(--accent)',
+  API: 'var(--ink-3)',
+  EMAIL: 'var(--ok)',
   WHATSAPP: '#25d366',
 };
 
@@ -109,7 +109,7 @@ const InboxesPage: React.FC = () => {
                 <div>
                   <span style={{
                     ...styles.channelBadge,
-                    backgroundColor: channelColors[inbox.channelType] || '#6b7280',
+                    backgroundColor: channelColors[inbox.channelType] || 'var(--ink-3)',
                   }}>
                     {channelLabels[inbox.channelType] || inbox.channelType}
                   </span>
@@ -142,7 +142,7 @@ const InboxesPage: React.FC = () => {
               <h3 style={{ margin: 0 }}>{selectedInbox.name}</h3>
               <span style={{
                 ...styles.channelBadge,
-                backgroundColor: channelColors[selectedInbox.channelType] || '#6b7280',
+                backgroundColor: channelColors[selectedInbox.channelType] || 'var(--ink-3)',
               }}>
                 {channelLabels[selectedInbox.channelType]}
               </span>
@@ -171,7 +171,7 @@ const InboxesPage: React.FC = () => {
 
             {selectedInbox.webWidgetConfig && (
               <div style={styles.detailSection}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#666' }}>Widget Configuration</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--ink-3)' }}>Widget Configuration</h4>
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Website</span>
                   <span>{selectedInbox.webWidgetConfig.websiteUrl || '-'}</span>
@@ -197,7 +197,7 @@ const InboxesPage: React.FC = () => {
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Pre-Chat Form</span>
                   <span style={{
-                    color: selectedInbox.webWidgetConfig.preChatFormEnabled ? '#059669' : '#999',
+                    color: selectedInbox.webWidgetConfig.preChatFormEnabled ? 'var(--ok)' : 'var(--ink-4)',
                     fontWeight: 500,
                   }}>
                     {selectedInbox.webWidgetConfig.preChatFormEnabled ? '✓ Enabled' : 'Disabled'}
@@ -212,7 +212,7 @@ const InboxesPage: React.FC = () => {
 
             {selectedInbox.emailConfig && (
               <div style={styles.detailSection}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#666' }}>Email Configuration</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--ink-3)' }}>Email Configuration</h4>
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Email Address</span>
                   <span>{selectedInbox.emailConfig.emailAddress}</span>
@@ -245,13 +245,13 @@ const InboxesPage: React.FC = () => {
                   <button
                     onClick={() => handleTestSmtp(selectedInbox.id)}
                     disabled={testingSmtp}
-                    style={{ ...styles.primaryBtn, backgroundColor: '#059669', opacity: testingSmtp ? 0.6 : 1 }}>
+                    style={{ ...styles.primaryBtn, backgroundColor: 'var(--ok)', opacity: testingSmtp ? 0.6 : 1 }}>
                     {testingSmtp ? 'Testing...' : 'Test SMTP Connection'}
                   </button>
                   {smtpTestResult && (
                     <span style={{
                       marginLeft: '12px', fontSize: '13px',
-                      color: smtpTestResult.success ? '#059669' : '#dc2626',
+                      color: smtpTestResult.success ? 'var(--ok)' : 'var(--danger)',
                     }}>
                       {smtpTestResult.message}
                     </span>
@@ -262,7 +262,7 @@ const InboxesPage: React.FC = () => {
 
             {selectedInbox.whatsappConfig && (
               <div style={styles.detailSection}>
-                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: '#666' }}>WhatsApp Configuration</h4>
+                <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', color: 'var(--ink-3)' }}>WhatsApp Configuration</h4>
                 <div style={styles.detailRow}>
                   <span style={styles.detailLabel}>Phone Number</span>
                   <span>{selectedInbox.whatsappConfig.phoneNumber}</span>
@@ -292,9 +292,9 @@ const InboxesPage: React.FC = () => {
                   <span style={{ fontSize: '12px' }}>{selectedInbox.whatsappConfig.apiBaseUrl}</span>
                 </div>
 
-                <div style={{ ...styles.detailSection, borderTop: '1px dashed #e5e7eb' }}>
-                  <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#666' }}>Webhook Setup</h4>
-                  <p style={{ fontSize: '12px', color: '#888', margin: '0 0 8px 0' }}>
+                <div style={{ ...styles.detailSection, borderTop: '1px dashed var(--line)' }}>
+                  <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--ink-3)' }}>Webhook Setup</h4>
+                  <p style={{ fontSize: '12px', color: 'var(--ink-3)', margin: '0 0 8px 0' }}>
                     Configure this URL in your Meta App Dashboard → WhatsApp → Configuration → Callback URL:
                   </p>
                   <code style={{ ...styles.codeBlock, fontSize: '12px', wordBreak: 'break-all' as const, display: 'block', marginBottom: '8px' }}>
@@ -304,7 +304,7 @@ const InboxesPage: React.FC = () => {
                     <span style={styles.detailLabel}>Verify Token</span>
                     <code style={styles.codeBlock}>{selectedInbox.whatsappConfig.webhookVerifyToken}</code>
                   </div>
-                  <p style={{ fontSize: '11px', color: '#999', margin: '4px 0 0 0' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--ink-4)', margin: '4px 0 0 0' }}>
                     Subscribe to: messages, message_deliveries, message_reads
                   </p>
                 </div>
@@ -313,8 +313,8 @@ const InboxesPage: React.FC = () => {
 
             {selectedInbox.channelType === 'WEB_WIDGET' && (
               <div style={styles.detailSection}>
-                <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#666' }}>Embed Widget on Your Website</h4>
-                <p style={{ fontSize: '12px', color: '#888', marginBottom: '8px' }}>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--ink-3)' }}>Embed Widget on Your Website</h4>
+                <p style={{ fontSize: '12px', color: 'var(--ink-3)', marginBottom: '8px' }}>
                   Add this code before the closing <code>&lt;/body&gt;</code> tag:
                 </p>
                 <pre style={{ fontSize: '11px', wordBreak: 'break-all' as const, whiteSpace: 'pre-wrap' as const, padding: '12px', backgroundColor: '#1e293b', color: '#e2e8f0', borderRadius: '6px', lineHeight: '1.5' }}>
@@ -332,7 +332,7 @@ const InboxesPage: React.FC = () => {
                     navigator.clipboard.writeText(code);
                     alert('Widget embed code copied to clipboard!');
                   }}
-                  style={{ marginTop: '8px', padding: '6px 14px', fontSize: '12px', backgroundColor: '#059669', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                  style={{ marginTop: '8px', padding: '6px 14px', fontSize: '12px', backgroundColor: 'var(--ok)', color: 'var(--surface)', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
                   Copy Embed Code
                 </button>
               </div>
@@ -340,7 +340,7 @@ const InboxesPage: React.FC = () => {
 
             <div className="app-modal-actions" style={styles.formActions}>
               <button onClick={() => handleDelete(selectedInbox)}
-                style={{ ...styles.cancelBtn, color: '#dc2626', borderColor: '#fca5a5' }}>
+                style={{ ...styles.cancelBtn, color: 'var(--danger)', borderColor: '#fca5a5' }}>
                 Delete Inbox
               </button>
               <button onClick={() => setSelectedInbox(null)} style={styles.primaryBtn}>Close</button>
@@ -354,53 +354,53 @@ const InboxesPage: React.FC = () => {
 
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    backgroundColor: '#fff', borderRadius: '8px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '24px',
   },
   header: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '20px',
   },
-  title: { margin: 0, fontSize: '18px', color: '#333' },
+  title: { margin: 0, fontSize: '18px', color: 'var(--ink)' },
   primaryBtn: {
-    padding: '8px 16px', backgroundColor: '#1b72e8', color: '#fff',
+    padding: '8px 16px', backgroundColor: 'var(--accent)', color: 'var(--surface)',
     border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   cancelBtn: {
-    padding: '8px 16px', backgroundColor: '#f3f4f6', color: '#333',
-    border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
+    padding: '8px 16px', backgroundColor: 'var(--surface-3)', color: 'var(--ink)',
+    border: '1px solid var(--line)', borderRadius: '4px', cursor: 'pointer', fontSize: '14px',
   },
   error: {
-    backgroundColor: '#fef2f2', color: '#dc2626', padding: '12px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   success: {
-    backgroundColor: '#f0fdf4', color: '#059669', padding: '12px',
+    backgroundColor: '#f0fdf4', color: 'var(--ok)', padding: '12px',
     borderRadius: '4px', marginBottom: '16px', fontSize: '14px',
   },
   empty: {
-    textAlign: 'center' as const, color: '#999', padding: '40px', fontSize: '14px',
+    textAlign: 'center' as const, color: 'var(--ink-4)', padding: '40px', fontSize: '14px',
   },
   grid: {
     display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px',
   },
   card: {
-    border: '1px solid #e5e7eb', borderRadius: '8px', padding: '16px',
+    border: '1px solid var(--line)', borderRadius: '8px', padding: '16px',
     cursor: 'pointer', transition: 'box-shadow 0.2s',
   },
   cardHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '8px',
   },
-  cardTitle: { margin: '0 0 4px 0', fontSize: '16px', color: '#333' },
-  cardMeta: { margin: '0 0 2px 0', fontSize: '13px', color: '#999' },
+  cardTitle: { margin: '0 0 4px 0', fontSize: '16px', color: 'var(--ink)' },
+  cardMeta: { margin: '0 0 2px 0', fontSize: '13px', color: 'var(--ink-4)' },
   channelBadge: {
     padding: '2px 8px', borderRadius: '12px', fontSize: '11px',
-    fontWeight: 600, color: '#fff', textTransform: 'uppercase' as const,
+    fontWeight: 600, color: 'var(--surface)', textTransform: 'uppercase' as const,
   },
   inactiveBadge: {
     padding: '2px 8px', borderRadius: '12px', fontSize: '11px',
-    backgroundColor: '#fef2f2', color: '#dc2626', marginLeft: '6px',
+    backgroundColor: '#fef2f2', color: 'var(--danger)', marginLeft: '6px',
   },
   modalOverlay: {
     position: 'fixed' as const, top: 0, left: 0, right: 0, bottom: 0,
@@ -408,7 +408,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: 'center', alignItems: 'center', zIndex: 1000,
   },
   modal: {
-    backgroundColor: '#fff', borderRadius: '8px', padding: '24px',
+    backgroundColor: 'var(--surface)', borderRadius: '8px', padding: '24px',
     width: '100%', maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto' as const,
   },
   formActions: {
@@ -421,9 +421,9 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     padding: '8px 0', fontSize: '14px',
   },
-  detailLabel: { color: '#666', fontWeight: 500 },
+  detailLabel: { color: 'var(--ink-3)', fontWeight: 500 },
   codeBlock: {
-    backgroundColor: '#f3f4f6', padding: '6px 10px', borderRadius: '4px',
+    backgroundColor: 'var(--surface-3)', padding: '6px 10px', borderRadius: '4px',
     fontSize: '13px', fontFamily: 'monospace',
   },
 };
