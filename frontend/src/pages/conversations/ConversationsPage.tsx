@@ -9,6 +9,8 @@ import { cannedResponsesApi, CannedResponse } from '../../api/cannedResponses';
 import { teamsApi, TeamResponse, agentsApi, AgentResponse } from '../../api/teams';
 import ContactPanel from '../../components/ContactPanel';
 import { csatApi } from '../../api/csat';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import ConversationsPageMobile from './ConversationsPage.mobile';
 
 const statusColors: Record<string, string> = {
   OPEN: 'var(--ok)',
@@ -354,6 +356,39 @@ const ConversationsPage: React.FC = () => {
       setError(err.response?.data?.error || 'Failed to create conversation');
     }
   };
+
+  // ── Mobile presentation ──────────────────────────────────────────
+  const isMobile = useIsMobile();
+  if (isMobile) {
+    return (
+      <ConversationsPageMobile
+        conversations={conversations} counts={counts} activeConv={activeConv}
+        messages={messages}
+        filterStatus={filterStatus} setFilterStatus={setFilterStatus}
+        filterAssigneeId={filterAssigneeId} setFilterAssigneeId={setFilterAssigneeId}
+        filterTeamId={filterTeamId} setFilterTeamId={setFilterTeamId}
+        allAgents={allAgents} allTeams={allTeams} allLabels={allLabels}
+        cannedResponses={cannedResponses} contacts={contacts} inboxes={inboxes}
+        newMessage={newMessage} setNewMessage={setNewMessage}
+        isPrivate={isPrivate} setIsPrivate={setIsPrivate}
+        selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles}
+        fileInputRef={fileInputRef}
+        error={error} setError={setError}
+        typingUser={typingUser} connected={connected}
+        onSelect={selectConversation}
+        onSend={handleSend} onFileSelect={handleFileSelect} onRemoveFile={removeFile}
+        onStatusChange={handleStatusChange}
+        onAssigneeChange={handleAssigneeChange} onTeamChange={handleTeamChange}
+        onToggleLabel={toggleConversationLabel}
+        onOpenNew={openNewModal} onCreateConversation={handleCreateConversation}
+        newContactId={newContactId} setNewContactId={setNewContactId}
+        newInboxId={newInboxId} setNewInboxId={setNewInboxId}
+        newInitialMsg={newInitialMsg} setNewInitialMsg={setNewInitialMsg}
+        showNew={showNew} setShowNew={setShowNew}
+        sendTyping={sendTyping}
+      />
+    );
+  }
 
   return (
     <div className="app-conv-wrapper" style={styles.wrapper}>
