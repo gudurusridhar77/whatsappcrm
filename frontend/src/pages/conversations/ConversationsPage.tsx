@@ -357,6 +357,18 @@ const ConversationsPage: React.FC = () => {
     }
   };
 
+  const handleSendCsat = useCallback(async (convId: number) => {
+    if (!currentAccountId) return;
+    try {
+      const res = await csatApi.createSurvey(currentAccountId, convId);
+      const url = window.location.origin + '/survey/' + res.data.token;
+      try { await navigator.clipboard.writeText(url); } catch {}
+      alert('CSAT survey link copied to clipboard!\n' + url);
+    } catch (err: any) {
+      alert(err.response?.data?.error || 'Failed to create survey');
+    }
+  }, [currentAccountId]);
+
   // ── Mobile presentation ──────────────────────────────────────────
   const isMobile = useIsMobile();
   if (isMobile) {
@@ -381,6 +393,7 @@ const ConversationsPage: React.FC = () => {
         onAssigneeChange={handleAssigneeChange} onTeamChange={handleTeamChange}
         onToggleLabel={toggleConversationLabel}
         onOpenNew={openNewModal} onCreateConversation={handleCreateConversation}
+        onCsat={handleSendCsat}
         newContactId={newContactId} setNewContactId={setNewContactId}
         newInboxId={newInboxId} setNewInboxId={setNewInboxId}
         newInitialMsg={newInitialMsg} setNewInitialMsg={setNewInitialMsg}

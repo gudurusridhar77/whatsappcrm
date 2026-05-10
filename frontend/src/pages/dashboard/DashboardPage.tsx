@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { accountApi } from '../../api/account';
 import { AccountUser } from '../../types';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import DashboardPageMobile from './DashboardPage.mobile';
 
 const availabilityColors: Record<string, string> = {
   ONLINE: 'var(--ok)',
@@ -80,6 +82,25 @@ const DashboardPage: React.FC = () => {
   const onlineMembers = members.filter(m => m.availability === 'ONLINE');
   const busyMembers = members.filter(m => m.availability === 'BUSY');
   const offlineMembers = members.filter(m => m.availability === 'OFFLINE');
+
+  const isMobile = useIsMobile();
+  if (isMobile) {
+    return (
+      <DashboardPageMobile
+        members={members}
+        currentUserId={user?.id}
+        isAdmin={isAdmin}
+        error={error}
+        showInvite={showInvite} setShowInvite={setShowInvite}
+        inviteName={inviteName} setInviteName={setInviteName}
+        inviteEmail={inviteEmail} setInviteEmail={setInviteEmail}
+        inviteRole={inviteRole} setInviteRole={setInviteRole}
+        onInvite={handleInvite}
+        onRoleChange={handleRoleChange}
+        onRemove={handleRemove}
+      />
+    );
+  }
 
   return (
     <div>

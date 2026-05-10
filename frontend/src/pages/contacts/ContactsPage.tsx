@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { contactsApi, Contact, ContactRequest, ContactImportResult } from '../../api/contacts';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import ContactsPageMobile from './ContactsPage.mobile';
 
 const emptyForm: ContactRequest = { name: '', email: '', phoneNumber: '', company: '', description: '' };
 
@@ -93,6 +95,30 @@ const ContactsPage: React.FC = () => {
       setError(err.response?.data?.error || 'Import failed');
     } finally { setImporting(false); }
   };
+
+  const isMobile = useIsMobile();
+  if (isMobile) {
+    return (
+      <ContactsPageMobile
+        contacts={contacts}
+        page={page} setPage={setPage}
+        totalPages={totalPages}
+        search={search} setSearch={setSearch}
+        error={error}
+        showForm={showForm} setShowForm={setShowForm}
+        editingId={editingId} setEditingId={setEditingId}
+        form={form} setForm={setForm}
+        emptyForm={emptyForm}
+        onSubmit={handleSubmit}
+        showImport={showImport} setShowImport={setShowImport}
+        importFile={importFile} setImportFile={setImportFile}
+        importing={importing}
+        importResult={importResult} setImportResult={setImportResult}
+        onImport={handleImport}
+        onDelete={handleDelete}
+      />
+    );
+  }
 
   return (
     <div style={styles.container}>

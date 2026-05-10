@@ -42,7 +42,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import {
-  ConversationResponse, MessageResponse, ConversationCounts,
+  ConversationResponse, MessageResponse, ConversationCounts, AttachmentResponse,
 } from '../../api/conversations';
 import { Contact } from '../../api/contacts';
 import { Inbox } from '../../api/inboxes';
@@ -95,6 +95,7 @@ export interface MobileProps {
 
   onOpenNew: () => void;
   onCreateConversation: (e: React.FormEvent) => void;
+  onCsat: (conversationId: number) => void;
   newContactId: number; setNewContactId: (n: number) => void;
   newInboxId: number;   setNewInboxId: (n: number) => void;
   newInitialMsg: string; setNewInitialMsg: (s: string) => void;
@@ -281,28 +282,37 @@ const ThreadView: React.FC<MobileProps & {
       </header>
 
       {p.showActions && (
-        <div style={s.actionMenu}>
-          <select value={p.conv.status}
-            onChange={e => { p.onStatusChange(p.conv.id, e.target.value); p.setShowActions(false); }}
-            style={s.actionSelect}>
-            <option value="OPEN">Mark as Open</option>
-            <option value="PENDING">Mark as Pending</option>
-            <option value="RESOLVED">Mark as Resolved</option>
-            <option value="SNOOZED">Snooze</option>
-          </select>
-          <select value={p.conv.assigneeId || 0}
-            onChange={e => { p.onAssigneeChange(p.conv.id, Number(e.target.value)); p.setShowActions(false); }}
-            style={s.actionSelect}>
-            <option value={0}>Unassigned</option>
-            {p.allAgents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
-          </select>
-          <select value={p.conv.teamId || 0}
-            onChange={e => { p.onTeamChange(p.conv.id, Number(e.target.value)); p.setShowActions(false); }}
-            style={s.actionSelect}>
-            <option value={0}>No team</option>
-            {p.allTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </select>
-        </div>
+        <>
+          <div style={s.actionBackdrop} onClick={() => p.setShowActions(false)} />
+          <div style={s.actionMenu}>
+            <select value={p.conv.status}
+              onChange={e => { p.onStatusChange(p.conv.id, e.target.value); p.setShowActions(false); }}
+              style={s.actionSelect}>
+              <option value="OPEN">Mark as Open</option>
+              <option value="PENDING">Mark as Pending</option>
+              <option value="RESOLVED">Mark as Resolved</option>
+              <option value="SNOOZED">Snooze</option>
+            </select>
+            <select value={p.conv.assigneeId || 0}
+              onChange={e => { p.onAssigneeChange(p.conv.id, Number(e.target.value)); p.setShowActions(false); }}
+              style={s.actionSelect}>
+              <option value={0}>Unassigned</option>
+              {p.allAgents.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+            </select>
+            <select value={p.conv.teamId || 0}
+              onChange={e => { p.onTeamChange(p.conv.id, Number(e.target.value)); p.setShowActions(false); }}
+              style={s.actionSelect}>
+              <option value={0}>No team</option>
+              {p.allTeams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+            </select>
+            {p.conv.status === 'RESOLVED' && (
+              <button onClick={() => { p.onCsat(p.conv.id); p.setShowActions(false); }}
+                style={{ ...s.actionSelect, background: 'var(--ok)', color: '#fff', border: 0, fontWeight: 600, cursor: 'pointer' }}>
+                Send CSAT survey
+              </button>
+            )}
+          </div>
+        </>
       )}
 
       {p.error && <div style={s.error}>{p.error}</div>}
@@ -316,6 +326,7 @@ const ThreadView: React.FC<MobileProps & {
           if (activity) return (
             <div key={m.id} style={s.activity}>— {m.content} —</div>
           );
+          const iData = (m.contentType && m.contentType !== 'text' && m.contentAttributes?.interactiveData) as any;
           return (
             <div key={m.id} style={{
               alignSelf: out ? 'flex-end' : 'flex-start',
@@ -329,10 +340,55 @@ const ThreadView: React.FC<MobileProps & {
                 ...(out ? s.bubbleOut : s.bubbleIn),
                 ...(m.privateFlag ? s.bubblePrivate : {}),
               }}>
-                {m.content}
+                {m.content && <div>{m.content}</div>}
+                {iData && (
+                  <div style={{ marginTop: m.content ? 6 : 0 }}>
+                    {iData.header && <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.85, marginBottom: 4 }}>{iData.header}</div>}
+                    {iData.body && <div style={{ fontSize: 13, lineHeight: 1.4 }}>{iData.body}</div>}
+                    {m.contentType === 'interactive_buttons' && iData.buttons && (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 6 }}>
+                        {(iData.buttons as any[]).map((b, i) => (
+                          <div key={i} style={s.interactiveBtnDisplay}>{b.title}</div>
+                        ))}
+                      </div>
+                    )}
+                    {m.contentType === 'interactive_list' && iData.sections && (
+                      <div style={{ marginTop: 6 }}>
+                        {iData.buttonText && <div style={s.interactiveListBtn}>{iData.buttonText}</div>}
+                        {(iData.sections as any[]).map((sec, si) => (
+                          <div key={si}>
+                            <div style={s.interactiveListSectionTitle}>{sec.title}</div>
+                            {(sec.rows as any[]).map((row, ri) => (
+                              <div key={ri} style={s.interactiveListRow}>
+                                <div style={{ fontWeight: 500, fontSize: 12 }}>{row.title}</div>
+                                {row.description && <div style={{ fontSize: 11, opacity: 0.75 }}>{row.description}</div>}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {iData.footer && <div style={{ fontSize: 11, opacity: 0.7, marginTop: 4, fontStyle: 'italic' }}>{iData.footer}</div>}
+                  </div>
+                )}
+                {m.attachments && m.attachments.length > 0 && (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: m.content || iData ? 6 : 0 }}>
+                    {m.attachments.map(att => (
+                      <AttachmentView key={att.id} att={att} outgoing={out && !m.privateFlag} />
+                    ))}
+                  </div>
+                )}
               </div>
               <div style={{ ...s.bubbleTime, textAlign: out ? 'right' : 'left' }}>
                 {new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {m.senderType === 'AGENT' && m.deliveryStatus && (
+                  <span style={{ marginLeft: 4 }} title={m.deliveryStatus}>
+                    {m.deliveryStatus === 'sent' && '✓'}
+                    {m.deliveryStatus === 'delivered' && '✓✓'}
+                    {m.deliveryStatus === 'read' && <span style={{ color: '#3b82f6' }}>✓✓</span>}
+                    {m.deliveryStatus === 'failed' && <span style={{ color: 'var(--danger)' }}>!</span>}
+                  </span>
+                )}
               </div>
             </div>
           );
@@ -450,15 +506,15 @@ const NewSheet: React.FC<MobileProps> = (p) => (
   <Sheet title="New conversation" onClose={() => p.setShowNew(false)}
     footer={
       <>
-        <button onClick={() => p.setShowNew(false)} style={s.btnSecondary}>Cancel</button>
-        <button onClick={p.onCreateConversation as any}
+        <button type="button" onClick={() => p.setShowNew(false)} style={s.btnSecondary}>Cancel</button>
+        <button type="submit" form="mobile-new-conv-form"
           disabled={!p.newContactId || !p.newInboxId}
           style={{ ...s.btnPrimary, ...(p.newContactId && p.newInboxId ? {} : { opacity: 0.5 }) }}>
           Start
         </button>
       </>
     }>
-    <form onSubmit={p.onCreateConversation}>
+    <form id="mobile-new-conv-form" onSubmit={p.onCreateConversation}>
       <Group title="Contact">
         <select value={p.newContactId} onChange={e => p.setNewContactId(Number(e.target.value))} style={s.input}>
           <option value={0}>Select a contact…</option>
@@ -506,6 +562,52 @@ const Group: React.FC<{ title: string; children: React.ReactNode }> = ({ title, 
 // ──────────────────────────────────────────────────────────────
 // ATOMS
 // ──────────────────────────────────────────────────────────────
+
+const formatFileSize = (bytes: number): string => {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+};
+
+const AttachmentView: React.FC<{ att: AttachmentResponse; outgoing: boolean }> = ({ att, outgoing }) => {
+  if (att.fileType === 'IMAGE') {
+    return (
+      <a href={att.dataUrl} target="_blank" rel="noopener noreferrer">
+        <img src={att.dataUrl} alt={att.fileName}
+          style={{ maxWidth: '100%', maxHeight: 220, borderRadius: 10, display: 'block' }} />
+      </a>
+    );
+  }
+  if (att.fileType === 'VIDEO') {
+    return (
+      <video controls style={{ maxWidth: '100%', maxHeight: 220, borderRadius: 10 }}>
+        <source src={att.dataUrl} type={att.contentType} />
+      </video>
+    );
+  }
+  if (att.fileType === 'AUDIO') {
+    return (
+      <audio controls style={{ maxWidth: '100%' }}>
+        <source src={att.dataUrl} type={att.contentType} />
+      </audio>
+    );
+  }
+  return (
+    <a href={att.dataUrl} target="_blank" rel="noopener noreferrer"
+      style={{
+        display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px',
+        borderRadius: 8, textDecoration: 'none', fontSize: 13,
+        background: outgoing ? 'rgba(255,255,255,0.18)' : 'var(--surface-3)',
+        color: outgoing ? '#fff' : 'var(--ink-2)',
+      }}>
+      <span style={{ fontSize: 16 }}>📎</span>
+      <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        {att.fileName}
+      </span>
+      <span style={{ fontSize: 11, opacity: 0.75 }}>{formatFileSize(att.fileSize)}</span>
+    </a>
+  );
+};
 
 const Avatar: React.FC<{ name: string }> = ({ name }) => {
   const initials = name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
@@ -562,7 +664,10 @@ const SvgSend = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="curr
 const s: Record<string, React.CSSProperties> = {
   shell: {
     display: 'flex', flexDirection: 'column',
-    height: 'calc(100vh - 64px - 56px)', // header + bottom tabs (matches index.css)
+    // 100dvh accounts for the dynamic mobile address-bar; vh fallback for older browsers.
+    height: 'calc(100vh - 64px - 56px)',
+    minHeight: 'calc(100dvh - 64px - 56px)',
+    maxHeight: 'calc(100dvh - 64px - 56px)',
     background: 'var(--bg)', position: 'relative', overflow: 'hidden',
   },
 
@@ -621,6 +726,9 @@ const s: Record<string, React.CSSProperties> = {
   threadName: { fontSize: 15, fontWeight: 700, color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
   threadSubtitle: { fontSize: 12, color: 'var(--ink-3)', display: 'flex', alignItems: 'center' },
 
+  actionBackdrop: {
+    position: 'absolute', inset: 0, zIndex: 19, background: 'transparent',
+  },
   actionMenu: {
     position: 'absolute', top: 60, right: 12, zIndex: 20,
     background: 'var(--surface)', borderRadius: 12, boxShadow: 'var(--sh-2)',
@@ -725,5 +833,22 @@ const s: Record<string, React.CSSProperties> = {
   btnSecondary: {
     flex: 1, height: 48, borderRadius: 12, border: '1px solid var(--line)',
     background: 'var(--surface)', color: 'var(--ink-2)', fontSize: 15, fontWeight: 600, cursor: 'pointer',
+  },
+
+  interactiveBtnDisplay: {
+    padding: '6px 10px', borderRadius: 14, fontSize: 12, fontWeight: 500,
+    textAlign: 'center', border: '1px solid currentColor', opacity: 0.9,
+  },
+  interactiveListBtn: {
+    padding: '6px 10px', borderRadius: 6, fontSize: 12, fontWeight: 500,
+    textAlign: 'center', marginBottom: 6, border: '1px solid currentColor', opacity: 0.9,
+  },
+  interactiveListSectionTitle: {
+    fontSize: 10, fontWeight: 700, opacity: 0.7, marginTop: 6, marginBottom: 3,
+    textTransform: 'uppercase', letterSpacing: '0.05em',
+  },
+  interactiveListRow: {
+    padding: '4px 8px', borderRadius: 4, marginBottom: 3,
+    background: 'rgba(0,0,0,0.06)',
   },
 };

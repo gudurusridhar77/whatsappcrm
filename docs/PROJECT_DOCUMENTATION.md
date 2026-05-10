@@ -7,6 +7,7 @@ A full-featured SaaS customer communication platform built with **Spring Boot 3.
 ## Table of Contents
 
 1. [Getting Started](#1-getting-started)
+   - [Running with Docker (Local or Server)](#running-with-docker-local-or-server)
 2. [Feature 1: Authentication & Account Management](#2-feature-1-authentication--account-management)
 3. [Feature 2: Contact Management](#3-feature-2-contact-management)
 4. [Feature 3: Conversations & Messaging](#4-feature-3-conversations--messaging)
@@ -82,6 +83,159 @@ The frontend starts on **http://localhost:3000**.
 2. Click **Sign Up** to create your first account
 3. You'll be logged in automatically as an **Admin**
 4. Start configuring your inboxes, teams, and labels
+
+---
+
+### Running with Docker (Local or Server)
+
+The repo ships with a multi-service `docker-compose.yml` at the project root that builds and runs the full stack — **PostgreSQL + Spring Boot backend + React frontend behind Nginx**. This is the recommended path for both quick local trials and server deployments.
+
+#### Prerequisites
+
+- **Docker Engine 24+**
+- **Docker Compose v2** (bundled with modern Docker Desktop; on Linux servers install the `docker-compose-plugin` package)
+
+Verify:
+```bash
+docker --version
+docker compose version
+```
+
+#### Services
+
+The stack defined in [docker-compose.yml](../docker-compose.yml):
+
+| Service | Image / Build | Container | Port (host) | Purpose |
+|---|---|---|---|---|
+| `postgres` | `postgres:16-alpine` | `whatsappcrm-db` | `5432` | Primary database |
+| `backend` | builds [backend/Dockerfile](../backend/Dockerfile) | `whatsappcrm-backend` | `8080` | Spring Boot API + WebSocket |
+| `frontend` | builds [frontend/Dockerfile](../frontend/Dockerfile) | `whatsappcrm-frontend` | `80` | React SPA + Nginx reverse proxy |
+
+The frontend container's Nginx reverse-proxies `/api` and `/ws` to the backend, so the browser only ever talks to port `80` (same-origin) — no CORS gymnastics.
+
+#### 1. Configure environment
+
+Copy the example env file at the repo root and edit secrets:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```ini
+# Database
+DB_USERNAME=whatsappcrm
+DB_PASSWORD=<a-strong-password>
+
+# JWT Secret — must be 256+ bits (32+ chars). Change for any non-trivial deploy.
+JWT_SECRET=<long-random-string>
+
+# Mail (optional — only if you use the Email channel)
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+```
+
+Compose reads `.env` automatically; values flow into `postgres` and `backend` via `${VAR}` substitution in `docker-compose.yml`.
+
+#### 2. Build and start
+
+From the repo root:
+
+```bash
+# Build images and start everything in the background
+docker compose up -d --build
+
+# Watch logs (Ctrl-C to detach; containers keep running)
+docker compose logs -f
+```
+
+First build downloads Maven and npm dependencies — expect 3–5 min. Subsequent builds use the layer cache and are much faster.
+
+#### 3. Verify
+
+```bash
+docker compose ps          # all three should be "running" / "healthy"
+curl http://localhost/      # frontend HTML
+curl http://localhost:8080/actuator/health  # backend (if actuator enabled)
+```
+
+Open **http://localhost** in your browser and sign up.
+
+#### 4. Common operations
+
+```bash
+# Stop everything (preserves volumes / data)
+docker compose down
+
+# Stop AND wipe DB + uploads (destructive — fresh start)
+docker compose down -v
+
+# Rebuild a single service after code changes
+docker compose up -d --build backend
+docker compose up -d --build frontend
+
+# Tail logs for one service
+docker compose logs -f backend
+
+# Open a shell in a running container
+docker compose exec backend sh
+docker compose exec postgres psql -U whatsappcrm -d whatsappcrm
+```
+
+#### 5. Persistence
+
+Two named volumes survive `docker compose down`:
+
+| Volume | Mounted at | Holds |
+|---|---|---|
+| `pgdata` | `/var/lib/postgresql/data` (postgres) | All DB tables |
+| `uploads` | `/app/uploads` (backend) | Message attachments |
+
+To back up the DB:
+```bash
+docker compose exec postgres pg_dump -U whatsappcrm whatsappcrm > backup.sql
+```
+
+#### 6. Running on a server
+
+The same `docker compose up -d --build` works on any Linux host with Docker installed. A turnkey AWS path is provided:
+
+```bash
+# Provisions an EC2 instance with Docker pre-installed via user-data
+./deploy/aws-setup.sh <your-key-pair-name> [region] [aws-profile]
+```
+
+See [deploy/aws-setup.sh](../deploy/aws-setup.sh). After SSH-ing in:
+
+```bash
+git clone <your-repo-url> whatsappcrm
+cd whatsappcrm
+cp .env.example .env && nano .env       # set strong DB_PASSWORD and JWT_SECRET
+docker compose up -d --build
+```
+
+The frontend will be reachable on `http://<server-public-ip>` (port 80).
+
+##### TLS / HTTPS
+
+For WhatsApp webhooks and any production use you need HTTPS. The repo includes [deploy/init-ssl.sh](../deploy/init-ssl.sh) for issuing Let's Encrypt certs. The general flow:
+
+1. Point a DNS A-record at the server's public IP.
+2. Run `./deploy/init-ssl.sh <your-domain>` to obtain certs.
+3. Update Nginx config / compose to terminate TLS on port 443.
+
+For local development against Meta's WhatsApp webhook, use `ngrok http 80` instead of provisioning real TLS.
+
+#### 7. Production notes
+
+- Set a real `JWT_SECRET` (≥ 32 random chars) and `DB_PASSWORD` — never ship the example values.
+- Set `spring.jpa.hibernate.ddl-auto=validate` (currently `update`) once the schema is stable. Override via `SPRING_JPA_HIBERNATE_DDL_AUTO=validate` in `.env` and add it to the backend service `environment:` block in `docker-compose.yml`.
+- Don't expose Postgres port `5432` to the internet — drop the `ports:` mapping under the `postgres` service for server deploys (containers still reach it over the compose network).
+- Put the stack behind a reverse proxy / load balancer that terminates TLS, or extend the frontend Nginx config to listen on `443`.
+- Use a managed mail provider (SES, SendGrid, Mailgun) for the Email channel rather than `localhost:1025`.
 
 ---
 
