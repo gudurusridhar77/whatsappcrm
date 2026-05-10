@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { broadcastsApi, BroadcastResponse } from '../../api/broadcasts';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import BroadcastsPageMobile from './BroadcastsPage.mobile';
 
 const BroadcastsPage: React.FC = () => {
   const { currentAccountId } = useAuth();
@@ -84,6 +86,19 @@ const BroadcastsPage: React.FC = () => {
   };
 
   const formatDate = (d: string | null) => d ? new Date(d).toLocaleString() : '-';
+
+  const isMobile = useIsMobile();
+  if (isMobile) {
+    return (
+      <BroadcastsPageMobile
+        broadcasts={broadcasts}
+        selected={selectedBroadcast} setSelected={setSelectedBroadcast}
+        error={error} setError={setError}
+        success={success} setSuccess={setSuccess}
+        onStart={handleStart} onCancel={handleCancel} onDelete={handleDelete}
+      />
+    );
+  }
 
   const progressBar = (b: BroadcastResponse) => {
     if (!b.totalCount) return null;

@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { csatApi, CsatReportResponse, CsatSurveyResponse } from '../../api/csat';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import CsatPageMobile from './CsatPage.mobile';
 
 const EMOJI_RATINGS = ['', '\uD83D\uDE21', '\uD83D\uDE1E', '\uD83D\uDE10', '\uD83D\uDE0A', '\uD83E\uDD29'];
 const RATING_COLORS = ['', 'var(--danger)', '#f97316', '#eab308', 'var(--ok)', 'var(--ok)'];
@@ -35,7 +37,19 @@ const CsatPage: React.FC = () => {
 
   useEffect(() => { loadReport(); loadResponses(); }, [loadReport, loadResponses]);
 
+  const isMobile = useIsMobile();
+
   if (loading) return <div style={s.loading}>Loading CSAT data...</div>;
+
+  if (isMobile) {
+    return (
+      <CsatPageMobile
+        tab={tab} setTab={setTab}
+        report={report} responses={responses} totalResponses={totalResponses}
+        error={error}
+      />
+    );
+  }
 
   return (
     <div>

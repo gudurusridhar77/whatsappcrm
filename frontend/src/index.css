@@ -225,3 +225,78 @@ button { font-family: inherit; }
   .app-bottom-tabs { display: none !important; }
   .app-menu-btn { display: none !important; }
 }
+
+/* =========================================================================
+ * Auto-mobile fixes for legacy pages that haven't been refactored
+ * Targets common inline-style patterns so we don't have to touch every file.
+ * ========================================================================= */
+@media (max-width: 768px) {
+  /* Tables: turn into horizontally scrollable blocks so they don't blow out
+     the layout. Children keep their default table-row / table-cell display. */
+  .app-main table {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+  .app-main table th,
+  .app-main table td { white-space: nowrap; }
+
+  /* Fixed-column stat / metric grids → 2 cols on phones */
+  .app-main div[style*="grid-template-columns: repeat(4, 1fr)"],
+  .app-main div[style*="grid-template-columns: repeat(6, 1fr)"],
+  .app-main div[style*="grid-template-columns:repeat(4, 1fr)"],
+  .app-main div[style*="grid-template-columns:repeat(6, 1fr)"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  /* 3-col grids → 1 col on phones */
+  .app-main div[style*="grid-template-columns: repeat(3, 1fr)"],
+  .app-main div[style*="grid-template-columns:repeat(3, 1fr)"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /* Side-by-side chart / column rows → stack */
+  .app-main div[style*="grid-template-columns: 1fr 1fr"],
+  .app-main div[style*="grid-template-columns:1fr 1fr"],
+  .app-main div[style*="minmax(0, 1fr) minmax(0, 1fr)"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  /* Side-by-side flex columns with explicit gap → stack vertically (form + preview, etc.) */
+  .app-main div[style*="display: flex"][style*="gap: 24px"],
+  .app-main div[style*="display:flex"][style*="gap: 24px"] {
+    flex-direction: column !important;
+  }
+  .app-main div[style*="display: flex"][style*="gap: 24px"] > div,
+  .app-main div[style*="display:flex"][style*="gap: 24px"] > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+  }
+
+  /* Form rows that pack inputs side-by-side with small gaps → wrap */
+  .app-main form div[style*="display: flex"][style*="gap: 8px"][style*="align-items: center"],
+  .app-main form div[style*="display: flex"][style*="gap: 12px"] {
+    flex-wrap: wrap !important;
+  }
+  .app-main form div[style*="display: flex"][style*="gap: 8px"][style*="align-items: center"] > select,
+  .app-main form div[style*="display: flex"][style*="gap: 8px"][style*="align-items: center"] > input {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Preview panels with fixed 320px width → expand to full width on phones */
+  .app-main div[style*="width: 320px"] {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Page wrappers that pad 24px → tighten */
+  .app-main > div[style*="padding: 24px"],
+  .app-main > div[style*="padding:24px"] {
+    padding: 14px !important;
+  }
+}

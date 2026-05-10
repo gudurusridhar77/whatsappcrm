@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { reportsApi, ReportResponse } from '../../api/reports';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import ReportsPageMobile from './ReportsPage.mobile';
 
 const STATUS_COLORS: Record<string, string> = {
   OPEN: 'var(--ok)',
@@ -48,9 +50,22 @@ const ReportsPage: React.FC = () => {
     return `${hrs}h ${remaining}m`;
   };
 
+  const isMobile = useIsMobile();
+
   if (loading) return <div style={s.loading}>Loading reports...</div>;
   if (error) return <div style={s.error}>{error}</div>;
   if (!report) return null;
+
+  if (isMobile) {
+    return (
+      <ReportsPageMobile
+        report={report}
+        startDate={startDate} setStartDate={setStartDate}
+        endDate={endDate} setEndDate={setEndDate}
+        formatMinutes={formatMinutes}
+      />
+    );
+  }
 
   const { overview, conversationTrend, messageTrend, agentPerformance, inboxBreakdown, statusDistribution, topLabels, teamPerformance } = report;
   const maxTrendConv = Math.max(...conversationTrend.map(p => p.count), 1);
