@@ -27,6 +27,22 @@ const InboxesPage: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [testingSmtp, setTestingSmtp] = useState(false);
   const [smtpTestResult, setSmtpTestResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  const handleCopy = (text: string, field: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 1500);
+  };
+
+  const buildWebhookUrl = () => {
+    const { protocol, hostname, port } = window.location;
+    const isLocalDev = hostname === 'localhost' || hostname === '127.0.0.1';
+    const base = isLocalDev
+      ? `${protocol}//${hostname}:8080`
+      : `${protocol}//${hostname}${port && port !== '80' && port !== '443' ? `:${port}` : ''}`;
+    return `${base}/public/whatsapp/webhook`;
+  };
 
   const loadInboxes = useCallback(async () => {
     if (!currentAccountId) return;
@@ -295,18 +311,49 @@ const InboxesPage: React.FC = () => {
                 <div style={{ ...styles.detailSection, borderTop: '1px dashed var(--line)' }}>
                   <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--ink-3)' }}>Webhook Setup</h4>
                   <p style={{ fontSize: '12px', color: 'var(--ink-3)', margin: '0 0 8px 0' }}>
-                    Configure this URL in your Meta App Dashboard → WhatsApp → Configuration → Callback URL:
+                    In your Meta App Dashboard → WhatsApp → Configuration, paste the values below.
                   </p>
-                  <code style={{ ...styles.codeBlock, fontSize: '12px', wordBreak: 'break-all' as const, display: 'block', marginBottom: '8px' }}>
-                    {`${window.location.protocol}//${window.location.hostname}:8080/public/whatsapp/webhook`}
-                  </code>
-                  <div style={styles.detailRow}>
-                    <span style={styles.detailLabel}>Verify Token</span>
-                    <code style={styles.codeBlock}>{selectedInbox.whatsappConfig.webhookVerifyToken}</code>
+
+                  <div style={{ marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ ...styles.detailLabel, fontSize: '12px' }}>Callback URL</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(buildWebhookUrl(), 'callback')}
+                        style={styles.copyBtn}
+                      >
+                        {copiedField === 'callback' ? '✓ Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <code style={{ ...styles.codeBlock, fontSize: '12px', wordBreak: 'break-all' as const, display: 'block' }}>
+                      {buildWebhookUrl()}
+                    </code>
                   </div>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-4)', margin: '4px 0 0 0' }}>
-                    Subscribe to: messages, message_deliveries, message_reads
+
+                  <div style={{ marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                      <span style={{ ...styles.detailLabel, fontSize: '12px' }}>Verify Token</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(selectedInbox.whatsappConfig!.webhookVerifyToken, 'verify')}
+                        style={styles.copyBtn}
+                      >
+                        {copiedField === 'verify' ? '✓ Copied' : 'Copy'}
+                      </button>
+                    </div>
+                    <code style={{ ...styles.codeBlock, fontSize: '12px', wordBreak: 'break-all' as const, display: 'block' }}>
+                      {selectedInbox.whatsappConfig.webhookVerifyToken}
+                    </code>
+                  </div>
+
+                  <p style={{ fontSize: '11px', color: 'var(--ink-4)', margin: '8px 0 0 0' }}>
+                    After saving the webhook in Meta, subscribe to the <strong>messages</strong> field (covers delivery and read receipts).
                   </p>
+                  {(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (
+                    <p style={{ fontSize: '11px', color: '#b45309', margin: '6px 0 0 0' }}>
+                      ⚠ You're on localhost. Meta cannot reach this URL — expose it via ngrok or deploy to a public HTTPS domain before saving in Meta.
+                    </p>
+                  )}
                 </div>
               </div>
             )}
@@ -425,6 +472,11 @@ const styles: Record<string, React.CSSProperties> = {
   codeBlock: {
     backgroundColor: 'var(--surface-3)', padding: '6px 10px', borderRadius: '4px',
     fontSize: '13px', fontFamily: 'monospace',
+  },
+  copyBtn: {
+    padding: '2px 10px', fontSize: '11px', backgroundColor: 'var(--surface-3)',
+    color: 'var(--ink-3)', border: '1px solid var(--line)', borderRadius: '4px',
+    cursor: 'pointer', fontWeight: 500,
   },
 };
 
