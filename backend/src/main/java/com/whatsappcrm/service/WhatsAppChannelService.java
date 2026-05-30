@@ -416,6 +416,26 @@ public class WhatsAppChannelService {
 
         log.info("Processed incoming WhatsApp message from {} for conversation #{}", phoneNumber, conversation.getDisplayId());
 
+        // Broadcast over WebSocket so open conversations and the inbox list update
+        // live, without requiring a page refresh (mirrors the web-widget inbound path).
+        webSocketEventService.broadcastNewMessage(accountId, conversation.getId(), Map.of(
+                "id", message.getId(),
+                "content", content,
+                "messageType", "INCOMING",
+                "senderType", "CONTACT",
+                "senderId", contact.getId(),
+                "senderName", contact.getName(),
+                "privateFlag", false,
+                "createdAt", message.getCreatedAt() != null ? message.getCreatedAt().toString() : ""
+        ));
+        webSocketEventService.broadcastConversationUpdate(accountId, Map.of(
+                "event", "conversation.updated",
+                "conversationId", conversation.getId(),
+                "displayId", conversation.getDisplayId(),
+                "contactName", contact.getName(),
+                "lastMessage", content
+        ));
+
         // Check for opt-in/opt-out keywords (STOP, START, etc.)
         // This must happen before chatbot/automation so consent is always processed
         try {
