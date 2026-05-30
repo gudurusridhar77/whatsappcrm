@@ -35,14 +35,18 @@ const InboxesPage: React.FC = () => {
     setTimeout(() => setCopiedField((current) => (current === field ? null : current)), 1500);
   };
 
-  const buildWebhookUrl = () => {
+  // Public base URL for embeds/webhooks. On localhost dev the backend runs on
+  // :8080; in any deployed env it's served on the same origin via the Nginx
+  // proxy, so we must NOT append a port (it's standard 80/443).
+  const buildBaseUrl = () => {
     const { protocol, hostname, port } = window.location;
     const isLocalDev = hostname === 'localhost' || hostname === '127.0.0.1';
-    const base = isLocalDev
+    return isLocalDev
       ? `${protocol}//${hostname}:8080`
       : `${protocol}//${hostname}${port && port !== '80' && port !== '443' ? `:${port}` : ''}`;
-    return `${base}/public/whatsapp/webhook`;
   };
+
+  const buildWebhookUrl = () => `${buildBaseUrl()}/public/whatsapp/webhook`;
 
   const loadInboxes = useCallback(async () => {
     if (!currentAccountId) return;
@@ -368,14 +372,14 @@ const InboxesPage: React.FC = () => {
 {`<script>
   window.chatwootSettings = {
     token: "${selectedInbox.token}",
-    baseUrl: "${window.location.protocol}//${window.location.hostname}:8080"
+    baseUrl: "${buildBaseUrl()}"
   };
 </script>
-<script src="${window.location.protocol}//${window.location.hostname}:8080/widget.js" defer></script>`}
+<script src="${buildBaseUrl()}/widget.js" defer></script>`}
                 </pre>
                 <button
                   onClick={() => {
-                    const code = `<script>\n  window.chatwootSettings = {\n    token: "${selectedInbox.token}",\n    baseUrl: "${window.location.protocol}//${window.location.hostname}:8080"\n  };\n</script>\n<script src="${window.location.protocol}//${window.location.hostname}:8080/widget.js" defer></script>`;
+                    const code = `<script>\n  window.chatwootSettings = {\n    token: "${selectedInbox.token}",\n    baseUrl: "${buildBaseUrl()}"\n  };\n</script>\n<script src="${buildBaseUrl()}/widget.js" defer></script>`;
                     navigator.clipboard.writeText(code);
                     alert('Widget embed code copied to clipboard!');
                   }}
