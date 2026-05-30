@@ -41,6 +41,9 @@ EOF
 echo "Starting Nginx with temporary config for certificate generation..."
 docker compose stop frontend 2>/dev/null || true
 
+# Remove any leftover temp nginx from a previous failed run (frees port 80)
+docker rm -f nginx-temp 2>/dev/null || true
+
 docker run -d --name nginx-temp \
     -p 80:80 \
     -v certbot-www:/var/www/certbot \
@@ -58,7 +61,7 @@ docker run --rm \
     --email "$EMAIL" \
     --agree-tos \
     --no-eff-email \
-    --keep-existing \
+    --keep-until-expiring \
     -d "$DOMAIN"
 
 # Step 4: Clean up temporary nginx
