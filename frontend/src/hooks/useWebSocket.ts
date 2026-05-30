@@ -32,7 +32,7 @@ export function useWebSocket({
   useEffect(() => {
     if (!accountId) return;
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (!token) return;
 
     const client = new Client({
