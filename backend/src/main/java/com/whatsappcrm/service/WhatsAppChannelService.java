@@ -2,6 +2,7 @@ package com.whatsappcrm.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.whatsappcrm.dto.AttachmentResponse;
 import com.whatsappcrm.entity.*;
 import com.whatsappcrm.enums.ChannelType;
 import com.whatsappcrm.enums.MessageType;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -393,6 +395,7 @@ public class WhatsAppChannelService {
         message = messageRepository.save(message);
 
         // Download and save media attachment if present
+        List<AttachmentResponse> attachmentDtos = new ArrayList<>();
         if (mediaId != null && MEDIA_TYPES.contains(messageContentType)) {
             try {
                 byte[] mediaBytes = downloadWhatsAppMedia(waConfig, mediaId);
@@ -401,9 +404,12 @@ public class WhatsAppChannelService {
                     if (fileName == null) {
                         fileName = messageContentType + "_" + waMessageId;
                     }
-                    attachmentService.saveAttachmentFromBytes(
+                    Attachment savedAttachment = attachmentService.saveAttachmentFromBytes(
                             message, account, mediaBytes, fileName,
                             mediaMimeType, mediaBytes.length);
+                    // Relative URL ("" base) -> resolves same-origin over https on the client;
+                    // the frontend appends the auth ?token= before rendering.
+                    attachmentDtos.add(AttachmentResponse.fromAttachment(savedAttachment, ""));
                     log.info("Downloaded and saved WhatsApp media: {} ({} bytes)", fileName, mediaBytes.length);
                 }
             } catch (Exception e) {
@@ -426,6 +432,7 @@ public class WhatsAppChannelService {
                 "senderId", contact.getId(),
                 "senderName", contact.getName(),
                 "privateFlag", false,
+                "attachments", attachmentDtos,
                 "createdAt", message.getCreatedAt() != null ? message.getCreatedAt().toString() : ""
         ));
         webSocketEventService.broadcastConversationUpdate(accountId, Map.of(

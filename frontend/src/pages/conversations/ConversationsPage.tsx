@@ -82,6 +82,17 @@ const ConversationsPage: React.FC = () => {
   }, []);
 
   const handleWsNewMessage = useCallback((msgData: MessageResponse) => {
+    // Attachments arrive with relative URLs and no auth; append the JWT so
+    // <img>/<video>/<a> can load them (same as getMessages does for REST).
+    const token = localStorage.getItem('accessToken');
+    if (token && msgData.attachments?.length) {
+      const withToken = (url: string) => url + (url.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(token);
+      msgData.attachments = msgData.attachments.map((a) => ({
+        ...a,
+        dataUrl: a.dataUrl ? withToken(a.dataUrl) : a.dataUrl,
+        thumbUrl: a.thumbUrl ? withToken(a.thumbUrl) : a.thumbUrl,
+      }));
+    }
     // Add message to the thread in real-time
     setMessages((prev) => {
       // Avoid duplicates
