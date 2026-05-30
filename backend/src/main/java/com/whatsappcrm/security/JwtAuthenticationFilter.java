@@ -48,6 +48,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
+        // Browser-loaded resources (e.g. <img>/<video>/<a> for attachments) cannot
+        // send the Authorization header, so allow the token as a query param —
+        // restricted to attachment endpoints to limit token-in-URL exposure and to
+        // avoid reading params (and the body) on other endpoints like uploads.
+        if (request.getRequestURI().contains("/attachments/")) {
+            String paramToken = request.getParameter("token");
+            if (StringUtils.hasText(paramToken)) {
+                return paramToken;
+            }
+        }
         return null;
     }
 }

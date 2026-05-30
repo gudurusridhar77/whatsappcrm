@@ -110,7 +110,23 @@ export const conversationsApi = {
     apiClient.patch<ConversationResponse>(`/api/v1/accounts/${accountId}/conversations/${conversationId}`, data),
 
   getMessages: (accountId: number, conversationId: number, page = 0) =>
-    apiClient.get<MessagePage>(`/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`, { params: { page, size: 50 } }),
+    apiClient
+      .get<MessagePage>(`/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`, { params: { page, size: 50 } })
+      .then((res) => {
+        // <img>/<video>/<a> can't send the auth header, so pass the JWT as a
+        // query param on attachment URLs (backend accepts it for /attachments/).
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          const withToken = (url: string) => url + (url.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(token);
+          res.data?.content?.forEach((m) =>
+            m.attachments?.forEach((a) => {
+              if (a.dataUrl) a.dataUrl = withToken(a.dataUrl);
+              if (a.thumbUrl) a.thumbUrl = withToken(a.thumbUrl);
+            })
+          );
+        }
+        return res;
+      }),
 
   sendMessage: (accountId: number, conversationId: number, data: { content: string; messageType?: string; privateFlag?: boolean }) =>
     apiClient.post<MessageResponse>(`/api/v1/accounts/${accountId}/conversations/${conversationId}/messages`, data),
