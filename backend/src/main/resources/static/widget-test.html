@@ -69,7 +69,7 @@
     <div class="card">
         <h3>Setup Instructions</h3>
         <ol class="steps">
-            <li>Make sure the <strong>backend is running</strong> on <code>http://localhost:8080</code></li>
+            <li>Make sure the app is reachable — locally on <code>http://localhost:8080</code>, or via your deployed domain (e.g. <code>https://crm.techtricky.com</code>)</li>
             <li>Create a <strong>Web Widget inbox</strong> in the CRM dashboard (Inboxes → + New Inbox → Web Widget)</li>
             <li>Copy the <strong>inbox token</strong> from the inbox detail panel</li>
             <li>Paste it below and click <strong>Load Widget</strong></li>
@@ -120,7 +120,16 @@
             // Set settings and load widget
             window.chatwootSettings = {
                 token: token,
-                baseUrl: window.location.protocol + '//' + window.location.hostname + ':8080'
+                // Localhost dev hits the backend directly on :8080; any deployed
+                // domain is served same-origin via the Nginx proxy (no port).
+                baseUrl: (function () {
+                    var loc = window.location;
+                    var isLocalDev = loc.hostname === 'localhost' || loc.hostname === '127.0.0.1';
+                    var port = isLocalDev
+                        ? ':8080'
+                        : (loc.port && loc.port !== '80' && loc.port !== '443' ? ':' + loc.port : '');
+                    return loc.protocol + '//' + loc.hostname + port;
+                })()
             };
 
             var script = document.createElement('script');
