@@ -42,6 +42,10 @@ spring:
 
 server:
   port: 8080
+  # Behind the Nginx TLS reverse proxy: honor X-Forwarded-* headers so
+  # request.getScheme()/getServerName() reflect the original https request.
+  # Fixes attachment/download URLs being generated as http:// (mixed content).
+  forward-headers-strategy: framework
 
 app:
   file-storage:
