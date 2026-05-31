@@ -92,9 +92,16 @@ public class WebPushService {
 
     /** Send a notification to every device the user has subscribed. */
     public void sendToUser(Long userId, String title, String body, String url) {
-        if (pushService == null) return;
+        if (pushService == null) {
+            log.debug("Web push skipped for user {} (push disabled)", userId);
+            return;
+        }
         List<PushSubscription> subs = subscriptionRepository.findByUserId(userId);
-        if (subs.isEmpty()) return;
+        if (subs.isEmpty()) {
+            log.info("Web push: user {} has no subscriptions", userId);
+            return;
+        }
+        log.info("Web push: sending to user {} ({} device(s))", userId, subs.size());
 
         final String payload;
         try {
@@ -121,6 +128,8 @@ public class WebPushService {
                     log.info("Removed stale push subscription (HTTP {})", code);
                 } else if (code >= 400) {
                     log.warn("Web push send returned HTTP {}", code);
+                } else {
+                    log.info("Web push sent OK (HTTP {})", code);
                 }
             } catch (Exception e) {
                 log.warn("Failed to send web push: {}", e.getMessage());
