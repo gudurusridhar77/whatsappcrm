@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { authApi } from '../api/auth';
 import SearchBar from './SearchBar';
 import NotificationBell from './NotificationBell';
+import EnableNotificationsButton from './EnableNotificationsButton';
 
 const availabilityColors: Record<string, string> = {
   ONLINE: 'var(--ok)',
@@ -135,6 +136,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div className="app-search-wrapper" style={S.searchWrap}>
             <SearchBar />
           </div>
+          <EnableNotificationsButton />
           <NotificationBell />
           <div ref={menuRef} style={{ position: 'relative' }}>
             <button onClick={() => setShowUserMenu(!showUserMenu)} style={S.userBtn}>

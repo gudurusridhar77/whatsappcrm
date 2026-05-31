@@ -466,14 +466,21 @@ public class WhatsAppChannelService {
         }
 
         if (!handledByChatbot) {
+            String preview = content.length() > 80 ? content.substring(0, 80) + "..." : content;
+            Map<String, Object> notifMeta = Map.of(
+                    "displayId", conversation.getDisplayId(), "senderName", contactName, "channel", "whatsapp");
             // Notify agents (only if chatbot didn't handle it)
             if (conversation.getAssignee() != null) {
                 notificationService.notifyAssignee(accountId, conversation.getAssignee().getId(), null,
                         "new_message",
                         "New WhatsApp message in #" + conversation.getDisplayId(),
-                        content.length() > 80 ? content.substring(0, 80) + "..." : content,
-                        conversation.getId(),
-                        Map.of("displayId", conversation.getDisplayId(), "senderName", contactName, "channel", "whatsapp"));
+                        preview, conversation.getId(), notifMeta);
+            } else {
+                // Unassigned conversation — alert all agents in the account.
+                notificationService.notifyAllAgents(accountId, null,
+                        "new_message", "conversation",
+                        "New WhatsApp message in #" + conversation.getDisplayId(),
+                        preview, "Conversation", conversation.getId(), notifMeta);
             }
 
             // Trigger automation rules
