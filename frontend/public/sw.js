@@ -19,9 +19,9 @@ self.addEventListener('push', function (event) {
   var options = {
     body: data.body || '',
     icon: '/logo192.png',
-    badge: '/logo192.png',
-    tag: 'cw-message',
-    renotify: true,
+    // A unique tag per notification so each message shows its own banner
+    // (a static tag made them coalesce into one and suppressed the banner).
+    tag: 'cw-' + Date.now(),
     data: { url: data.url || '/' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
