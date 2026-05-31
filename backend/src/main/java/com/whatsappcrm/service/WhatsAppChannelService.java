@@ -465,25 +465,27 @@ public class WhatsAppChannelService {
             log.warn("Chatbot engine error for conversation #{}: {}", conversation.getDisplayId(), e.getMessage());
         }
 
-        if (!handledByChatbot) {
-            String preview = content.length() > 80 ? content.substring(0, 80) + "..." : content;
-            Map<String, Object> notifMeta = Map.of(
-                    "displayId", conversation.getDisplayId(), "senderName", contactName, "channel", "whatsapp");
-            // Notify agents (only if chatbot didn't handle it)
-            if (conversation.getAssignee() != null) {
-                notificationService.notifyAssignee(accountId, conversation.getAssignee().getId(), null,
-                        "new_message",
-                        "New WhatsApp message in #" + conversation.getDisplayId(),
-                        preview, conversation.getId(), notifMeta);
-            } else {
-                // Unassigned conversation — alert all agents in the account.
-                notificationService.notifyAllAgents(accountId, null,
-                        "new_message", "conversation",
-                        "New WhatsApp message in #" + conversation.getDisplayId(),
-                        preview, "Conversation", conversation.getId(), notifMeta);
-            }
+        // Notify agents of every inbound message — even while a chatbot is
+        // auto-handling the conversation — so they're alerted of new messages
+        // (in-app notification + Web Push).
+        String preview = content.length() > 80 ? content.substring(0, 80) + "..." : content;
+        Map<String, Object> notifMeta = Map.of(
+                "displayId", conversation.getDisplayId(), "senderName", contactName, "channel", "whatsapp");
+        if (conversation.getAssignee() != null) {
+            notificationService.notifyAssignee(accountId, conversation.getAssignee().getId(), null,
+                    "new_message",
+                    "New WhatsApp message in #" + conversation.getDisplayId(),
+                    preview, conversation.getId(), notifMeta);
+        } else {
+            // Unassigned conversation — alert all agents in the account.
+            notificationService.notifyAllAgents(accountId, null,
+                    "new_message", "conversation",
+                    "New WhatsApp message in #" + conversation.getDisplayId(),
+                    preview, "Conversation", conversation.getId(), notifMeta);
+        }
 
-            // Trigger automation rules
+        if (!handledByChatbot) {
+            // Trigger automation rules only when the bot didn't handle the message.
             automationEngine.onMessageCreated(message, conversation);
         }
     }
