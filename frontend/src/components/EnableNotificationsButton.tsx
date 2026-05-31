@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { enablePushNotifications } from '../push';
 
 /**
@@ -17,10 +17,30 @@ const EnableNotificationsButton: React.FC = () => {
     supported ? Notification.permission : 'denied'
   );
   const [busy, setBusy] = useState(false);
+  const prevPermission = useRef<NotificationPermission>(permission);
+
+  // Re-read the permission whenever the app regains focus/visibility, so the
+  // button reflects changes the user made in browser/OS settings without a
+  // reload. If it just became granted, subscribe right away.
+  const recheck = useCallback(() => {
+    if (!supported) return;
+    const current = Notification.permission;
+    if (prevPermission.current !== 'granted' && current === 'granted') {
+      enablePushNotifications();
+    }
+    prevPermission.current = current;
+    setPermission(current);
+  }, [supported]);
 
   useEffect(() => {
-    if (supported) setPermission(Notification.permission);
-  }, [supported]);
+    recheck();
+    document.addEventListener('visibilitychange', recheck);
+    window.addEventListener('focus', recheck);
+    return () => {
+      document.removeEventListener('visibilitychange', recheck);
+      window.removeEventListener('focus', recheck);
+    };
+  }, [recheck]);
 
   if (!supported || permission === 'granted') return null;
 

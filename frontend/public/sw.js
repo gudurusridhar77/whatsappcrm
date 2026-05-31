@@ -22,6 +22,8 @@ self.addEventListener('push', function (event) {
     // A unique tag per notification so each message shows its own banner
     // (a static tag made them coalesce into one and suppressed the banner).
     tag: 'cw-' + Date.now(),
+    // Buzz even when the phone is on silent (sound itself is OS-controlled).
+    vibrate: [200, 100, 200],
     data: { url: data.url || '/' },
   };
   event.waitUntil(self.registration.showNotification(title, options));
