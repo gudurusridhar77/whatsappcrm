@@ -70,7 +70,9 @@ public class NotificationService {
             String pushUrl = "Conversation".equals(entityType) && entityId != null
                     ? "/conversations?conversationId=" + entityId
                     : "/conversations";
-            webPushService.sendToUser(userId, title, message, pushUrl);
+            // Unread count drives the PWA app-icon badge even when the app is closed.
+            int unread = (int) getUnreadCount(userId, accountId);
+            webPushService.sendToUser(userId, title, message, pushUrl, unread);
         } catch (Exception e) {
             log.warn("Web push notification failed for user {}: {}", userId, e.getMessage());
         }

@@ -92,7 +92,7 @@ public class WebPushService {
     }
 
     /** Send a notification to every device the user has subscribed. */
-    public void sendToUser(Long userId, String title, String body, String url) {
+    public void sendToUser(Long userId, String title, String body, String url, int badge) {
         if (pushService == null) {
             log.debug("Web push skipped for user {} (push disabled)", userId);
             return;
@@ -109,7 +109,8 @@ public class WebPushService {
             payload = objectMapper.writeValueAsString(Map.of(
                     "title", title == null ? "" : title,
                     "body", body == null ? "" : body,
-                    "url", url == null ? "/" : url
+                    "url", url == null ? "/" : url,
+                    "badge", badge
             ));
         } catch (Exception e) {
             log.warn("Failed to build push payload: {}", e.getMessage());

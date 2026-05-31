@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { notificationsApi, NotificationResponse } from '../api/notifications';
 import { useNavigate } from 'react-router-dom';
+import { useNotificationsSocket } from '../hooks/useNotificationsSocket';
 
 const NOTIFICATION_ICONS: Record<string, string> = {
   conversation_assignment: '\uD83D\uDCE8',
@@ -11,7 +12,7 @@ const NOTIFICATION_ICONS: Record<string, string> = {
 };
 
 const NotificationBell: React.FC = () => {
-  const { currentAccountId } = useAuth();
+  const { currentAccountId, user } = useAuth();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<NotificationResponse[]>([]);
@@ -33,10 +34,24 @@ const NotificationBell: React.FC = () => {
 
   useEffect(() => {
     loadNotifications();
-    // Poll every 30 seconds
+    // Poll every 30 seconds as a fallback; the WebSocket below makes it live.
     const interval = setInterval(loadNotifications, 30000);
     return () => clearInterval(interval);
   }, [loadNotifications]);
+
+  // Real-time: refresh immediately when a notification is pushed to this user.
+  useNotificationsSocket(user?.id, loadNotifications);
+
+  // Mirror the unread count onto the installed PWA's app icon (Badging API).
+  useEffect(() => {
+    const nav = navigator as Navigator & {
+      setAppBadge?: (n?: number) => Promise<void>;
+      clearAppBadge?: () => Promise<void>;
+    };
+    if (!nav.setAppBadge) return;
+    if (unreadCount > 0) nav.setAppBadge(unreadCount).catch(() => {});
+    else nav.clearAppBadge?.().catch(() => {});
+  }, [unreadCount]);
 
   // Close dropdown on outside click
   useEffect(() => {

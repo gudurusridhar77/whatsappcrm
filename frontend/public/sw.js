@@ -15,6 +15,15 @@ self.addEventListener('push', function (event) {
   } catch (e) {
     data = { title: 'New message', body: event.data ? event.data.text() : '' };
   }
+  // Update the app-icon badge (Badging API) even while the app is closed.
+  if (typeof data.badge === 'number' && self.navigator && self.navigator.setAppBadge) {
+    if (data.badge > 0) {
+      self.navigator.setAppBadge(data.badge);
+    } else if (self.navigator.clearAppBadge) {
+      self.navigator.clearAppBadge();
+    }
+  }
+
   var title = data.title || 'New message';
   var options = {
     body: data.body || '',
