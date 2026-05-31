@@ -8,6 +8,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
+import nl.martijndwars.webpush.Urgency;
 import org.apache.http.HttpResponse;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -117,9 +118,16 @@ public class WebPushService {
 
         for (PushSubscription sub : subs) {
             try {
-                Notification notification = new Notification(
-                        sub.getEndpoint(), sub.getP256dh(), sub.getAuth(),
-                        payload.getBytes(StandardCharsets.UTF_8));
+                // High urgency + TTL so FCM delivers immediately (wakes the
+                // device from Doze) instead of batching until the app reopens.
+                Notification notification = Notification.builder()
+                        .endpoint(sub.getEndpoint())
+                        .userPublicKey(sub.getP256dh())
+                        .userAuth(sub.getAuth())
+                        .payload(payload.getBytes(StandardCharsets.UTF_8))
+                        .urgency(Urgency.HIGH)
+                        .ttl(24 * 60 * 60) // keep up to 24h if the device is offline
+                        .build();
                 HttpResponse response = pushService.send(notification);
                 int code = response.getStatusLine().getStatusCode();
                 if (code == 404 || code == 410) {
