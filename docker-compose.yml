@@ -36,6 +36,11 @@ services:
       UPLOAD_DIR: /app/uploads
       MAIL_HOST: ${MAIL_HOST:-localhost}
       MAIL_PORT: ${MAIL_PORT:-1025}
+      # Web Push (VAPID). Generate with: npx web-push generate-vapid-keys
+      # Leave blank to disable push (app still runs).
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@crm.techtricky.com}
     volumes:
       - uploads:/app/uploads
     ports:

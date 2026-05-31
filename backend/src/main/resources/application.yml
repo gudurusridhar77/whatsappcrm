@@ -55,3 +55,9 @@ app:
     secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationThatIsAtLeast256BitsLong2024}
     expiration-ms: 86400000       # 24 hours
     refresh-expiration-ms: 604800000  # 7 days
+  webpush:
+    # VAPID keys for Web Push. Generate once with: npx web-push generate-vapid-keys
+    # If left blank, push is disabled (the app still runs normally).
+    public-key: ${VAPID_PUBLIC_KEY:}
+    private-key: ${VAPID_PRIVATE_KEY:}
+    subject: ${VAPID_SUBJECT:mailto:admin@crm.techtricky.com}

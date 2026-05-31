@@ -10,6 +10,7 @@ import com.whatsappcrm.repository.AccountUserRepository;
 import com.whatsappcrm.repository.NotificationRepository;
 import com.whatsappcrm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class NotificationService {
 
@@ -29,6 +31,7 @@ public class NotificationService {
     private final UserRepository userRepository;
     private final AccountUserRepository accountUserRepository;
     private final SimpMessagingTemplate messagingTemplate;
+    private final WebPushService webPushService;
 
     /**
      * Create and broadcast a notification to a specific user
@@ -59,6 +62,14 @@ public class NotificationService {
         NotificationResponse response = NotificationResponse.fromEntity(notification);
         messagingTemplate.convertAndSend(
                 "/topic/users/" + userId + "/notifications", response);
+
+        // Also send a Web Push so the user is alerted even when the app/PWA is
+        // closed or backgrounded (no-op if push isn't configured/subscribed).
+        try {
+            webPushService.sendToUser(userId, title, message, "/conversations");
+        } catch (Exception e) {
+            log.warn("Web push notification failed for user {}: {}", userId, e.getMessage());
+        }
     }
 
     /**

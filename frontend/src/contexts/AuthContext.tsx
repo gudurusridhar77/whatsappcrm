@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { authApi } from '../api/auth';
 import { User } from '../types';
+import { initPushNotifications } from '../push';
 
 interface AuthContextType {
   user: User | null;
@@ -32,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (response.data.accounts.length > 0 && !currentAccountId) {
         setCurrentAccountId(response.data.accounts[0].accountId);
       }
+      initPushNotifications();
     } catch {
       localStorage.clear();
     } finally {
@@ -52,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (userData.accounts.length > 0) {
       setCurrentAccountId(userData.accounts[0].accountId);
     }
+    initPushNotifications();
   };
 
   const signup = async (name: string, email: string, password: string, accountName: string) => {
@@ -63,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (userData.accounts.length > 0) {
       setCurrentAccountId(userData.accounts[0].accountId);
     }
+    initPushNotifications();
   };
 
   const logout = () => {
