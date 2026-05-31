@@ -19,6 +19,7 @@ export interface ConversationResponse {
   teamName: string | null;
   messageCount: number;
   lastMessage: string | null;
+  unreadCount?: number;
   labels: { id: number; title: string; color: string }[];
 }
 
@@ -102,6 +103,9 @@ export const conversationsApi = {
 
   getConversation: (accountId: number, conversationId: number) =>
     apiClient.get<ConversationResponse>(`/api/v1/accounts/${accountId}/conversations/${conversationId}`),
+
+  markRead: (accountId: number, conversationId: number) =>
+    apiClient.post<ConversationResponse>(`/api/v1/accounts/${accountId}/conversations/${conversationId}/read`),
 
   createConversation: (accountId: number, data: { contactId: number; inboxId: number; assigneeId?: number; subject?: string; initialMessage?: string }) =>
     apiClient.post<ConversationResponse>(`/api/v1/accounts/${accountId}/conversations`, data),

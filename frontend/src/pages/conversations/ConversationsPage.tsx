@@ -35,6 +35,8 @@ const ConversationsPage: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [typingUser, setTypingUser] = useState<string | null>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Tracks the open conversation so WS callbacks (empty deps) can mark it read.
+  const activeReadRef = useRef<{ accountId: number | null; convId: number | null }>({ accountId: null, convId: null });
 
   // New conversation modal
   const [showNew, setShowNew] = useState(false);
@@ -101,6 +103,15 @@ const ConversationsPage: React.FC = () => {
       return [...prev, msgData];
     });
     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    // The agent is viewing this conversation, so a new inbound message is
+    // already "read" — clear its unread count.
+    if (msgData.messageType === 'INCOMING') {
+      const { accountId, convId } = activeReadRef.current;
+      if (accountId && convId) {
+        setConversations((prev) => prev.map((c) => (c.id === convId ? { ...c, unreadCount: 0 } : c)));
+        conversationsApi.markRead(accountId, convId).catch(() => { /* ignore */ });
+      }
+    }
   }, []);
 
   const handleWsTyping = useCallback((data: { userName: string; isTyping: boolean }) => {
@@ -162,7 +173,17 @@ const ConversationsPage: React.FC = () => {
   const selectConversation = (conv: ConversationResponse) => {
     setActiveConv(conv);
     loadMessages(conv.id);
+    // Opening a thread clears its unread badge (optimistically, then server).
+    if (conv.unreadCount && currentAccountId) {
+      setConversations((prev) => prev.map((c) => (c.id === conv.id ? { ...c, unreadCount: 0 } : c)));
+      conversationsApi.markRead(currentAccountId, conv.id).catch(() => { /* ignore */ });
+    }
   };
+
+  // Keep the active-conversation ref current for the WS mark-read callback.
+  useEffect(() => {
+    activeReadRef.current = { accountId: currentAccountId, convId: activeConv?.id ?? null };
+  }, [currentAccountId, activeConv]);
 
   // Deep-link: open a specific conversation from ?conversationId=… (used by
   // in-app notifications and Web Push clicks). Fetch it directly so it opens
@@ -477,9 +498,14 @@ const ConversationsPage: React.FC = () => {
                   ...(activeConv?.id === conv.id ? styles.convItemActive : {}),
                 }}>
                 <div style={styles.convItemHeader}>
-                  <span style={styles.convContact}>{conv.contactName}</span>
-                  <span style={styles.convTime}>
-                    {conv.lastActivityAt ? new Date(conv.lastActivityAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                  <span style={{ ...styles.convContact, ...(conv.unreadCount ? { fontWeight: 700 } : {}) }}>{conv.contactName}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    {!!conv.unreadCount && conv.unreadCount > 0 && (
+                      <span style={styles.convUnreadBadge}>{conv.unreadCount}</span>
+                    )}
+                    <span style={styles.convTime}>
+                      {conv.lastActivityAt ? new Date(conv.lastActivityAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                    </span>
                   </span>
                 </div>
                 <div style={styles.convMeta}>
@@ -1088,6 +1114,11 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '12px 16px', borderBottom: '1px solid #f0f0f0', cursor: 'pointer',
   },
   convItemActive: { backgroundColor: '#eff6ff' },
+  convUnreadBadge: {
+    backgroundColor: '#25D366', color: '#fff', fontSize: '11px', fontWeight: 700,
+    minWidth: 18, height: 18, borderRadius: 9, padding: '0 5px',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+  },
   convItemHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
     marginBottom: '4px',

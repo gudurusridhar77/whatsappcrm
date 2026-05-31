@@ -51,6 +51,13 @@ public class ConversationController {
         return ResponseEntity.ok(conversationService.getConversation(accountId, conversationId));
     }
 
+    @PostMapping("/{conversationId}/read")
+    public ResponseEntity<ConversationResponse> markConversationRead(
+            @PathVariable Long accountId,
+            @PathVariable Long conversationId) {
+        return ResponseEntity.ok(conversationService.markRead(accountId, conversationId));
+    }
+
     @PostMapping
     public ResponseEntity<ConversationResponse> createConversation(
             @PathVariable Long accountId,

@@ -69,6 +69,11 @@ public class Conversation {
     @Column(name = "first_reply_at")
     private LocalDateTime firstReplyAt;
 
+    // Number of unseen inbound messages; reset to 0 when an agent opens the thread.
+    @Builder.Default
+    @Column(name = "unread_count", nullable = false, columnDefinition = "integer not null default 0")
+    private Integer unreadCount = 0;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "conversation_labels",

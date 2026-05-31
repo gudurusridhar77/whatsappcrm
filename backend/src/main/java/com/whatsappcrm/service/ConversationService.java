@@ -66,6 +66,21 @@ public class ConversationService {
         return toResponse(conv);
     }
 
+    /** Mark a conversation as read (clear its unread count) and broadcast the change. */
+    @Transactional
+    public ConversationResponse markRead(Long accountId, Long conversationId) {
+        Conversation conv = conversationRepository.findByIdAndAccountId(conversationId, accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Conversation not found"));
+        if (conv.getUnreadCount() == null || conv.getUnreadCount() != 0) {
+            conv.setUnreadCount(0);
+            conv = conversationRepository.save(conv);
+            ConversationResponse response = toResponse(conv);
+            webSocketEventService.broadcastConversationUpdate(accountId, response);
+            return response;
+        }
+        return toResponse(conv);
+    }
+
     public Map<String, Long> getConversationCounts(Long accountId) {
         return Map.of(
                 "open", conversationRepository.countByAccountIdAndStatus(accountId, ConversationStatus.OPEN),

@@ -44,6 +44,9 @@ public class ConversationResponse {
     // Last message preview
     private String lastMessage;
 
+    // Unseen inbound messages
+    private Integer unreadCount;
+
     // Labels
     private List<LabelSummary> labels;
 
@@ -64,6 +67,7 @@ public class ConversationResponse {
                 .subject(conv.getSubject())
                 .lastActivityAt(conv.getLastActivityAt())
                 .createdAt(conv.getCreatedAt())
+                .unreadCount(conv.getUnreadCount() == null ? 0 : conv.getUnreadCount())
                 .contactId(conv.getContact().getId())
                 .contactName(conv.getContact().getName())
                 .contactEmail(conv.getContact().getEmail())

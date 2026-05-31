@@ -418,6 +418,8 @@ public class WhatsAppChannelService {
         }
 
         conversation.setLastActivityAt(LocalDateTime.now());
+        int prevUnread = conversation.getUnreadCount() == null ? 0 : conversation.getUnreadCount();
+        conversation.setUnreadCount(prevUnread + 1);
         conversationRepository.save(conversation);
 
         log.info("Processed incoming WhatsApp message from {} for conversation #{}", phoneNumber, conversation.getDisplayId());

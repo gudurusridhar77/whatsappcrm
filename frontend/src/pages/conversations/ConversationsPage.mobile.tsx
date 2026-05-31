@@ -227,9 +227,14 @@ const ListView: React.FC<MobileProps & {
             <Avatar name={c.contactName} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={s.rowTop}>
-                <span style={s.rowName}>{c.contactName}</span>
-                <span style={s.rowTime}>
-                  {c.lastActivityAt ? new Date(c.lastActivityAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                <span style={{ ...s.rowName, ...(c.unreadCount ? { fontWeight: 700 } : {}) }}>{c.contactName}</span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  {!!c.unreadCount && c.unreadCount > 0 && (
+                    <span style={s.rowUnread}>{c.unreadCount}</span>
+                  )}
+                  <span style={s.rowTime}>
+                    {c.lastActivityAt ? new Date(c.lastActivityAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                  </span>
                 </span>
               </div>
               <div style={s.rowMeta}>
@@ -711,6 +716,11 @@ const s: Record<string, React.CSSProperties> = {
   rowTop: { display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 2 },
   rowName: { fontWeight: 600, fontSize: 15, color: 'var(--ink)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' },
   rowTime: { fontSize: 12, color: 'var(--ink-4)', flexShrink: 0 },
+  rowUnread: {
+    backgroundColor: '#25D366', color: '#fff', fontSize: 11, fontWeight: 700,
+    minWidth: 18, height: 18, borderRadius: 9, padding: '0 5px',
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
   rowMeta: { display: 'flex', gap: 6, alignItems: 'center', marginBottom: 4 },
   rowId: { fontSize: 11, color: 'var(--accent)', fontWeight: 600 },
   rowInbox: { fontSize: 11, padding: '1px 6px', borderRadius: 4, background: 'var(--surface-3)', color: 'var(--ink-3)' },
