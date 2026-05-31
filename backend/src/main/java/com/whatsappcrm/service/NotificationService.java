@@ -65,8 +65,12 @@ public class NotificationService {
 
         // Also send a Web Push so the user is alerted even when the app/PWA is
         // closed or backgrounded (no-op if push isn't configured/subscribed).
+        // Deep-link to the conversation so clicking the push opens the thread.
         try {
-            webPushService.sendToUser(userId, title, message, "/conversations");
+            String pushUrl = "Conversation".equals(entityType) && entityId != null
+                    ? "/conversations?conversationId=" + entityId
+                    : "/conversations";
+            webPushService.sendToUser(userId, title, message, pushUrl);
         } catch (Exception e) {
             log.warn("Web push notification failed for user {}: {}", userId, e.getMessage());
         }

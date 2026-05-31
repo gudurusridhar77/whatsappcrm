@@ -68,7 +68,8 @@ const NotificationBell: React.FC = () => {
   const handleClick = (notif: NotificationResponse) => {
     handleMarkAsRead(notif);
     if (notif.entityType === 'Conversation' && notif.entityId) {
-      navigate('/conversations');
+      // Deep-link into the specific conversation thread.
+      navigate(`/conversations?conversationId=${notif.entityId}`);
     }
     setIsOpen(false);
   };
@@ -153,9 +154,11 @@ const s: Record<string, React.CSSProperties> = {
     padding: '1px 5px', minWidth: '16px', textAlign: 'center',
   },
   dropdown: {
-    position: 'absolute', top: '36px', right: '0', width: '360px',
+    // Viewport-anchored so it never overflows the screen edge on mobile.
+    position: 'fixed', top: '56px', right: '8px',
+    width: 'min(360px, calc(100vw - 16px))', maxWidth: 'calc(100vw - 16px)',
     backgroundColor: 'var(--surface)', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-    zIndex: 1000, maxHeight: '480px', display: 'flex', flexDirection: 'column',
+    zIndex: 1000, maxHeight: '70vh', display: 'flex', flexDirection: 'column',
   },
   dropdownHeader: {
     display: 'flex', justifyContent: 'space-between', alignItems: 'center',

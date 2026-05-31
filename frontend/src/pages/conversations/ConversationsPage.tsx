@@ -10,6 +10,7 @@ import { teamsApi, TeamResponse, agentsApi, AgentResponse } from '../../api/team
 import ContactPanel from '../../components/ContactPanel';
 import { csatApi } from '../../api/csat';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { useSearchParams } from 'react-router-dom';
 import ConversationsPageMobile from './ConversationsPage.mobile';
 
 const statusColors: Record<string, string> = {
@@ -162,6 +163,21 @@ const ConversationsPage: React.FC = () => {
     setActiveConv(conv);
     loadMessages(conv.id);
   };
+
+  // Deep-link: open a specific conversation from ?conversationId=… (used by
+  // in-app notifications and Web Push clicks). Fetch it directly so it opens
+  // even if it's not in the current filtered list, then clear the param.
+  const [searchParams, setSearchParams] = useSearchParams();
+  useEffect(() => {
+    const cid = searchParams.get('conversationId');
+    if (!cid || !currentAccountId) return;
+    conversationsApi.getConversation(currentAccountId, Number(cid))
+      .then(res => selectConversation(res.data))
+      .catch(() => { /* ignore – conversation may not exist/belong to account */ });
+    searchParams.delete('conversationId');
+    setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, currentAccountId]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();

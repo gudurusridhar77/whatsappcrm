@@ -125,6 +125,16 @@ const ConversationsPageMobile: React.FC<MobileProps> = (p) => {
     if (!p.activeConv && view !== 'list') setView('list');
   }, [p.activeConv, view]);
 
+  // Open the thread when a conversation is selected externally (e.g. a
+  // notification/Web Push deep-link), not just via a tap. Track the last
+  // opened id so pressing "back" (which keeps activeConv) doesn't re-open it.
+  const lastOpenedId = useRef<number | null>(null);
+  useEffect(() => {
+    const id = p.activeConv?.id ?? null;
+    if (id !== null && id !== lastOpenedId.current) setView('thread');
+    lastOpenedId.current = id;
+  }, [p.activeConv]);
+
   return (
     <div style={s.shell}>
       {view === 'list' && (

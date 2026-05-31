@@ -128,7 +128,9 @@ button { font-family: inherit; }
 
   /* Header tweaks */
   .app-header { padding: 10px 14px !important; gap: 10px !important; }
-  .app-header h1 { font-size: 16px !important; }
+  /* Title grows to fill the space the (hidden) search used to, pushing the
+     bell + profile to the right edge. */
+  .app-header h1 { font-size: 16px !important; flex: 1 1 auto !important; min-width: 0 !important; }
   .app-header .app-menu-btn { display: inline-flex !important; }
   .app-user-name { display: none !important; }
   .app-search-wrapper { display: none !important; } /* search via dedicated button on small screens */
@@ -214,6 +216,8 @@ button { font-family: inherit; }
   /* Main column reclaims full width */
   .app-shell { display: block !important; }
   .app-header { padding: 10px 14px !important; }
+  /* Title fills the row so bell + profile sit at the right edge. */
+  .app-header h1 { flex: 1 1 auto !important; min-width: 0 !important; }
 
   /* Conversations page: full-bleed under header, above tabs */
   .app-conv-wrapper,
