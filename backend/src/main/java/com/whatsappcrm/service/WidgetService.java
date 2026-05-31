@@ -159,6 +159,10 @@ public class WidgetService {
                         .build();
                 msg = messageRepository.save(msg);
 
+                // First inbound message on a brand-new conversation counts as unread.
+                conversation.setUnreadCount((conversation.getUnreadCount() == null ? 0 : conversation.getUnreadCount()) + 1);
+                conversationRepository.save(conversation);
+
                 // Try chatbot first, then automation
                 boolean handled = false;
                 try { handled = chatbotEngine.processIncomingMessage(msg, conversation); } catch (Exception ignored) {}
@@ -196,6 +200,7 @@ public class WidgetService {
             msg = messageRepository.save(msg);
 
             conversation.setLastActivityAt(LocalDateTime.now());
+            conversation.setUnreadCount((conversation.getUnreadCount() == null ? 0 : conversation.getUnreadCount()) + 1);
             conversationRepository.save(conversation);
 
             // Try chatbot first, then automation
@@ -265,6 +270,7 @@ public class WidgetService {
             conv.setStatus(ConversationStatus.OPEN);
         }
         conv.setLastActivityAt(LocalDateTime.now());
+        conv.setUnreadCount((conv.getUnreadCount() == null ? 0 : conv.getUnreadCount()) + 1);
         conversationRepository.save(conv);
 
         Message message = Message.builder()
