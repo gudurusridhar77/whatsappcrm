@@ -6,6 +6,7 @@ import com.whatsappcrm.dto.SendMessageRequest;
 import com.whatsappcrm.entity.Attachment;
 import com.whatsappcrm.entity.Conversation;
 import com.whatsappcrm.entity.Message;
+import com.whatsappcrm.enums.ChannelType;
 import com.whatsappcrm.enums.MessageType;
 import com.whatsappcrm.enums.SenderType;
 import com.whatsappcrm.exception.BadRequestException;
@@ -43,6 +44,7 @@ public class MessageService {
     private final AutomationEngine automationEngine;
     private final AttachmentService attachmentService;
     private final WhatsAppChannelService whatsAppChannelService;
+    private final EmailChannelService emailChannelService;
 
     public Page<MessageResponse> getMessages(Long accountId, Long conversationId, Pageable pageable,
                                               String baseUrl) {
@@ -137,14 +139,24 @@ public class MessageService {
         }
         conversationRepository.save(conv);
 
-        // Send via WhatsApp API if this is a WhatsApp conversation (outgoing, non-private)
+        // Deliver via the conversation's channel (outgoing, non-private)
         if (messageType == MessageType.OUTGOING && !message.getPrivateFlag()) {
-            try {
-                whatsAppChannelService.sendOutgoingWhatsAppMessage(
-                        accountId, conversationId, message, attachments);
-            } catch (Exception e) {
-                // Log but don't fail — message is saved locally
-                log.warn("Failed to deliver message via WhatsApp for conversation {}: {}", conversationId, e.getMessage());
+            ChannelType channelType = conv.getInbox().getChannelType();
+            if (channelType == ChannelType.WHATSAPP) {
+                try {
+                    whatsAppChannelService.sendOutgoingWhatsAppMessage(
+                            accountId, conversationId, message, attachments);
+                } catch (Exception e) {
+                    // Log but don't fail — message is saved locally
+                    log.warn("Failed to deliver message via WhatsApp for conversation {}: {}", conversationId, e.getMessage());
+                }
+            } else if (channelType == ChannelType.EMAIL) {
+                try {
+                    emailChannelService.sendEmailReply(accountId, conversationId, content, currentUserId);
+                } catch (Exception e) {
+                    // Log but don't fail — message is saved locally
+                    log.warn("Failed to deliver message via email for conversation {}: {}", conversationId, e.getMessage());
+                }
             }
         }
 
